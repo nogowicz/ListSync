@@ -4,6 +4,9 @@ import { ThemeContext } from '../../../navigation/utils/ThemeProvider';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 
+
+import TopPanel from 'components/top-panel';
+
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
 type HomeProps = {
@@ -14,7 +17,9 @@ export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
-            <Text style={{ color: theme.TEXT }}>Home</Text>
+            <TopPanel
+                name='John'
+            />
         </View>
     )
 }

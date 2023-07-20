@@ -1,10 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { formatDateToLongDate } from 'utils/dateFormat';
+import Button from 'components/button';
 
-export default function TopPanel() {
+type TopPanelProps = {
+    name: string;
+};
+
+export default function TopPanel({ name }: TopPanelProps) {
+    const date = formatDateToLongDate(new Date());
     return (
         <View>
-            <Text>TopPanel</Text>
+            <View>
+                <Text>Hi, {name}!</Text>
+                <Text>{date}</Text>
+            </View>
+            <Button text="New List" type='add' />
         </View>
     )
 }
