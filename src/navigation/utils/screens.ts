@@ -3,5 +3,8 @@ export const SCREENS = {
     HOME: {
       ID: 'HOME',
     },
+    LIST: {
+      ID: 'LIST',
+    },
   },
 };

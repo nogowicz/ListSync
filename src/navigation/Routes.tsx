@@ -1,6 +1,7 @@
 import React from 'react';
-import AuthenticatedStack from './AuthenticatedStack';
+import AuthenticatedStack from './authenticated-stack/AuthenticatedStack';
 import { NavigationContainer } from '@react-navigation/native';
+
 
 export default function Routes() {
     return (

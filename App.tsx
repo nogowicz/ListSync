@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-  SafeAreaView,
   StatusBar,
+  View,
   useColorScheme,
 } from 'react-native';
 import Routes from './src/navigation/Routes';
@@ -15,18 +15,16 @@ export default function App(): JSX.Element {
   return (
 
     <ThemeContext.Provider value={themeMode ? theme.dark : theme.light}>
-      <SafeAreaView>
-        <StatusBar
-          backgroundColor={themeMode ? '#000000' : '#F9F9F9'}
-          barStyle={themeMode ? 'light-content' : 'dark-content'}
-        />
-        <LangModeProvider>
-          <LangContext>
-            <Routes />
-          </LangContext>
-        </LangModeProvider>
-      </SafeAreaView>
-    </ThemeContext.Provider>
+      <StatusBar
+        backgroundColor={themeMode ? '#000000' : '#F9F9F9'}
+        barStyle={themeMode ? 'light-content' : 'dark-content'}
+      />
+      <LangModeProvider>
+        <LangContext>
+          <Routes />
+        </LangContext>
+      </LangModeProvider>
+    </ThemeContext.Provider >
 
 
   );
