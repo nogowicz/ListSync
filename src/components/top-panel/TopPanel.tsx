@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { formatDateToLongDate } from 'utils/dateFormat';
 import Button from 'components/button';
+import { typography } from 'styles';
+import { ThemeContext } from 'navigation/utils/ThemeProvider';
 
 type TopPanelProps = {
     name: string;
@@ -9,11 +11,12 @@ type TopPanelProps = {
 
 export default function TopPanel({ name }: TopPanelProps) {
     const date = formatDateToLongDate(new Date());
+    const theme = useContext(ThemeContext);
     return (
         <View style={styles.container}>
             <View>
-                <Text>Hi, {name}!</Text>
-                <Text>{date}</Text>
+                <Text style={[styles.greetingText, { color: theme.TEXT }]}>Hi, {name}!</Text>
+                <Text style={[styles.dateText, { color: theme.HINT }]}>{date}</Text>
             </View>
             <Button text="New List" type='add' />
         </View>
@@ -25,5 +28,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    greetingText: {
+        fontWeight: typography.FONT_WEIGHT_BOLD,
+        fontSize: typography.FONT_SIZE_18,
+    },
+    dateText: {
+        fontSize: typography.FONT_SIZE_15,
     },
 })
