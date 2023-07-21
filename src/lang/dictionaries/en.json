@@ -1,3 +1,23 @@
 {
-  "views.auth.onboarding.all-in-one.get-started": "Get Started"
+  "views.authenticated.home.greetings-text": "Hi, ",
+  "views.authenticated.home.add-button-text": "New List",
+  "date.month.january": "January",
+  "date.month.february": "February",
+  "date.month.march": "March",
+  "date.month.april": "April",
+  "date.month.may": "May",
+  "date.month.june": "June",
+  "date.month.july": "July",
+  "date.month.august": "August",
+  "date.month.september": "September",
+  "date.month.october": "October",
+  "date.month.november": "November",
+  "date.month.december": "December",
+  "date.day.sunday": "Sunday",
+  "date.day.monday": "Monday",
+  "date.day.tuesday": "Tuesday",
+  "date.day.wednesday": "Wednesday",
+  "date.day.thursday": "Thursday",
+  "date.day.friday": "Friday",
+  "date.day.saturday": "Saturday"
 }

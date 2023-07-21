@@ -1,12 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, ReactNode } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
-import { colors, constants, spacing, typography } from 'styles';
+import { constants, spacing, typography } from 'styles';
 
 import Plus from 'assets/button-icons/plus.svg';
 
 type ButtonProps = {
-    text: string;
+    text: string | ReactNode;
     type: "add" | "submit";
     activeOpacity?: number;
 };

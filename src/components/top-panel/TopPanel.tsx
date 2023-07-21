@@ -4,21 +4,34 @@ import { formatDateToLongDate } from 'utils/dateFormat';
 import Button from 'components/button';
 import { typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 type TopPanelProps = {
     name: string;
 };
 
 export default function TopPanel({ name }: TopPanelProps) {
-    const date = formatDateToLongDate(new Date());
+    const intl = useIntl();
+    const date = formatDateToLongDate(new Date(), intl);
     const theme = useContext(ThemeContext);
     return (
         <View style={styles.container}>
             <View>
-                <Text style={[styles.greetingText, { color: theme.TEXT }]}>Hi, {name}!</Text>
+                <Text style={[styles.greetingText, { color: theme.TEXT }]}>
+                    <FormattedMessage
+                        id='views.authenticated.home.greetings-text'
+                        defaultMessage={"Hi, "}
+                    />
+                    {name}!
+                </Text>
                 <Text style={[styles.dateText, { color: theme.HINT }]}>{date}</Text>
             </View>
-            <Button text="New List" type='add' />
+            <Button text={
+                <FormattedMessage
+                    id='views.authenticated.home.add-button-text'
+                    defaultMessage={"New List"}
+                />
+            } type='add' />
         </View>
     )
 }

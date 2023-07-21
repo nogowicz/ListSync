@@ -1,3 +1,23 @@
 {
-  "views.auth.onboarding.all-in-one.get-started": "Zaczynajmy"
+  "views.authenticated.home.greetings-text": "Cześć, ",
+  "views.authenticated.home.add-button-text": "Nowa Lista",
+  "date.month.january": "Stycznia",
+  "date.month.february": "Lutego",
+  "date.month.march": "Marca",
+  "date.month.april": "Kwietnia",
+  "date.month.may": "Maja",
+  "date.month.june": "Czerwca",
+  "date.month.july": "Lipca",
+  "date.month.august": "Sierpnia",
+  "date.month.september": "Września",
+  "date.month.october": "Października",
+  "date.month.november": "Listopada",
+  "date.month.december": "Grudnia",
+  "date.day.sunday": "Niedziela",
+  "date.day.monday": "Poniedziałek",
+  "date.day.tuesday": "Wtorek",
+  "date.day.wednesday": "Środa",
+  "date.day.thursday": "Czwartek",
+  "date.day.friday": "Piątek",
+  "date.day.saturday": "Sobota"
 }
