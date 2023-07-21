@@ -10,7 +10,7 @@ type TopPanelProps = {
 export default function TopPanel({ name }: TopPanelProps) {
     const date = formatDateToLongDate(new Date());
     return (
-        <View>
+        <View style={styles.container}>
             <View>
                 <Text>Hi, {name}!</Text>
                 <Text>{date}</Text>
@@ -20,4 +20,10 @@ export default function TopPanel({ name }: TopPanelProps) {
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+})

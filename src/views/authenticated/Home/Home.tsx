@@ -6,6 +6,7 @@ import { RootStackParamList } from 'navigation/navigation';
 
 
 import TopPanel from 'components/top-panel';
+import { spacing } from 'styles';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
@@ -27,5 +28,7 @@ export default function Home({ navigation }: HomeProps) {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
+        paddingHorizontal: spacing.SCALE_20,
+        paddingVertical: spacing.SCALE_20,
     },
 })
