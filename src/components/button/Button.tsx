@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         paddingVertical: spacing.SCALE_4,
-        paddingHorizontal: spacing.SCALE_12,
+        paddingRight: spacing.SCALE_12,
+        paddingLeft: spacing.SCALE_4,
     },
     addText: {
         fontSize: typography.FONT_SIZE_18,

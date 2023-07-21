@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     greetingText: {
-        fontWeight: typography.FONT_WEIGHT_BOLD,
-        fontSize: typography.FONT_SIZE_18,
+        fontWeight: typography.FONT_WEIGHT_REGULAR,
+        fontSize: typography.FONT_SIZE_24,
     },
     dateText: {
         fontSize: typography.FONT_SIZE_15,

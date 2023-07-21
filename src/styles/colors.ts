@@ -11,9 +11,9 @@ export const theme = {
   },
   dark: {
     theme: 'dark',
-    PRIMARY: '#0860FB',
+    PRIMARY: '#E0ECFA',
     SECONDARY: '#000000',
-    TERTIARY: '#E0ECFA',
+    TERTIARY: '#0860FB',
     TEXT: '#FFFFFF',
     BACKGROUND: '#000000',
     HINT: '#9B9B9B',
