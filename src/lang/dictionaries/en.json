@@ -19,5 +19,9 @@
   "date.day.wednesday": "Wednesday",
   "date.day.thursday": "Thursday",
   "date.day.friday": "Friday",
-  "date.day.saturday": "Saturday"
+  "date.day.saturday": "Saturday",
+  "views.authenticated.home.filter-button-text-all": "All",
+  "views.authenticated.home.filter-button-text-favorite": "Favorite",
+  "views.authenticated.home.filter-button-text-shared": "Shared",
+  "views.authenticated.home.filter-button-text-archived": "Archived"
 }

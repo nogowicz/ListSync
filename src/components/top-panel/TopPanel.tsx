@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { formatDateToLongDate } from 'utils/dateFormat';
 import Button from 'components/button';
-import { typography } from 'styles';
+import { spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -26,12 +26,14 @@ export default function TopPanel({ name }: TopPanelProps) {
                 </Text>
                 <Text style={[styles.dateText, { color: theme.HINT }]}>{date}</Text>
             </View>
-            <Button text={
-                <FormattedMessage
-                    id='views.authenticated.home.add-button-text'
-                    defaultMessage={"New List"}
-                />
-            } type='add' />
+            <Button
+                onPress={() => console.log("New list button")}
+                text={
+                    <FormattedMessage
+                        id='views.authenticated.home.add-button-text'
+                        defaultMessage={"New List"}
+                    />
+                } type='add' />
         </View>
     )
 }
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+
     },
     greetingText: {
         fontWeight: typography.FONT_WEIGHT_REGULAR,

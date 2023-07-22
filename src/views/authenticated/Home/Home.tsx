@@ -7,6 +7,7 @@ import { RootStackParamList } from 'navigation/navigation';
 
 import TopPanel from 'components/top-panel';
 import { spacing } from 'styles';
+import FilterPanel from 'components/filter-panel';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
@@ -21,6 +22,7 @@ export default function Home({ navigation }: HomeProps) {
             <TopPanel
                 name='John'
             />
+            <FilterPanel />
         </View>
     )
 }

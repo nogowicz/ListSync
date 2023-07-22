@@ -7,16 +7,20 @@ import Plus from 'assets/button-icons/plus.svg';
 
 type ButtonProps = {
     text: string | ReactNode;
-    type: "add" | "submit";
+    type: "add" | "filter";
+    amount?: number;
+    isActive?: boolean;
+    onPress: () => void;
     activeOpacity?: number;
 };
 
-export default function Button({ text, type, activeOpacity = 0.7 }: ButtonProps) {
+export default function Button({ text, type, amount, onPress, isActive = false, activeOpacity = 0.7 }: ButtonProps) {
     const theme = useContext(ThemeContext);
     if (type === "add") {
         return (
             <TouchableOpacity
-                style={[styles.container, { backgroundColor: theme.TERTIARY }]}
+                onPress={onPress}
+                style={[styles.addContainer, { backgroundColor: theme.TERTIARY }]}
                 activeOpacity={activeOpacity}
             >
                 <Plus stroke={theme.PRIMARY} width={spacing.SCALE_30} height={spacing.SCALE_30} />
@@ -24,9 +28,35 @@ export default function Button({ text, type, activeOpacity = 0.7 }: ButtonProps)
             </TouchableOpacity>
         );
 
+    } else if (type === "filter") {
+        return (
+            <TouchableOpacity
+                onPress={onPress}
+                activeOpacity={activeOpacity}
+                style={[styles.filterContainer]}
+            >
+                <Text
+                    style={[
+                        styles.filterText,
+                        isActive ? { color: theme.PRIMARY, fontWeight: typography.FONT_WEIGHT_BOLD } :
+                            { color: theme.HINT }]}
+                >
+                    {text}
+                </Text>
+                <View
+                    style={[styles.amountFilterContainer,
+                    isActive ? { backgroundColor: theme.PRIMARY } : { backgroundColor: theme.HINT }]}
+                >
+                    <Text style={[
+                        styles.amountFilterText,
+                        { color: theme.BACKGROUND }]}
+                    >{amount}</Text>
+                </View>
+            </TouchableOpacity>
+        );
     } else {
         return (
-            <View style={[styles.container, { backgroundColor: theme.TERTIARY }]}>
+            <View style={[styles.filterContainer, { backgroundColor: theme.TERTIARY }]}>
                 <Text>{text}</Text>
             </View>
         );
@@ -37,7 +67,7 @@ export default function Button({ text, type, activeOpacity = 0.7 }: ButtonProps)
 }
 
 const styles = StyleSheet.create({
-    container: {
+    addContainer: {
         backgroundColor: "blue",
         borderRadius: constants.BORDER_RADIUS.BUTTON,
         flexDirection: "row",
@@ -50,5 +80,22 @@ const styles = StyleSheet.create({
     addText: {
         fontSize: typography.FONT_SIZE_18,
         fontWeight: typography.FONT_WEIGHT_REGULAR,
+    },
+    filterContainer: {
+        flexDirection: "row",
+        gap: spacing.SCALE_4,
+        alignItems: "center",
+        marginRight: spacing.SCALE_12,
+    },
+    filterText: {
+        fontSize: typography.FONT_SIZE_18,
+    },
+    amountFilterContainer: {
+        paddingVertical: spacing.SCALE_2,
+        paddingHorizontal: spacing.SCALE_8,
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+    },
+    amountFilterText: {
+        fontSize: typography.FONT_SIZE_12,
     }
 })
