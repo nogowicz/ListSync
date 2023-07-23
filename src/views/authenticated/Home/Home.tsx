@@ -9,6 +9,8 @@ import { spacing } from 'styles';
 import FilterPanel from 'components/filter-panel';
 import ListItem from 'components/list-item';
 import { numColumns } from 'components/list-item/ListItem';
+import ShoppingCart from 'assets/list-icons/shopping-cart.svg';
+import ListIcon from 'assets/list-icons/list-iconsvg.svg';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
@@ -17,18 +19,13 @@ type HomeProps = {
 };
 
 const data = [
-    { id: '1', title: 'All', taskAmount: 130, isShared: false, isFavorite: false },
+    { id: '1', title: 'All', taskAmount: 130, isShared: false, isFavorite: false, listIcon: (<ListIcon />) },
     { id: '2', title: 'Wishlist', taskAmount: 10, isShared: false, isFavorite: true },
     { id: '3', title: 'Home', taskAmount: 13, isShared: true, isFavorite: false },
-    { id: '4', title: 'Shopping', taskAmount: 20, isShared: true, isFavorite: true },
-    { id: '5', title: 'Primark', taskAmount: 5, isShared: false, isFavorite: false },
-    { id: '6', title: 'Primark', taskAmount: 5, isShared: false, isFavorite: false },
-    { id: '7', title: 'Primark', taskAmount: 5, isShared: false, isFavorite: false },
-    { id: '8', title: 'Primark', taskAmount: 5, isShared: false, isFavorite: false },
-    { id: '9', title: 'Primark', taskAmount: 5, isShared: false, isFavorite: false },
+    { id: '4', title: 'Shopping', taskAmount: 20, isShared: true, isFavorite: true, listIcon: (<ShoppingCart />) },
+    { id: '5', title: 'Rzeczy do wzięcia do holandii', taskAmount: 5, isShared: false, isFavorite: false },
 ];
 
-const screenWidth = Dimensions.get('window').width;
 
 export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
@@ -50,6 +47,7 @@ export default function Home({ navigation }: HomeProps) {
                                     taskAmount={item.taskAmount}
                                     isShared={item.isShared}
                                     isFavorite={item.isFavorite}
+                                    listIcon={item.listIcon}
                                 />
                             </View>
                         )}

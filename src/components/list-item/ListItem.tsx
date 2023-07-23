@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
-import ListIcon from 'assets/button-icons/list.svg';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
+
+import ListDefault from 'assets/list-icons/list-default.svg'
+import SharedList from 'assets/button-icons/shared-list.svg';
+import FavoriteList from 'assets/button-icons/favorite.svg';
 
 type ListItemProps = {
     listName: string;
@@ -23,7 +26,7 @@ export default function ListItem({
     listName,
     taskAmount,
     listIcon = (
-        <ListIcon stroke='#0860FB' strokeWidth={2} />
+        <ListDefault fill={'#0860FB'} />
     ),
     isFavorite = false,
     isShared = false,
@@ -33,6 +36,18 @@ export default function ListItem({
     const theme = useContext(ThemeContext);
     const tasks = taskAmount !== 1 ? "tasks" : "task";
 
+
+    const getFontSize = (textLength: number) => {
+        if (textLength <= 10) {
+            return typography.FONT_SIZE_24;
+        } else if (textLength > 10 && textLength <= 20) {
+            return typography.FONT_SIZE_20;
+        } else {
+            return typography.FONT_SIZE_14;
+        }
+    };
+
+    const fontSize = getFontSize(listName.length);
 
     return (
         <TouchableOpacity
@@ -46,9 +61,15 @@ export default function ListItem({
             onPress={onPress}
         >
             <View style={styles.iconContainer}>
-                {listIcon}
+                <View style={{ marginLeft: spacing.SCALE_6, }}>
+                    {listIcon}
+                </View>
+                <View style={styles.favoriteAndSharedContainer}>
+                    {isFavorite && <FavoriteList />}
+                    {isShared && <SharedList />}
+                </View>
             </View>
-            <Text style={[styles.listName, { color: theme.TEXT }]}>{listName}</Text>
+            <Text style={[{ color: theme.TEXT, fontSize }]}>{listName}</Text>
             <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmount} {tasks}</Text>
         </TouchableOpacity>
     )
@@ -70,16 +91,20 @@ const styles = StyleSheet.create({
         padding: spacing.SCALE_16,
         justifyContent: 'space-between'
     },
-    listName: {
-        fontSize: typography.FONT_SIZE_24,
-    },
     taskAmount: {
         fontSize: typography.FONT_SIZE_16,
     },
     iconContainer: {
         marginLeft: -spacing.SCALE_12,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     lastItemInRow: {
         marginRight: 0,
     },
+    favoriteAndSharedContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-end',
+    }
 });
