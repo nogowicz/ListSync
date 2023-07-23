@@ -8,14 +8,13 @@ import TopPanel from 'components/top-panel';
 import { spacing } from 'styles';
 import FilterPanel from 'components/filter-panel';
 import ListList from 'components/list-list';
+import Button from 'components/button';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
 type HomeProps = {
     navigation: HomeScreenNavigationProp['navigation'];
 };
-
-
 
 
 export default function Home({ navigation }: HomeProps) {
@@ -27,6 +26,7 @@ export default function Home({ navigation }: HomeProps) {
                 <TopPanel name='John' />
                 <FilterPanel />
                 <ListList />
+                <Button type='fab' onPress={() => console.log("Add new task")} />
             </View>
         </View>
     );

@@ -6,8 +6,8 @@ import { constants, spacing, typography } from 'styles';
 import Plus from 'assets/button-icons/plus.svg';
 
 type ButtonProps = {
-    text: string | ReactNode;
-    type: "add" | "filter";
+    text?: string | ReactNode;
+    type: "add" | "filter" | "fab";
     amount?: number;
     isActive?: boolean;
     onPress: () => void;
@@ -54,6 +54,15 @@ export default function Button({ text, type, amount, onPress, isActive = false, 
                 </View>
             </TouchableOpacity>
         );
+    } else if (type === "fab") {
+        return (
+            <TouchableOpacity
+                activeOpacity={activeOpacity}
+                style={[styles.fabContainer, { backgroundColor: theme.TERTIARY }]}
+                onPress={onPress}>
+                <Plus stroke={theme.PRIMARY} width={spacing.SCALE_40} height={spacing.SCALE_40} />
+            </TouchableOpacity>
+        );
     } else {
         return (
             <View style={[styles.filterContainer, { backgroundColor: theme.TERTIARY }]}>
@@ -97,5 +106,15 @@ const styles = StyleSheet.create({
     },
     amountFilterText: {
         fontSize: typography.FONT_SIZE_12,
+    },
+    fabContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+        position: "absolute",
+        bottom: spacing.SCALE_30,
+        right: 0,
+        paddingHorizontal: spacing.SCALE_12,
+        paddingVertical: spacing.SCALE_12,
     }
 })

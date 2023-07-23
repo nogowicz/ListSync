@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import ListItem from 'components/list-item'
 import { numColumns } from 'components/list-item/ListItem'
 
@@ -15,10 +15,11 @@ const data = [
 ];
 
 export default function ListList() {
+    const [list, setList] = useState(data);
     return (
         <View style={{ flex: 1, }}>
             <FlatList
-                data={data}
+                data={list}
                 keyExtractor={(item: any) => item.id}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }: any) => (
