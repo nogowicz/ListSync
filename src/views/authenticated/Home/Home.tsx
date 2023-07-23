@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Dimensions, FlatList, Keyboard, StyleSheet, View } from 'react-native';
 import { ThemeContext } from '../../../navigation/utils/ThemeProvider';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -12,14 +12,15 @@ import Button from 'components/button';
 
 
 import ShoppingCart from 'assets/list-icons/shopping-cart.svg';
-import ListIcon from 'assets/list-icons/list-iconsvg.svg';
+import ListIcon from 'assets/list-icons/list-icon.svg';
+import AddTaskField from 'components/add-task-field';
 
 const data = [
     { id: '1', title: 'All', taskAmount: 130, isShared: false, isFavorite: false, isArchived: false, listIcon: (<ListIcon />) },
     { id: '2', title: 'Wishlist', taskAmount: 10, isShared: false, isFavorite: true, isArchived: false, },
     { id: '3', title: 'Home', taskAmount: 13, isShared: true, isFavorite: false, isArchived: false, },
     { id: '4', title: 'Shopping', taskAmount: 20, isShared: true, isFavorite: true, isArchived: false, listIcon: (<ShoppingCart />) },
-    { id: '5', title: 'Rzeczy do wzięcia do holandii', taskAmount: 5, isShared: false, isArchived: true, isFavorite: false },
+    { id: '5', title: 'Stuff to take on the trip', taskAmount: 5, isShared: false, isArchived: true, isFavorite: false },
 ];
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
@@ -33,6 +34,27 @@ export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
     const newList = data.filter((item: any) => item.isArchived === false);
     const [list, setList] = useState(newList);
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true);
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false);
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -40,7 +62,9 @@ export default function Home({ navigation }: HomeProps) {
                 <TopPanel name='John' />
                 <FilterPanel data={data} setList={setList} />
                 <ListList list={list} />
-                <Button type='fab' onPress={() => console.log("Add new task")} />
+                {isKeyboardVisible ? <AddTaskField /> :
+                    <Button type='fab' onPress={() => setKeyboardVisible(true)} />}
+
             </View>
         </View>
     );

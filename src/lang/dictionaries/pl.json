@@ -23,5 +23,9 @@
   "views.authenticated.home.filter-button-text-all": "Wszytskie",
   "views.authenticated.home.filter-button-text-favorite": "Ulubione",
   "views.authenticated.home.filter-button-text-shared": "Udostępnione",
-  "views.authenticated.home.filter-button-text-archived": "Archiwum"
+  "views.authenticated.home.filter-button-text-archived": "Archiwum",
+  "views.authenticated.home.text-input.placeholder": "Dodaj nowe zadanie",
+  "views.authenticated.home.text-input.list-name.all": "Wszystkie",
+  "views.authenticated.home.text-input.deadline.today": "Dzisiaj",
+  "views.authenticated.home.text-input.importance": "Priorytet"
 }

@@ -23,5 +23,9 @@
   "views.authenticated.home.filter-button-text-all": "All",
   "views.authenticated.home.filter-button-text-favorite": "Favorite",
   "views.authenticated.home.filter-button-text-shared": "Shared",
-  "views.authenticated.home.filter-button-text-archived": "Archived"
+  "views.authenticated.home.filter-button-text-archived": "Archived",
+  "views.authenticated.home.text-input.placeholder": "Add new task",
+  "views.authenticated.home.text-input.list-name.all": "All",
+  "views.authenticated.home.text-input.deadline.today": "Today",
+  "views.authenticated.home.text-input.importance": "Importance"
 }

@@ -65,8 +65,8 @@ export default function ListItem({
                     {listIcon}
                 </View>
                 <View style={styles.favoriteAndSharedContainer}>
-                    {isFavorite && <FavoriteList />}
                     {isShared && <SharedList />}
+                    {isFavorite && <FavoriteList />}
                 </View>
             </View>
             <Text style={[{ color: theme.TEXT, fontSize }]}>{listName}</Text>
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     },
     favoriteAndSharedContainer: {
         flexDirection: 'row',
+        flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'flex-end',
     }
