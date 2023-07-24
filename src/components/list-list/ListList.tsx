@@ -2,6 +2,10 @@ import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import ListItem from 'components/list-item'
 import { numColumns } from 'components/list-item/ListItem'
+import { useNavigation } from '@react-navigation/native';
+import { SCREENS } from 'navigation/utils/screens';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from 'navigation/navigation';
 
 
 type ListListProps = {
@@ -9,7 +13,7 @@ type ListListProps = {
 };
 
 export default function ListList({ list }: ListListProps) {
-
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     return (
         <View style={{ flex: 1, }}>
             <FlatList
@@ -24,6 +28,7 @@ export default function ListList({ list }: ListListProps) {
                             isShared={item.isShared}
                             isFavorite={item.isFavorite}
                             listIcon={item.listIcon}
+                            onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID)}
                         />
                     </View>
                 )}
