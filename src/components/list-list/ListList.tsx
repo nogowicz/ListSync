@@ -20,18 +20,20 @@ export default function ListList({ list }: ListListProps) {
                 data={list}
                 keyExtractor={(item: any) => item.id}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item, index }: any) => (
-                    <View>
-                        <ListItem
-                            listName={item.title}
-                            taskAmount={item.taskAmount}
-                            isShared={item.isShared}
-                            isFavorite={item.isFavorite}
-                            listIcon={item.listIcon}
-                            onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID)}
-                        />
-                    </View>
-                )}
+                renderItem={({ item, index }: any) => {
+                    return (
+                        <View>
+                            <ListItem
+                                listName={item.listName}
+                                taskAmount={item.tasks.length}
+                                isShared={item.isShared}
+                                isFavorite={item.isFavorite}
+                                listIcon={item.iconId}
+                                onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID)}
+                            />
+                        </View>
+                    )
+                }}
                 numColumns={numColumns}
             />
         </View>

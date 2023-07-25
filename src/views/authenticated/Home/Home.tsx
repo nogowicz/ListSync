@@ -10,18 +10,9 @@ import FilterPanel from 'components/filter-panel';
 import ListList from 'components/list-list';
 import Button from 'components/button';
 
-
-import ShoppingCart from 'assets/list-icons/shopping-cart.svg';
-import ListIcon from 'assets/list-icons/list-icon.svg';
 import AddTaskField from 'components/add-task-field';
 
-const data = [
-    { id: '1', title: 'All', taskAmount: 130, isShared: false, isFavorite: false, isArchived: false, listIcon: (<ListIcon />) },
-    { id: '2', title: 'Wishlist', taskAmount: 10, isShared: false, isFavorite: true, isArchived: false, },
-    { id: '3', title: 'Home', taskAmount: 13, isShared: true, isFavorite: false, isArchived: false, },
-    { id: '4', title: 'Shopping', taskAmount: 20, isShared: true, isFavorite: true, isArchived: false, listIcon: (<ShoppingCart />) },
-    { id: '5', title: 'Stuff to take on the trip', taskAmount: 5, isShared: false, isArchived: true, isFavorite: false },
-];
+import { data } from '../../../data/data.json';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 

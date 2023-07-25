@@ -20,7 +20,7 @@ export default function List({ navigation }: ListProps) {
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
                 <ListTopBar
-                    name='All'
+                    name='Wishlist'
                     icon={<ListIcon />}
                 />
             </View>

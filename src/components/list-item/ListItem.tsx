@@ -1,11 +1,14 @@
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 
-import ListDefault from 'assets/list-icons/list-default.svg'
 import SharedList from 'assets/button-icons/shared-list.svg';
 import FavoriteList from 'assets/button-icons/favorite.svg';
+
+import ListDefault from 'assets/list-icons/list-default.svg'
+import ListIcon from 'assets/list-icons/list-icon.svg';
+import ShoppingCart from 'assets/list-icons/shopping-cart.svg';
 
 type ListItemProps = {
     listName: string;
@@ -22,12 +25,16 @@ export const numColumns = 2;
 const screenWidth = Dimensions.get('window').width;
 const itemSize = (screenWidth - (spacing.SCALE_22 * 2) - (spacing.SCALE_22 * (numColumns - 1))) / numColumns;
 
+const icon: any = {
+    1: (<ListDefault fill='#0860FB' />),
+    2: (<ListIcon />),
+    3: (<ShoppingCart />)
+};
+
 export default function ListItem({
     listName,
     taskAmount,
-    listIcon = (
-        <ListDefault fill={'#0860FB'} />
-    ),
+    listIcon = 1,
     isFavorite = false,
     isShared = false,
     activeOpacity = 0.7,
@@ -62,7 +69,7 @@ export default function ListItem({
         >
             <View style={styles.iconContainer}>
                 <View style={{ marginLeft: spacing.SCALE_6, }}>
-                    {listIcon}
+                    {icon[listIcon]}
                 </View>
                 <View style={styles.favoriteAndSharedContainer}>
                     {isShared && <SharedList />}
