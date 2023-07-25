@@ -4,10 +4,11 @@ import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 
 import Plus from 'assets/button-icons/plus.svg';
+import Check from 'assets/button-icons/Check.svg';
 
 type ButtonProps = {
     text?: string | ReactNode;
-    type: "add" | "filter" | "fab";
+    type: "add" | "filter" | "fab" | "check";
     amount?: number;
     isActive?: boolean;
     onPress: () => void;
@@ -63,6 +64,15 @@ export default function Button({ text, type, amount, onPress, isActive = false, 
                 <Plus stroke={theme.PRIMARY} width={spacing.SCALE_40} height={spacing.SCALE_40} />
             </TouchableOpacity>
         );
+    } else if (type === "check") {
+        return (
+            <TouchableOpacity
+                activeOpacity={activeOpacity}
+                style={[styles.checkButton, { backgroundColor: theme.PRIMARY, borderColor: theme.PRIMARY, }]}
+                onPress={onPress}>
+                <Check stroke={theme.BACKGROUND} strokeWidth={1.5} />
+            </TouchableOpacity>
+        );
     } else {
         return (
             <View style={[styles.filterContainer, { backgroundColor: theme.TERTIARY }]}>
@@ -116,5 +126,12 @@ const styles = StyleSheet.create({
         right: 0,
         paddingHorizontal: spacing.SCALE_12,
         paddingVertical: spacing.SCALE_12,
-    }
+    },
+    checkButton: {
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: spacing.SCALE_4,
+        borderRadius: constants.BORDER_RADIUS.CHECK_BUTTON,
+    },
 })

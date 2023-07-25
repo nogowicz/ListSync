@@ -1,7 +1,8 @@
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
-import { constants, spacing } from 'styles';
+import { constants, spacing, typography } from 'styles';
+import Button from 'components/button';
 
 type TaskProps = {
     task: any;
@@ -11,7 +12,8 @@ export default function Task({ task }: TaskProps) {
     const theme = useContext(ThemeContext);
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
-            <Text style={[{ color: theme.TEXT }]}>{task.item.title}</Text>
+            <Button type='check' onPress={() => console.log("Pressed")} />
+            <Text style={[styles.text, { color: theme.TEXT }]}>{task.item.title}</Text>
         </View>
     )
 }
@@ -29,5 +31,10 @@ const styles = StyleSheet.create({
         borderRadius: constants.BORDER_RADIUS.BUTTON,
         marginVertical: spacing.SCALE_8,
         marginHorizontal: spacing.SCALE_2,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
+    text: {
+        fontSize: typography.FONT_SIZE_16,
+    }
 })
