@@ -15,7 +15,7 @@
         {
           "IdTask": 1,
           "title": "Buy groceries",
-          "isCompleted": 0,
+          "isCompleted": false,
           "deadline": "2023-07-26 18:00:00",
           "importance": "High",
           "effort": "Low",
@@ -28,7 +28,7 @@
         {
           "IdTask": 4,
           "title": "Buy birthday gift",
-          "isCompleted": 0,
+          "isCompleted": false,
           "deadline": "2023-08-10 09:30:00",
           "importance": "Medium",
           "effort": "Low",
@@ -41,7 +41,7 @@
         {
           "IdTask": 8,
           "title": "Pay utility bills",
-          "isCompleted": 0,
+          "isCompleted": false,
           "deadline": "2023-08-05 12:00:00",
           "importance": "High",
           "effort": "Low",
@@ -68,7 +68,7 @@
         {
           "IdTask": 2,
           "title": "Finish project report",
-          "isCompleted": 0,
+          "isCompleted": false,
           "deadline": "2023-07-28 12:00:00",
           "importance": "High",
           "effort": "High",
@@ -81,7 +81,7 @@
         {
           "IdTask": 5,
           "title": "Buy stationery",
-          "isCompleted": 0,
+          "isCompleted": false,
           "deadline": "2023-07-27 16:00:00",
           "importance": "Medium",
           "effort": "Low",
@@ -94,7 +94,7 @@
         {
           "IdTask": 6,
           "title": "Send meeting invitations",
-          "isCompleted": 0,
+          "isCompleted": false,
           "deadline": "2023-07-29 10:00:00",
           "importance": "High",
           "effort": "Medium",
@@ -121,7 +121,7 @@
         {
           "IdTask": 3,
           "title": "Go for a run",
-          "isCompleted": 1,
+          "isCompleted": false,
           "deadline": null,
           "importance": "Low",
           "effort": "Medium",
@@ -134,7 +134,7 @@
         {
           "IdTask": 7,
           "title": "Read book chapters",
-          "isCompleted": 1,
+          "isCompleted": false,
           "deadline": null,
           "importance": "Low",
           "effort": "High",

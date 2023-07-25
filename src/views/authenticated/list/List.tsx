@@ -6,6 +6,9 @@ import { constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import ListTopBar from 'components/list-top-bar';
 import ListIcon from 'assets/list-icons/list-icon.svg';
+import { useRoute } from '@react-navigation/native';
+import { icon } from 'components/list-item/ListItem';
+import TaskList from 'components/task-list';
 
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
@@ -16,13 +19,17 @@ type ListProps = {
 
 export default function List({ navigation }: ListProps) {
     const theme = useContext(ThemeContext);
+    const route = useRoute();
+    const { data }: any = route.params;
+    console.log(data)
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
                 <ListTopBar
-                    name='Wishlist'
-                    icon={<ListIcon />}
+                    name={data.listName}
+                    icon={icon[data.iconId]}
                 />
+                <TaskList tasks={data.tasks} />
             </View>
         </View>
     )

@@ -25,7 +25,7 @@ export const numColumns = 2;
 const screenWidth = Dimensions.get('window').width;
 const itemSize = (screenWidth - (spacing.SCALE_22 * 2) - (spacing.SCALE_22 * (numColumns - 1))) / numColumns;
 
-const icon: any = {
+export const icon: any = {
     1: (<ListDefault fill='#0860FB' />),
     2: (<ListIcon />),
     3: (<ShoppingCart />)
@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: constants.BORDER_RADIUS.BUTTON,
+        elevation: spacing.SCALE_4,
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
         flex: 1,
         margin: spacing.SCALE_7,
         width: itemSize,
         height: itemSize,
-        borderRadius: constants.BORDER_RADIUS.BUTTON,
-        elevation: spacing.SCALE_4,
         padding: spacing.SCALE_16,
         justifyContent: 'space-between'
     },

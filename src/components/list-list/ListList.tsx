@@ -29,7 +29,9 @@ export default function ListList({ list }: ListListProps) {
                                 isShared={item.isShared}
                                 isFavorite={item.isFavorite}
                                 listIcon={item.iconId}
-                                onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID)}
+                                onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
+                                    data: item,
+                                } as any)}
                             />
                         </View>
                     )
