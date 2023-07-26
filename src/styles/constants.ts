@@ -8,7 +8,7 @@ export const STROKE_WIDTH = {
 };
 
 export const ICON_SIZE = {
-  CHECK: 15,
+  CHECK: 12,
 };
 
 export const ACTIVE_OPACITY = {

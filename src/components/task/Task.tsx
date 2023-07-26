@@ -11,15 +11,24 @@ type TaskProps = {
 
 export default function Task({ task }: TaskProps) {
     const theme = useContext(ThemeContext);
-    console.log(task)
+    const isCompleted = task.isCompleted;
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
             <Button
                 type={buttonTypes.BUTTON_TYPES.CHECK}
                 onPress={() => console.log("Pressed")}
-                isChecked={task.isCompleted}
+                isChecked={isCompleted}
             />
-            <Text style={[styles.text, { color: theme.TEXT }]}>{task.title}</Text>
+            <Text style={[
+                styles.text,
+                isCompleted ?
+                    {
+                        color: theme.HINT,
+                        textDecorationLine: 'line-through',
+                    } :
+                    {
+                        color: theme.TEXT,
+                    }]}>{task.title}</Text>
         </View>
     )
 }

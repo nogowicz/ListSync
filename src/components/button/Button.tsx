@@ -71,7 +71,15 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
         return (
             <TouchableOpacity
                 activeOpacity={activeOpacity}
-                style={[styles.checkButton, isChecked && { backgroundColor: theme.PRIMARY }, { borderColor: theme.PRIMARY }]}
+                style={[
+                    styles.checkButton,
+                    isChecked && {
+                        backgroundColor: theme.PRIMARY,
+                    },
+                    {
+                        borderWidth: constants.BORDER_WIDTH.CHECK,
+                        borderColor: theme.PRIMARY,
+                    }]}
                 onPress={onPress}>
                 <Check
                     stroke={theme.BACKGROUND}
@@ -135,7 +143,6 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.SCALE_12,
     },
     checkButton: {
-        borderWidth: constants.BORDER_WIDTH.CHECK,
         justifyContent: 'center',
         alignItems: 'center',
         padding: spacing.SCALE_4,
