@@ -1,21 +1,127 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, } from 'react-native'
+import React, { useContext, useState, } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
+import { constants, spacing, typography } from 'styles';
+import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import ListTopBar from 'components/list-top-bar';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { icon } from 'components/list-item/ListItem';
+import TaskList from 'components/task-list';
+import { FormattedMessage } from 'react-intl';
+import { Task } from 'data/types';
+
+import Arrow from 'assets/button-icons/Back.svg';
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+    Easing,
+} from 'react-native-reanimated';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
+type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
+
 
 type ListProps = {
-    navigation: ListScreenNavigationProp['navigation']
+    navigation: ListScreenNavigationProp['navigation'];
+    route: ListScreenRouteProp;
 }
 
 
-export default function List({ navigation }: ListProps) {
+
+
+export default function List({ navigation, route }: ListProps) {
+    const theme = useContext(ThemeContext);
+    const { data }: any = route.params;
+    const [unCompletedTasks, setUnCompletedTasks] = useState(
+        data.tasks.filter((item: Task) => !item.isCompleted)
+    );
+    const [completedTasks, setCompletedTasks] = useState(
+        data.tasks.filter((item: Task) => item.isCompleted)
+    );
+    const [isCompletedVisible, setIsCompletedVisible] = useState(false);
+
+    const rotateAnimation = useSharedValue(isCompletedVisible ? -180 : -90);
+
+    const rotateStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ rotate: `${rotateAnimation.value}deg` }],
+        };
+    });
+
+    const handleArrowPress = () => {
+        const targetRotation = isCompletedVisible ? -180 : -90;
+        rotateAnimation.value = withTiming(targetRotation, {
+            duration: 200,
+            easing: Easing.ease,
+        });
+        setIsCompletedVisible(!isCompletedVisible);
+    };
+
+
+    if (!data) {
+        //TODO
+        return <Text>No data here</Text>;
+    }
     return (
-        <View>
-            <Text>List</Text>
+        <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
+            <View style={styles.container}>
+                <ListTopBar
+                    name={data.listName}
+                    icon={icon[data.iconId]}
+                />
+                <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
+                    <FormattedMessage
+                        defaultMessage="Tasks "
+                        id='views.authenticated.home.list.tasks'
+                    />
+                    - {unCompletedTasks.length}
+                </Text>
+                <TaskList tasks={unCompletedTasks} />
+                {completedTasks.length > 0 && (
+                    <View>
+                        <TouchableOpacity
+                            activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                            onPress={handleArrowPress}
+                            style={styles.completedButton}
+                        >
+                            <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
+                                <FormattedMessage
+                                    defaultMessage="Completed "
+                                    id="views.authenticated.home.list.completed"
+                                />
+                                - {completedTasks.length}
+                            </Text>
+                            <Animated.View style={[rotateStyle]}>
+                                <Arrow />
+                            </Animated.View>
+                        </TouchableOpacity>
+                        {isCompletedVisible && <TaskList tasks={completedTasks} />}
+                    </View>
+                )}
+            </View>
         </View>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    root: {
+        flex: 1,
+    },
+    container: {
+        marginHorizontal: spacing.SCALE_20,
+        marginTop: spacing.SCALE_20,
+        flex: 1,
+    },
+    sectionTitle: {
+        fontSize: typography.FONT_SIZE_16,
+        fontWeight: typography.FONT_WEIGHT_BOLD,
+    },
+    completedButton: {
+        flexDirection: 'row',
+        gap: spacing.SCALE_8,
+    }
+})

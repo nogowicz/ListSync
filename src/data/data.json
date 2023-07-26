@@ -1,0 +1,201 @@
+{
+  "data": [
+    {
+      "IdList": 1,
+      "listName": "Shopping List",
+      "iconId": 3,
+      "canBeDeleted": false,
+      "isShared": false,
+      "createdAt": "2023-07-25 08:30:00",
+      "isFavorite": true,
+      "isArchived": false,
+      "createdBy": 2,
+      "colorVariant": 2,
+      "tasks": [
+        {
+          "IdTask": 1,
+          "title": "Buy groceries",
+          "isCompleted": true,
+          "deadline": "2023-07-26 18:00:00",
+          "importance": "High",
+          "effort": "Low",
+          "note": "Remember the milk!",
+          "addedBy": "john_doe",
+          "assignedTo": null,
+          "createdAt": "2023-07-25 14:30:00",
+          "List_idList": 1,
+          "subtasks": [
+            {
+              "idSubtask": 1,
+              "title": "Research recipes",
+              "isCompleted": false,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 16:00:00",
+              "Task_idTask": 1
+            },
+            {
+              "idSubtask": 2,
+              "title": "Buy vegetables",
+              "isCompleted": false,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 16:30:00",
+              "Task_idTask": 1
+            }
+          ]
+        },
+        {
+          "IdTask": 4,
+          "title": "Buy birthday gift",
+          "isCompleted": false,
+          "deadline": "2023-08-10 09:30:00",
+          "importance": "Medium",
+          "effort": "Low",
+          "note": "Check online stores",
+          "addedBy": "jane_smith",
+          "assignedTo": null,
+          "createdAt": "2023-07-25 10:00:00",
+          "List_idList": 1,
+          "subtasks": []
+        },
+        {
+          "IdTask": 8,
+          "title": "Pay utility bills",
+          "isCompleted": false,
+          "deadline": "2023-08-05 12:00:00",
+          "importance": "High",
+          "effort": "Low",
+          "note": "Check due amounts",
+          "addedBy": "john_doe",
+          "assignedTo": null,
+          "createdAt": "2023-07-27 11:30:00",
+          "List_idList": 1,
+          "subtasks": []
+        }
+      ]
+    },
+    {
+      "IdList": 2,
+      "listName": "Work Tasks",
+      "iconId": 1,
+      "canBeDeleted": true,
+      "isShared": false,
+      "createdAt": "2023-07-25 09:00:00",
+      "isFavorite": false,
+      "isArchived": false,
+      "createdBy": 1,
+      "colorVariant": 1,
+      "tasks": [
+        {
+          "IdTask": 2,
+          "title": "Finish project report",
+          "isCompleted": false,
+          "deadline": "2023-07-28 12:00:00",
+          "importance": "High",
+          "effort": "High",
+          "note": "Include data charts",
+          "addedBy": "john_doe",
+          "assignedTo": 2,
+          "createdAt": "2023-07-25 15:45:00",
+          "List_idList": 2,
+          "subtasks": [
+            {
+              "idSubtask": 3,
+              "title": "Write introduction",
+              "isCompleted": true,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 16:45:00",
+              "Task_idTask": 2
+            },
+            {
+              "idSubtask": 4,
+              "title": "Prepare presentation slides",
+              "isCompleted": false,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 17:00:00",
+              "Task_idTask": 2
+            }
+          ]
+        },
+        {
+          "IdTask": 5,
+          "title": "Buy stationery",
+          "isCompleted": false,
+          "deadline": "2023-07-27 16:00:00",
+          "importance": "Medium",
+          "effort": "Low",
+          "note": "Need pens and notepads",
+          "addedBy": "john_doe",
+          "assignedTo": null,
+          "createdAt": "2023-07-25 17:30:00",
+          "List_idList": 2,
+          "subtasks": []
+        },
+        {
+          "IdTask": 6,
+          "title": "Send meeting invitations",
+          "isCompleted": false,
+          "deadline": "2023-07-29 10:00:00",
+          "importance": "High",
+          "effort": "Medium",
+          "note": "Include agenda",
+          "addedBy": "john_doe",
+          "assignedTo": 2,
+          "createdAt": "2023-07-26 09:15:00",
+          "List_idList": 2,
+          "subtasks": []
+        }
+      ]
+    },
+    {
+      "IdList": 3,
+      "listName": "Personal Goals",
+      "iconId": 2,
+      "canBeDeleted": false,
+      "isShared": true,
+      "createdAt": "2023-07-25 10:45:00",
+      "isFavorite": false,
+      "isArchived": false,
+      "createdBy": 3,
+      "colorVariant": 3,
+      "tasks": [
+        {
+          "IdTask": 3,
+          "title": "Go for a run",
+          "isCompleted": false,
+          "deadline": null,
+          "importance": "Low",
+          "effort": "Medium",
+          "note": "Wear running shoes",
+          "addedBy": "jane_smith",
+          "assignedTo": null,
+          "createdAt": "2023-07-25 11:00:00",
+          "List_idList": 3,
+          "subtasks": [
+            {
+              "idSubtask": 5,
+              "title": "Warm-up stretching",
+              "isCompleted": true,
+              "addedBy": "jane_smith",
+              "createdAt": "2023-07-25 11:15:00",
+              "Task_idTask": 3
+            }
+          ]
+        },
+        {
+          "IdTask": 7,
+          "title": "Read book chapters",
+          "isCompleted": false,
+          "deadline": null,
+          "importance": "Low",
+          "effort": "High",
+          "note": "Science fiction novel",
+          "addedBy": "jane_smith",
+          "assignedTo": null,
+          "createdAt": "2023-07-26 14:00:00",
+          "List_idList": 3,
+          "subtasks": []
+        }
+      ]
+    }
+  ]
+}

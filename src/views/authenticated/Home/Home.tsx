@@ -8,20 +8,12 @@ import TopPanel from 'components/top-panel';
 import { spacing } from 'styles';
 import FilterPanel from 'components/filter-panel';
 import ListList from 'components/list-list';
-import Button from 'components/button';
+import Button, { buttonTypes } from 'components/button';
 
-
-import ShoppingCart from 'assets/list-icons/shopping-cart.svg';
-import ListIcon from 'assets/list-icons/list-icon.svg';
 import AddTaskField from 'components/add-task-field';
 
-const data = [
-    { id: '1', title: 'All', taskAmount: 130, isShared: false, isFavorite: false, isArchived: false, listIcon: (<ListIcon />) },
-    { id: '2', title: 'Wishlist', taskAmount: 10, isShared: false, isFavorite: true, isArchived: false, },
-    { id: '3', title: 'Home', taskAmount: 13, isShared: true, isFavorite: false, isArchived: false, },
-    { id: '4', title: 'Shopping', taskAmount: 20, isShared: true, isFavorite: true, isArchived: false, listIcon: (<ShoppingCart />) },
-    { id: '5', title: 'Stuff to take on the trip', taskAmount: 5, isShared: false, isArchived: true, isFavorite: false },
-];
+import { data } from '../../../data/data.json';
+import { List } from 'data/types';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
@@ -32,8 +24,8 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
-    const newList = data.filter((item: any) => item.isArchived === false);
-    const [list, setList] = useState(newList);
+    const newList = data.filter((item: List) => item.isArchived === false);
+    const [list, setList] = useState<List[]>(newList);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     useEffect(() => {
@@ -63,7 +55,7 @@ export default function Home({ navigation }: HomeProps) {
                 <FilterPanel data={data} setList={setList} />
                 <ListList list={list} />
                 {isKeyboardVisible ? <AddTaskField /> :
-                    <Button type='fab' onPress={() => setKeyboardVisible(true)} />}
+                    <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
 
             </View>
         </View>

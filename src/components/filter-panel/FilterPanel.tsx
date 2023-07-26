@@ -1,22 +1,23 @@
 import { StyleSheet, ScrollView, View, } from 'react-native'
-import React, { useContext, useState } from 'react'
-import Button from 'components/button'
+import React, { useContext, useState, Dispatch, SetStateAction } from 'react'
+import Button, { buttonTypes } from 'components/button'
 import { FormattedMessage } from 'react-intl'
 import { spacing } from 'styles'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
+import { List } from 'data/types'
 
 type FilterPanelProps = {
-    data: any;
-    setList: any;
+    data: List[];
+    setList: Dispatch<SetStateAction<List[]>>;
 };
 
 export default function FilterPanel({ data, setList }: FilterPanelProps) {
     const theme = useContext(ThemeContext);
     const [activeListName, setActiveListName] = useState('all');
-    const allList = data.filter((item: any) => item.isArchived === false);
-    const favoriteList = data.filter((item: any) => item.isFavorite === true && item.isArchived === false);
-    const sharedList = data.filter((item: any) => item.isShared === true && item.isArchived === false);
-    const archivedList = data.filter((item: any) => item.isArchived === true);
+    const allList = data.filter((item: List) => item.isArchived === false);
+    const favoriteList = data.filter((item: List) => item.isFavorite === true && item.isArchived === false);
+    const sharedList = data.filter((item: List) => item.isShared === true && item.isArchived === false);
+    const archivedList = data.filter((item: List) => item.isArchived === true);
 
 
     const handleAllList = () => {
@@ -46,7 +47,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                 showsHorizontalScrollIndicator={false}
             >
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'all'}
                     onPress={handleAllList}
                     text={
@@ -61,7 +62,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                 <View style={[styles.separator, { backgroundColor: theme.LIGHT_HINT }]} />
 
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'favorite'}
                     onPress={handleFavoriteList}
                     text={
@@ -73,7 +74,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                     amount={favoriteList.length}
                 />
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'shared'}
                     onPress={handleSharedList}
                     text={
@@ -85,7 +86,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                     amount={sharedList.length}
                 />
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'archived'}
                     onPress={handleArchivedList}
                     text={
