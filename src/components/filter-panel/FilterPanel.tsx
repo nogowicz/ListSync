@@ -1,6 +1,6 @@
 import { StyleSheet, ScrollView, View, } from 'react-native'
 import React, { useContext, useState, Dispatch, SetStateAction } from 'react'
-import Button from 'components/button'
+import Button, { buttonTypes } from 'components/button'
 import { FormattedMessage } from 'react-intl'
 import { spacing } from 'styles'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
@@ -47,7 +47,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                 showsHorizontalScrollIndicator={false}
             >
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'all'}
                     onPress={handleAllList}
                     text={
@@ -62,7 +62,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                 <View style={[styles.separator, { backgroundColor: theme.LIGHT_HINT }]} />
 
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'favorite'}
                     onPress={handleFavoriteList}
                     text={
@@ -74,7 +74,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                     amount={favoriteList.length}
                 />
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'shared'}
                     onPress={handleSharedList}
                     text={
@@ -86,7 +86,7 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                     amount={sharedList.length}
                 />
                 <Button
-                    type='filter'
+                    type={buttonTypes.BUTTON_TYPES.FILTER}
                     isActive={activeListName === 'archived'}
                     onPress={handleArchivedList}
                     text={

@@ -2,13 +2,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, ReactNode } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
+import { buttonTypes } from '.';
+
 
 import Plus from 'assets/button-icons/plus.svg';
 import Check from 'assets/button-icons/Check.svg';
 
 type ButtonProps = {
     text?: string | ReactNode;
-    type: "add" | "filter" | "fab" | "check";
+    type: buttonTypes.BUTTON_TYPES;
     amount?: number;
     isActive?: boolean;
     onPress: () => void;
@@ -18,7 +20,7 @@ type ButtonProps = {
 
 export default function Button({ text, type, amount, onPress, isChecked, isActive = false, activeOpacity = constants.ACTIVE_OPACITY.HIGH }: ButtonProps) {
     const theme = useContext(ThemeContext);
-    if (type === "add") {
+    if (type === buttonTypes.BUTTON_TYPES.ALL) {
         return (
             <TouchableOpacity
                 onPress={onPress}
@@ -30,7 +32,7 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
             </TouchableOpacity>
         );
 
-    } else if (type === "filter") {
+    } else if (type === buttonTypes.BUTTON_TYPES.FILTER) {
         return (
             <TouchableOpacity
                 onPress={onPress}
@@ -56,7 +58,7 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
                 </View>
             </TouchableOpacity>
         );
-    } else if (type === "fab") {
+    } else if (type === buttonTypes.BUTTON_TYPES.FAB) {
         return (
             <TouchableOpacity
                 activeOpacity={activeOpacity}
@@ -65,7 +67,7 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
                 <Plus stroke={theme.PRIMARY} width={spacing.SCALE_40} height={spacing.SCALE_40} />
             </TouchableOpacity>
         );
-    } else if (type === "check") {
+    } else if (type === buttonTypes.BUTTON_TYPES.CHECK) {
         return (
             <TouchableOpacity
                 activeOpacity={activeOpacity}

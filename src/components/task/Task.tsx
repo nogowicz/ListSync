@@ -2,7 +2,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
-import Button from 'components/button';
+import Button, { buttonTypes } from 'components/button';
 import { Task as TaskType } from 'data/types';
 
 type TaskProps = {
@@ -15,7 +15,7 @@ export default function Task({ task }: TaskProps) {
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
             <Button
-                type='check'
+                type={buttonTypes.BUTTON_TYPES.CHECK}
                 onPress={() => console.log("Pressed")}
                 isChecked={task.isCompleted}
             />

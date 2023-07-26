@@ -28,7 +28,8 @@ export default function List({ navigation, route }: ListProps) {
 
 
     if (!data) {
-        return <Text>Brak danych</Text>;
+        //TODO
+        return <Text>No data here</Text>;
     }
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>

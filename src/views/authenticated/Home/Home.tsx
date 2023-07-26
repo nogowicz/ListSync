@@ -8,7 +8,7 @@ import TopPanel from 'components/top-panel';
 import { spacing } from 'styles';
 import FilterPanel from 'components/filter-panel';
 import ListList from 'components/list-list';
-import Button from 'components/button';
+import Button, { buttonTypes } from 'components/button';
 
 import AddTaskField from 'components/add-task-field';
 
@@ -55,7 +55,7 @@ export default function Home({ navigation }: HomeProps) {
                 <FilterPanel data={data} setList={setList} />
                 <ListList list={list} />
                 {isKeyboardVisible ? <AddTaskField /> :
-                    <Button type='fab' onPress={() => setKeyboardVisible(true)} />}
+                    <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
 
             </View>
         </View>
