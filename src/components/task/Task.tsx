@@ -3,21 +3,23 @@ import React, { useContext } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import Button from 'components/button';
+import { Task as TaskType } from 'data/types';
 
 type TaskProps = {
-    task: any;
+    task: TaskType;
 };
 
 export default function Task({ task }: TaskProps) {
     const theme = useContext(ThemeContext);
+    console.log(task)
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
             <Button
                 type='check'
                 onPress={() => console.log("Pressed")}
-                isChecked={task.item.isCompleted}
+                isChecked={task.isCompleted}
             />
-            <Text style={[styles.text, { color: theme.TEXT }]}>{task.item.title}</Text>
+            <Text style={[styles.text, { color: theme.TEXT }]}>{task.title}</Text>
         </View>
     )
 }

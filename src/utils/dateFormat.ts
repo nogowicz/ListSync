@@ -1,4 +1,6 @@
-export function formatDateToLongDate(date: Date, intl: any): string {
+import { IntlShape } from 'react-intl';
+
+export function formatDateToLongDate(date: Date, intl: IntlShape): string {
   function getMonthName(month: string): string {
     const monthId: { [key: string]: string } = {
       '0': 'date.month.january',

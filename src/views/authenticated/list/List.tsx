@@ -5,23 +5,31 @@ import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import ListTopBar from 'components/list-top-bar';
-import ListIcon from 'assets/list-icons/list-icon.svg';
-import { useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { icon } from 'components/list-item/ListItem';
 import TaskList from 'components/task-list';
+import { List as ListType } from 'data/types';
 
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
+type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
+
 
 type ListProps = {
-    navigation: ListScreenNavigationProp['navigation']
+    navigation: ListScreenNavigationProp['navigation'];
+    route: ListScreenRouteProp;
 }
 
-export default function List({ navigation }: ListProps) {
+
+export default function List({ navigation, route }: ListProps) {
     const theme = useContext(ThemeContext);
-    const route = useRoute();
+
     const { data }: any = route.params;
-    console.log(data)
+
+
+    if (!data) {
+        return <Text>Brak danych</Text>;
+    }
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>

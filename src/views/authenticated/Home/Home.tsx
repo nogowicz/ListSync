@@ -13,6 +13,7 @@ import Button from 'components/button';
 import AddTaskField from 'components/add-task-field';
 
 import { data } from '../../../data/data.json';
+import { List } from 'data/types';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
@@ -23,8 +24,8 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
-    const newList = data.filter((item: any) => item.isArchived === false);
-    const [list, setList] = useState(newList);
+    const newList = data.filter((item: List) => item.isArchived === false);
+    const [list, setList] = useState<List[]>(newList);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     useEffect(() => {

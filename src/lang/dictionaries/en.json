@@ -27,5 +27,7 @@
   "views.authenticated.home.text-input.placeholder": "Add new task",
   "views.authenticated.home.text-input.list-name.all": "All",
   "views.authenticated.home.text-input.deadline.today": "Today",
-  "views.authenticated.home.text-input.importance": "Importance"
+  "views.authenticated.home.text-input.importance": "Importance",
+  "views.authenticated.home.list-item.tasks": "tasks",
+  "views.authenticated.home.list-item.task": "task"
 }

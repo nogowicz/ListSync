@@ -18,4 +18,5 @@ export const ACTIVE_OPACITY = {
 
 export const BORDER_WIDTH = {
   CHECK: 2,
+  BACK: 1,
 };

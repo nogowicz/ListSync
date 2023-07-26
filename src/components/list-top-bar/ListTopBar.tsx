@@ -33,7 +33,7 @@ export default function ListTopBar({ name, icon }: ListTopBar) {
     return (
         <View style={styles.container}>
             <TouchableOpacity
-                activeOpacity={0.5}
+                activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
                 style={[styles.backButton, { borderColor: theme.LIGHT_HINT, }]}
                 onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)}
             >
@@ -51,7 +51,7 @@ export default function ListTopBar({ name, icon }: ListTopBar) {
                 </Text>
             </View>
             <TouchableOpacity
-                activeOpacity={0.5}
+                activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
                 style={{
                     padding: spacing.SCALE_12,
                 }}>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         marginBottom: spacing.SCALE_30,
     },
     backButton: {
-        borderWidth: 1,
+        borderWidth: constants.BORDER_WIDTH.BACK,
         borderRadius: constants.BORDER_RADIUS.BUTTON,
         padding: spacing.SCALE_12,
     },

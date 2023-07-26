@@ -9,11 +9,12 @@ import FavoriteList from 'assets/button-icons/favorite.svg';
 import ListDefault from 'assets/list-icons/list-default.svg'
 import ListIcon from 'assets/list-icons/list-icon.svg';
 import ShoppingCart from 'assets/list-icons/shopping-cart.svg';
+import { FormattedMessage } from 'react-intl';
 
 type ListItemProps = {
     listName: string;
     taskAmount: number;
-    listIcon?: any;
+    listIcon?: number;
     isFavorite?: boolean;
     isShared?: boolean;
     activeOpacity?: number;
@@ -25,7 +26,7 @@ export const numColumns = 2;
 const screenWidth = Dimensions.get('window').width;
 const itemSize = (screenWidth - (spacing.SCALE_22 * 2) - (spacing.SCALE_22 * (numColumns - 1))) / numColumns;
 
-export const icon: any = {
+export const icon: Record<number, ReactNode> = {
     1: (<ListDefault fill='#0860FB' />),
     2: (<ListIcon />),
     3: (<ShoppingCart />)
@@ -37,11 +38,19 @@ export default function ListItem({
     listIcon = 1,
     isFavorite = false,
     isShared = false,
-    activeOpacity = 0.7,
+    activeOpacity = constants.ACTIVE_OPACITY.HIGH,
     onPress,
 }: ListItemProps) {
     const theme = useContext(ThemeContext);
-    const tasks = taskAmount !== 1 ? "tasks" : "task";
+    const tasks = taskAmount !== 1 ?
+        (<FormattedMessage
+            defaultMessage="tasks"
+            id='views.authenticated.home.list-item.tasks'
+        />) :
+        (<FormattedMessage
+            defaultMessage="task"
+            id='views.authenticated.home.list-item.task'
+        />);
 
 
     const getFontSize = (textLength: number) => {
