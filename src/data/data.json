@@ -15,7 +15,7 @@
         {
           "IdTask": 1,
           "title": "Buy groceries",
-          "isCompleted": false,
+          "isCompleted": true,
           "deadline": "2023-07-26 18:00:00",
           "importance": "High",
           "effort": "Low",
@@ -23,7 +23,25 @@
           "addedBy": "john_doe",
           "assignedTo": null,
           "createdAt": "2023-07-25 14:30:00",
-          "List_idList": 1
+          "List_idList": 1,
+          "subtasks": [
+            {
+              "idSubtask": 1,
+              "title": "Research recipes",
+              "isCompleted": false,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 16:00:00",
+              "Task_idTask": 1
+            },
+            {
+              "idSubtask": 2,
+              "title": "Buy vegetables",
+              "isCompleted": false,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 16:30:00",
+              "Task_idTask": 1
+            }
+          ]
         },
         {
           "IdTask": 4,
@@ -36,7 +54,8 @@
           "addedBy": "jane_smith",
           "assignedTo": null,
           "createdAt": "2023-07-25 10:00:00",
-          "List_idList": 1
+          "List_idList": 1,
+          "subtasks": []
         },
         {
           "IdTask": 8,
@@ -49,7 +68,8 @@
           "addedBy": "john_doe",
           "assignedTo": null,
           "createdAt": "2023-07-27 11:30:00",
-          "List_idList": 1
+          "List_idList": 1,
+          "subtasks": []
         }
       ]
     },
@@ -76,7 +96,25 @@
           "addedBy": "john_doe",
           "assignedTo": 2,
           "createdAt": "2023-07-25 15:45:00",
-          "List_idList": 2
+          "List_idList": 2,
+          "subtasks": [
+            {
+              "idSubtask": 3,
+              "title": "Write introduction",
+              "isCompleted": true,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 16:45:00",
+              "Task_idTask": 2
+            },
+            {
+              "idSubtask": 4,
+              "title": "Prepare presentation slides",
+              "isCompleted": false,
+              "addedBy": "john_doe",
+              "createdAt": "2023-07-25 17:00:00",
+              "Task_idTask": 2
+            }
+          ]
         },
         {
           "IdTask": 5,
@@ -89,7 +127,8 @@
           "addedBy": "john_doe",
           "assignedTo": null,
           "createdAt": "2023-07-25 17:30:00",
-          "List_idList": 2
+          "List_idList": 2,
+          "subtasks": []
         },
         {
           "IdTask": 6,
@@ -102,7 +141,8 @@
           "addedBy": "john_doe",
           "assignedTo": 2,
           "createdAt": "2023-07-26 09:15:00",
-          "List_idList": 2
+          "List_idList": 2,
+          "subtasks": []
         }
       ]
     },
@@ -129,7 +169,17 @@
           "addedBy": "jane_smith",
           "assignedTo": null,
           "createdAt": "2023-07-25 11:00:00",
-          "List_idList": 3
+          "List_idList": 3,
+          "subtasks": [
+            {
+              "idSubtask": 5,
+              "title": "Warm-up stretching",
+              "isCompleted": true,
+              "addedBy": "jane_smith",
+              "createdAt": "2023-07-25 11:15:00",
+              "Task_idTask": 3
+            }
+          ]
         },
         {
           "IdTask": 7,
@@ -142,7 +192,8 @@
           "addedBy": "jane_smith",
           "assignedTo": null,
           "createdAt": "2023-07-26 14:00:00",
-          "List_idList": 3
+          "List_idList": 3,
+          "subtasks": []
         }
       ]
     }

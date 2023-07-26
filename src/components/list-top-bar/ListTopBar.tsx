@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: spacing.SCALE_30,
     },
     backButton: {
         borderWidth: 1,

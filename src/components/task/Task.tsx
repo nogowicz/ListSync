@@ -12,7 +12,11 @@ export default function Task({ task }: TaskProps) {
     const theme = useContext(ThemeContext);
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
-            <Button type='check' onPress={() => console.log("Pressed")} />
+            <Button
+                type='check'
+                onPress={() => console.log("Pressed")}
+                isChecked={task.item.isCompleted}
+            />
             <Text style={[styles.text, { color: theme.TEXT }]}>{task.item.title}</Text>
         </View>
     )

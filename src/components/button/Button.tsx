@@ -12,10 +12,11 @@ type ButtonProps = {
     amount?: number;
     isActive?: boolean;
     onPress: () => void;
+    isChecked?: boolean;
     activeOpacity?: number;
 };
 
-export default function Button({ text, type, amount, onPress, isActive = false, activeOpacity = 0.7 }: ButtonProps) {
+export default function Button({ text, type, amount, onPress, isChecked, isActive = false, activeOpacity = constants.ACTIVE_OPACITY.HIGH }: ButtonProps) {
     const theme = useContext(ThemeContext);
     if (type === "add") {
         return (
@@ -68,9 +69,14 @@ export default function Button({ text, type, amount, onPress, isActive = false, 
         return (
             <TouchableOpacity
                 activeOpacity={activeOpacity}
-                style={[styles.checkButton, { backgroundColor: theme.PRIMARY, borderColor: theme.PRIMARY, }]}
+                style={[styles.checkButton, isChecked && { backgroundColor: theme.PRIMARY }, { borderColor: theme.PRIMARY }]}
                 onPress={onPress}>
-                <Check stroke={theme.BACKGROUND} strokeWidth={1.5} />
+                <Check
+                    stroke={theme.BACKGROUND}
+                    strokeWidth={constants.STROKE_WIDTH.ICON}
+                    width={constants.ICON_SIZE.CHECK}
+                    height={constants.ICON_SIZE.CHECK}
+                />
             </TouchableOpacity>
         );
     } else {
@@ -87,7 +93,6 @@ export default function Button({ text, type, amount, onPress, isActive = false, 
 
 const styles = StyleSheet.create({
     addContainer: {
-        backgroundColor: "blue",
         borderRadius: constants.BORDER_RADIUS.BUTTON,
         flexDirection: "row",
         justifyContent: "center",
@@ -128,10 +133,11 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.SCALE_12,
     },
     checkButton: {
-        borderWidth: 2,
+        borderWidth: constants.BORDER_WIDTH.CHECK,
         justifyContent: 'center',
         alignItems: 'center',
         padding: spacing.SCALE_4,
         borderRadius: constants.BORDER_RADIUS.CHECK_BUTTON,
+        marginRight: spacing.SCALE_12,
     },
 })
