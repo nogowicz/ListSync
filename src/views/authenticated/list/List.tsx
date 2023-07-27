@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, } from 'react-native'
-import React, { useContext, useState, } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Keyboard, } from 'react-native'
+import React, { useContext, useEffect, useState, } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import ListTopBar from 'components/list-top-bar';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { icon } from 'components/list-item/ListItem';
 import TaskList from 'components/task-list';
 import { FormattedMessage } from 'react-intl';
@@ -18,7 +18,8 @@ import Animated, {
     withTiming,
     Easing,
 } from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import AddTaskField from 'components/add-task-field';
+import Button, { buttonTypes } from 'components/button';
 
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
@@ -36,6 +37,7 @@ type ListProps = {
 export default function List({ navigation, route }: ListProps) {
     const theme = useContext(ThemeContext);
     const { data }: any = route.params;
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [unCompletedTasks, setUnCompletedTasks] = useState(
         data.tasks.filter((item: Task) => !item.isCompleted)
     );
@@ -44,7 +46,7 @@ export default function List({ navigation, route }: ListProps) {
     );
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);
 
-    const rotateAnimation = useSharedValue(isCompletedVisible ? -180 : -90);
+    const rotateAnimation = useSharedValue(isCompletedVisible ? -90 : -180);
 
     const rotateStyle = useAnimatedStyle(() => {
         return {
@@ -60,6 +62,26 @@ export default function List({ navigation, route }: ListProps) {
         });
         setIsCompletedVisible(!isCompletedVisible);
     };
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true);
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false);
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
 
     if (!data) {
@@ -96,13 +118,26 @@ export default function List({ navigation, route }: ListProps) {
                                 - {completedTasks.length}
                             </Text>
                             <Animated.View style={[rotateStyle]}>
-                                <Arrow />
+                                <Arrow
+                                    width={constants.ICON_SIZE.COMPLETED_ARROW}
+                                    height={constants.ICON_SIZE.COMPLETED_ARROW}
+                                />
                             </Animated.View>
                         </TouchableOpacity>
                         {isCompletedVisible && <TaskList tasks={completedTasks} />}
                     </View>
                 )}
             </View>
+            {isKeyboardVisible ? <AddTaskField /> :
+                <View>
+                    <Button
+                        type={buttonTypes.BUTTON_TYPES.FAB}
+                        onPress={() => setKeyboardVisible(true)}
+                    />
+                </View>
+            }
+
+
         </View>
     )
 }
@@ -110,10 +145,10 @@ export default function List({ navigation, route }: ListProps) {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
+        paddingHorizontal: spacing.SCALE_20,
+        paddingTop: spacing.SCALE_20,
     },
     container: {
-        marginHorizontal: spacing.SCALE_20,
-        marginTop: spacing.SCALE_20,
         flex: 1,
     },
     sectionTitle: {
@@ -123,5 +158,6 @@ const styles = StyleSheet.create({
     completedButton: {
         flexDirection: 'row',
         gap: spacing.SCALE_8,
+        alignItems: 'center',
     }
 })
