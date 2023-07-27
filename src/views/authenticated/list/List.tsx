@@ -159,5 +159,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: spacing.SCALE_8,
         alignItems: 'center',
+        marginTop: spacing.SCALE_20,
     }
 })

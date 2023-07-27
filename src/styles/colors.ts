@@ -8,6 +8,9 @@ export const theme = {
     BACKGROUND: '#F9F9F9',
     HINT: '#9B9B9B',
     LIGHT_HINT: '#D9D9D9',
+    GREEN: '#58CB7B',
+    RED: '#DC6A5E',
+    YELLOW: '#FCBA77',
   },
   dark: {
     theme: 'dark',
@@ -18,5 +21,8 @@ export const theme = {
     BACKGROUND: '#000000',
     HINT: '#9B9B9B',
     LIGHT_HINT: '#D9D9D9',
+    GREEN: '#58CB7B',
+    RED: '#DC6A5E',
+    YELLOW: '#FCBA77',
   },
 };

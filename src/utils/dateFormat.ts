@@ -1,5 +1,18 @@
 import { IntlShape } from 'react-intl';
 
+export function getDayName(day: number, intl: IntlShape): string {
+  const dayId: { [key: string]: string } = {
+    '0': 'date.day.sunday',
+    '1': 'date.day.monday',
+    '2': 'date.day.tuesday',
+    '3': 'date.day.wednesday',
+    '4': 'date.day.thursday',
+    '5': 'date.day.friday',
+    '6': 'date.day.saturday',
+  };
+  return intl.formatMessage({ id: dayId[day] });
+}
+
 export function formatDateToLongDate(date: Date, intl: IntlShape): string {
   function getMonthName(month: string): string {
     const monthId: { [key: string]: string } = {
@@ -19,23 +32,10 @@ export function formatDateToLongDate(date: Date, intl: IntlShape): string {
     return intl.formatMessage({ id: monthId[month] });
   }
 
-  function getDayName(day: number): string {
-    const dayId: { [key: string]: string } = {
-      '0': 'date.day.sunday',
-      '1': 'date.day.monday',
-      '2': 'date.day.tuesday',
-      '3': 'date.day.wednesday',
-      '4': 'date.day.thursday',
-      '5': 'date.day.friday',
-      '6': 'date.day.saturday',
-    };
-    return intl.formatMessage({ id: dayId[day] });
-  }
-
   const day: number = date.getDate();
   const month: number = date.getMonth();
   const year: number = date.getFullYear();
-  const dayName: string = getDayName(date.getDay());
+  const dayName: string = getDayName(date.getDay(), intl);
   const monthName: string = getMonthName(String(month));
 
   return `${dayName}, ${day} ${monthName} ${year}`;

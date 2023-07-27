@@ -10,6 +10,8 @@ export const STROKE_WIDTH = {
 export const ICON_SIZE = {
   CHECK: 12,
   COMPLETED_ARROW: 15,
+  SUBTASK_ARROW: 10,
+  SUBTASK_TREE: 18,
 };
 
 export const ACTIVE_OPACITY = {
