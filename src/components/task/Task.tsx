@@ -16,6 +16,7 @@ import Calendar from 'assets/button-icons/calendar-input-selection.svg';
 import { useIntl } from 'react-intl';
 import { getDayName } from 'utils/dateFormat';
 import { toggleAnimation } from './helpers';
+import SubTask from 'components/sub-task';
 
 type TaskProps = {
     task: TaskType;
@@ -53,7 +54,7 @@ export default function Task({ task }: TaskProps) {
 
     const handleArrowPress = () => {
         setIsSubtasksVisible(!isSubtasksVisible);
-        const targetRotation = isSubtasksVisible ? -90 : -180;
+        const targetRotation = isSubtasksVisible ? -180 : -90;
         rotateAnimation.value = withTiming(targetRotation, {
             duration: 200,
             easing: Easing.ease,
@@ -127,30 +128,7 @@ export default function Task({ task }: TaskProps) {
                     <FlatList
                         data={subTasks}
                         keyExtractor={(item: Subtask) => item.idSubtask.toString()}
-                        renderItem={({ item }: { item: Subtask }) => {
-                            return (
-                                <View
-                                    style={[styles.leftContainer, { marginVertical: spacing.SCALE_8, }]}
-                                >
-                                    <Button
-                                        type={buttonTypes.BUTTON_TYPES.CHECK}
-                                        onPress={() => console.log("Pressed")}
-                                        isChecked={item.isCompleted}
-                                    />
-                                    <Text style={[
-                                        styles.text,
-                                        item.isCompleted ?
-                                            {
-                                                color: theme.HINT,
-                                                textDecorationLine: 'line-through',
-                                            } :
-                                            {
-                                                color: theme.TEXT,
-                                            }]}>{item.title}</Text>
-                                </View>
-                            )
-                        }
-                        }
+                        renderItem={({ item }: { item: Subtask }) => <SubTask item={item} />}
                     />
                 </Animated.View>}
 
