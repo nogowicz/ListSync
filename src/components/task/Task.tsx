@@ -1,5 +1,5 @@
-import { Platform, StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { Platform, StyleSheet, Text, TouchableOpacity, View, FlatList, LayoutAnimation } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import Button, { buttonTypes } from 'components/button';
@@ -15,6 +15,7 @@ import SubtaskTree from 'assets/button-icons/subtasks-icon.svg';
 import Calendar from 'assets/button-icons/calendar-input-selection.svg';
 import { useIntl } from 'react-intl';
 import { getDayName } from 'utils/dateFormat';
+import { toggleAnimation } from './helpers';
 
 type TaskProps = {
     task: TaskType;
@@ -24,14 +25,21 @@ export default function Task({ task }: TaskProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
     const isCompleted = task.isCompleted;
-    const [isSubtasksVisible, setIsSubtasksVisible] = useState(true);
     const subTasks: Subtask[] = task.subtasks;
     const completedSubTasks: Subtask[] = subTasks.filter(item => item.isCompleted);
     const hasDeadline = task.deadline;
     const deadline = new Date(task.deadline as string);
     const deadlineDayName = getDayName(deadline.getDay(), intl);
+    const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
     const now = new Date();
+
+    const rotateStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ rotate: `${rotateAnimation.value}deg` }],
+        };
+    });
+
     const deadlineColor = () => {
         if (deadline < now) {
             return theme.RED;
@@ -43,24 +51,15 @@ export default function Task({ task }: TaskProps) {
     };
 
 
-
-    const rotateStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ rotate: `${rotateAnimation.value}deg` }],
-        };
-    });
-
     const handleArrowPress = () => {
-        const targetRotation = isSubtasksVisible ? -180 : -90;
+        setIsSubtasksVisible(!isSubtasksVisible);
+        const targetRotation = isSubtasksVisible ? -90 : -180;
         rotateAnimation.value = withTiming(targetRotation, {
             duration: 200,
             easing: Easing.ease,
         });
-        setIsSubtasksVisible(!isSubtasksVisible);
+        LayoutAnimation.configureNext(toggleAnimation);
     };
-
-
-
 
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
@@ -122,13 +121,17 @@ export default function Task({ task }: TaskProps) {
             </View>
 
             {(subTasks.length > 0 && isSubtasksVisible) &&
-                <View style={styles.subtasks}>
+                <Animated.View
+                    style={[styles.subtasks]}
+                >
                     <FlatList
                         data={subTasks}
                         keyExtractor={(item: Subtask) => item.idSubtask.toString()}
                         renderItem={({ item }: { item: Subtask }) => {
                             return (
-                                <View style={[styles.leftContainer, { marginVertical: spacing.SCALE_8, }]}>
+                                <View
+                                    style={[styles.leftContainer, { marginVertical: spacing.SCALE_8, }]}
+                                >
                                     <Button
                                         type={buttonTypes.BUTTON_TYPES.CHECK}
                                         onPress={() => console.log("Pressed")}
@@ -149,7 +152,7 @@ export default function Task({ task }: TaskProps) {
                         }
                         }
                     />
-                </View>}
+                </Animated.View>}
 
         </View>
     );
@@ -197,5 +200,6 @@ const styles = StyleSheet.create({
     subtasks: {
         marginTop: spacing.SCALE_20,
         marginLeft: spacing.SCALE_30,
+        overflow: 'hidden',
     }
 })
