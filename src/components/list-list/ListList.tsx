@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useContext } from 'react'
+import { FlatList, StyleSheet, View } from 'react-native'
+import React, { useContext, Dispatch, SetStateAction } from 'react'
 import ListItem from 'components/list-item'
 import { numColumns } from 'components/list-item/ListItem'
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +16,6 @@ type ListListProps = {
 
 export default function ListList({ list }: ListListProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const theme = useContext(ThemeContext);
 
     const renderItem = ({ item, index }: { item: List; index: number }) => {
         return (

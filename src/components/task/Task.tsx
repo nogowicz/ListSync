@@ -20,9 +20,10 @@ import SubTask from 'components/sub-task';
 
 type TaskProps = {
     task: TaskType;
+    onTaskComplete: any;
 };
 
-export default function Task({ task }: TaskProps) {
+export default function Task({ task, onTaskComplete }: TaskProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
     const isCompleted = task.isCompleted;
@@ -77,13 +78,15 @@ export default function Task({ task }: TaskProps) {
         setSortedSubTasks(sortedTasks);
     }, [subTasks]);
 
+
+
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.upperContainer}>
                 <View style={styles.leftContainer}>
                     <Button
                         type={buttonTypes.BUTTON_TYPES.CHECK}
-                        onPress={() => console.log("Pressed")}
+                        onPress={onTaskComplete}
                         isChecked={isCompleted}
                     />
                     <Text style={[

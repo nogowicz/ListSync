@@ -5,19 +5,20 @@ import { FormattedMessage } from 'react-intl'
 import { spacing } from 'styles'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { List } from 'data/types'
+import { useListContext } from 'context/DataProvider'
 
 type FilterPanelProps = {
-    data: List[];
     setList: Dispatch<SetStateAction<List[]>>;
 };
 
-export default function FilterPanel({ data, setList }: FilterPanelProps) {
+export default function FilterPanel({ setList }: FilterPanelProps) {
     const theme = useContext(ThemeContext);
+    const { listData } = useListContext();
     const [activeListName, setActiveListName] = useState('all');
-    const allList = data.filter((item: List) => item.isArchived === false);
-    const favoriteList = data.filter((item: List) => item.isFavorite === true && item.isArchived === false);
-    const sharedList = data.filter((item: List) => item.isShared === true && item.isArchived === false);
-    const archivedList = data.filter((item: List) => item.isArchived === true);
+    const allList = listData.filter((item: List) => item.isArchived === false);
+    const favoriteList = listData.filter((item: List) => item.isFavorite === true && item.isArchived === false);
+    const sharedList = listData.filter((item: List) => item.isShared === true && item.isArchived === false);
+    const archivedList = listData.filter((item: List) => item.isArchived === true);
 
 
     const handleAllList = () => {
