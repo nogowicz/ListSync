@@ -105,7 +105,6 @@ export default function List({ navigation, route }: ListProps) {
         //TODO
         return <Text>No data here</Text>;
     }
-    console.log(selectedColor)
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>

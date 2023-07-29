@@ -62,6 +62,21 @@ export default function Task({ task }: TaskProps) {
         LayoutAnimation.configureNext(toggleAnimation);
     };
 
+    const [sortedSubTasks, setSortedSubTasks] = useState<Subtask[]>([]);
+
+    useEffect(() => {
+        const sortedTasks = [...subTasks].sort((a, b) => {
+            if (a.isCompleted && !b.isCompleted) {
+                return 1;
+            } else if (!a.isCompleted && b.isCompleted) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+        setSortedSubTasks(sortedTasks);
+    }, [subTasks]);
+
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.upperContainer}>
@@ -126,7 +141,7 @@ export default function Task({ task }: TaskProps) {
                     style={[styles.subtasks]}
                 >
                     <FlatList
-                        data={subTasks}
+                        data={sortedSubTasks}
                         keyExtractor={(item: Subtask) => item.idSubtask.toString()}
                         renderItem={({ item }: { item: Subtask }) => <SubTask item={item} />}
                     />
