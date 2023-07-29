@@ -12,7 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-  const [themeMode, setThemeMode] = useState(false);
+  const [themeMode, setThemeMode] = useState(true);
   return (
     <ThemeContext.Provider value={themeMode ? theme.dark : theme.light}>
       <StatusBar

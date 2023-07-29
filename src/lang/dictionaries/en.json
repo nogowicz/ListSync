@@ -31,5 +31,9 @@
   "views.authenticated.home.list-item.tasks": "tasks",
   "views.authenticated.home.list-item.task": "task",
   "views.authenticated.home.list.tasks": "Tasks ",
-  "views.authenticated.home.list.completed": "Completed "
+  "views.authenticated.home.list.completed": "Completed ",
+  "views.authenticated.home.list.modal.title": "Change list name",
+  "views.authenticated.home.list.modal.cancel": "Cancel",
+  "views.authenticated.home.list.modal.save": "Save",
+  "views.authenticated.home.list.modal.placeholder": "Enter list name"
 }

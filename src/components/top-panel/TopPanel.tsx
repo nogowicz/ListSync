@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { formatDateToLongDate } from 'utils/dateFormat';
-import Button from 'components/button';
+import Button, { buttonTypes } from 'components/button';
 import { spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -33,7 +33,7 @@ export default function TopPanel({ name }: TopPanelProps) {
                         id='views.authenticated.home.add-button-text'
                         defaultMessage={"New List"}
                     />
-                } type='add' />
+                } type={buttonTypes.BUTTON_TYPES.ADD} />
         </View>
     )
 }

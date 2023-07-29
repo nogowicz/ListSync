@@ -1,6 +1,7 @@
 export enum BUTTON_TYPES {
-  ALL = 'all',
+  ADD = 'add',
   FILTER = 'filter',
   FAB = 'fab',
   CHECK = 'check',
+  FUNCTIONAL = 'functional',
 }

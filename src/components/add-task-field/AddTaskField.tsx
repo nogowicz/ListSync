@@ -35,7 +35,7 @@ export default function AddTaskField() {
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttons}>
-                    <CalendarSelection />
+                    <CalendarSelection fill={theme.HINT} />
                     <Text style={{ color: theme.HINT }}>
                         <FormattedMessage
                             id='views.authenticated.home.text-input.deadline.today'

@@ -32,6 +32,15 @@ export const icon: Record<number, ReactNode> = {
     3: (<ShoppingCart />)
 };
 
+export const color: Record<number, string> = {
+    1: '#0860FB',
+    2: '#46B1BF',
+    3: '#F7917D',
+    4: '#58CB7B',
+    5: '#AA69C4',
+    6: '#8F86C9',
+};
+
 export default function ListItem({
     listName,
     taskAmount,
