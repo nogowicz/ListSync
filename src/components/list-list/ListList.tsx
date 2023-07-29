@@ -7,8 +7,6 @@ import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { List } from 'data/types';
-import { FormattedMessage } from 'react-intl';
-import { theme } from 'styles/colors';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 
 
@@ -29,6 +27,7 @@ export default function ListList({ list }: ListListProps) {
                     isShared={item.isShared}
                     isFavorite={item.isFavorite}
                     listIcon={item.iconId}
+                    colorVariant={item.colorVariant}
                     onPress={() =>
                         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
                             data: item,

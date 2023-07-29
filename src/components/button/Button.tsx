@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        paddingVertical: spacing.SCALE_4,
+        paddingVertical: spacing.SCALE_8,
         paddingHorizontal: spacing.SCALE_12,
     }
 })

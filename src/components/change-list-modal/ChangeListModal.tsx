@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useContext, SetStateAction, Dispatch } from 'react'
+import React, { useContext, SetStateAction, Dispatch, cloneElement } from 'react'
 import Button, { buttonTypes } from 'components/button';
 import { color, icon } from 'components/list-item/ListItem';
 import { FormattedMessage } from 'react-intl';
@@ -53,7 +53,7 @@ export default function ChangeListModal({
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {Object.keys(icon).map((key) => {
-                            const iconElement = icon[parseInt(key, 10)];
+                            const iconElement = icon[parseInt(key)];
                             return (
                                 <TouchableOpacity
                                     key={key}
@@ -67,7 +67,7 @@ export default function ChangeListModal({
                                         borderColor: selectedIcon === parseInt(key) ? color[selectedColor] : theme.BACKGROUND,
                                     }}
                                 >
-                                    {iconElement}
+                                    {cloneElement(iconElement as any, { fill: color[selectedColor] })}
                                 </TouchableOpacity>
                             );
                         })}

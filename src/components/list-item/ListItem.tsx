@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext, cloneElement } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
@@ -21,6 +21,7 @@ type ListItemProps = {
     onPress?: () => void;
     isLastItemInRow?: boolean;
     isSingleItemInRow?: boolean;
+    colorVariant: number;
 };
 export const numColumns = 2;
 const screenWidth = Dimensions.get('window').width;
@@ -48,6 +49,7 @@ export default function ListItem({
     isFavorite = false,
     isShared = false,
     activeOpacity = constants.ACTIVE_OPACITY.HIGH,
+    colorVariant,
     onPress,
 }: ListItemProps) {
     const theme = useContext(ThemeContext);
@@ -87,7 +89,7 @@ export default function ListItem({
         >
             <View style={styles.iconContainer}>
                 <View style={{ marginLeft: spacing.SCALE_6, }}>
-                    {icon[listIcon]}
+                    {cloneElement(icon[listIcon] as any, { fill: color[colorVariant] })}
                 </View>
                 <View style={styles.favoriteAndSharedContainer}>
                     {isShared && <SharedList />}

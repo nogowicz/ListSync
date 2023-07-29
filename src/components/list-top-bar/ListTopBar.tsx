@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { ReactNode, useContext, useState } from 'react'
+import React, { ReactNode, cloneElement, useContext, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage } from 'react-intl';
@@ -14,10 +14,11 @@ import { RootStackParamList } from 'navigation/navigation';
 type ListTopBar = {
     name: string;
     icon: ReactNode;
+    color: string;
     onTitlePress: () => void;
 };
 
-export default function ListTopBar({ name, icon, onTitlePress }: ListTopBar) {
+export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopBar) {
     const theme = useContext(ThemeContext);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -47,7 +48,7 @@ export default function ListTopBar({ name, icon, onTitlePress }: ListTopBar) {
                 style={styles.iconAndNameContainer}
                 onPress={onTitlePress}
             >
-                {icon}
+                {cloneElement(icon as any, { fill: color })}
 
                 <Text style={{
                     fontSize: fontSize,

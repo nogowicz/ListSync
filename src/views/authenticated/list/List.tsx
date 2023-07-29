@@ -6,7 +6,6 @@ import { colors, constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import ListTopBar from 'components/list-top-bar';
 import { RouteProp } from '@react-navigation/native';
-import { color, icon } from 'components/list-item/ListItem';
 import TaskList from 'components/task-list';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Task } from 'data/types';
@@ -22,6 +21,7 @@ import AddTaskField from 'components/add-task-field';
 import Button, { buttonTypes } from 'components/button';
 import { Modal } from 'components/modal/Modal';
 import ChangeListModal from 'components/change-list-modal/ChangeListModal';
+import { color, icon } from 'components/list-item/ListItem';
 
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
@@ -43,12 +43,13 @@ export default function List({ navigation, route }: ListProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(1);
     const [selectedColor, setSelectedColor] = useState(1);
+    const [listName, setListName] = useState(data.listName);
     const intl = useIntl();
+
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
         setKeyboardVisible(false);
     }
-    const [listName, setListName] = useState(data.listName);
     const [unCompletedTasks, setUnCompletedTasks] = useState(
         data.tasks.filter((item: Task) => !item.isCompleted)
     );
@@ -111,6 +112,7 @@ export default function List({ navigation, route }: ListProps) {
                 <ListTopBar
                     name={data.listName}
                     icon={icon[data.iconId]}
+                    color={color[data.colorVariant]}
                     onTitlePress={handleModal}
                 />
                 <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
