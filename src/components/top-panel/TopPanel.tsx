@@ -33,7 +33,7 @@ export default function TopPanel({ name }: TopPanelProps) {
                         id='views.authenticated.home.add-button-text'
                         defaultMessage={"New List"}
                     />
-                } type={buttonTypes.BUTTON_TYPES.ALL} />
+                } type={buttonTypes.BUTTON_TYPES.ADD} />
         </View>
     )
 }

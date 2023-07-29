@@ -20,7 +20,7 @@ type ButtonProps = {
 
 export default function Button({ text, type, amount, onPress, isChecked, isActive = false, activeOpacity = constants.ACTIVE_OPACITY.HIGH }: ButtonProps) {
     const theme = useContext(ThemeContext);
-    if (type === buttonTypes.BUTTON_TYPES.ALL) {
+    if (type === buttonTypes.BUTTON_TYPES.ADD) {
         return (
             <TouchableOpacity
                 onPress={onPress}
@@ -89,6 +89,16 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
                 />
             </TouchableOpacity>
         );
+    } else if (type === buttonTypes.BUTTON_TYPES.FUNCTIONAL) {
+        return (
+            <TouchableOpacity
+                onPress={onPress}
+                style={[styles.functionalContainer, { backgroundColor: theme.TERTIARY }]}
+                activeOpacity={activeOpacity}
+            >
+                <Text style={[styles.addText, { color: theme.PRIMARY }]}>{text}</Text>
+            </TouchableOpacity>
+        );
     } else {
         return (
             <View style={[styles.filterContainer, { backgroundColor: theme.TERTIARY }]}>
@@ -149,4 +159,12 @@ const styles = StyleSheet.create({
         borderRadius: constants.BORDER_RADIUS.CHECK_BUTTON,
         marginRight: spacing.SCALE_12,
     },
+    functionalContainer: {
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingVertical: spacing.SCALE_4,
+        paddingHorizontal: spacing.SCALE_12,
+    }
 })

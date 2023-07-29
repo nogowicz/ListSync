@@ -12,11 +12,13 @@ export const ICON_SIZE = {
   COMPLETED_ARROW: 15,
   SUBTASK_ARROW: 10,
   SUBTASK_TREE: 18,
+  COLOR: 40,
 };
 
 export const ACTIVE_OPACITY = {
   HIGH: 0.7,
   MEDIUM: 0.5,
+  LOW: 0.2,
 };
 
 export const BORDER_WIDTH = {

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { ReactNode, useContext } from 'react'
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { ReactNode, useContext, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage } from 'react-intl';
@@ -14,22 +14,24 @@ import { RootStackParamList } from 'navigation/navigation';
 type ListTopBar = {
     name: string;
     icon: ReactNode;
+    onTitlePress: () => void;
 };
 
-export default function ListTopBar({ name, icon }: ListTopBar) {
+export default function ListTopBar({ name, icon, onTitlePress }: ListTopBar) {
     const theme = useContext(ThemeContext);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const getFontSize = (textLength: number) => {
         if (textLength <= 7) {
             return typography.FONT_SIZE_32;
-        } else if (textLength > 7 && textLength <= 11) {
+        } else if (textLength > 7 && textLength <= 16) {
             return typography.FONT_SIZE_20;
         } else {
             return typography.FONT_SIZE_14;
         }
     };
     const fontSize = getFontSize(name.length);
+
     return (
         <View style={styles.container}>
             <TouchableOpacity
@@ -39,8 +41,12 @@ export default function ListTopBar({ name, icon }: ListTopBar) {
             >
                 <GoBack />
             </TouchableOpacity>
-            <View style={styles.iconAndNameContainer}>
 
+            <TouchableOpacity
+                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                style={styles.iconAndNameContainer}
+                onPress={onTitlePress}
+            >
                 {icon}
 
                 <Text style={{
@@ -49,7 +55,7 @@ export default function ListTopBar({ name, icon }: ListTopBar) {
                 }}>
                     {name}
                 </Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
                 activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
                 style={{
@@ -57,6 +63,7 @@ export default function ListTopBar({ name, icon }: ListTopBar) {
                 }}>
                 <Details />
             </TouchableOpacity>
+
         </View>
     )
 }
