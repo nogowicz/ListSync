@@ -1,6 +1,6 @@
 import { StyleSheet, FlatList, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { List, Task as TaskType } from 'data/types';
+import { List, Subtask, Task as TaskType } from 'data/types';
 import Task from 'components/task';
 import { useListContext } from 'context/DataProvider';
 
@@ -35,12 +35,14 @@ export default function TaskList({ tasks, listId }: TaskListProps) {
         });
     };
 
+
+
     return (
         <View>
             <FlatList
                 data={currentTasks}
                 keyExtractor={(item: TaskType) => item.IdTask.toString()}
-                renderItem={({ item }: { item: TaskType }) => <Task task={item} onTaskComplete={() => handleCompleteTask(item.IdTask)} />}
+                renderItem={({ item }: { item: TaskType }) => <Task listId={listId} task={item} onTaskComplete={() => handleCompleteTask(item.IdTask)} />}
             />
         </View>
     );

@@ -6,10 +6,11 @@ import { Subtask as SubtaskType } from 'data/types'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 
 type SubtaskProps = {
-    item: SubtaskType
+    item: SubtaskType;
+    handleCompleteSubtask: any;
 };
 
-export default function Subtask({ item }: SubtaskProps) {
+export default function Subtask({ item, handleCompleteSubtask }: SubtaskProps) {
     const theme = useContext(ThemeContext);
     return (
         <View
@@ -17,7 +18,7 @@ export default function Subtask({ item }: SubtaskProps) {
         >
             <Button
                 type={buttonTypes.BUTTON_TYPES.CHECK}
-                onPress={() => console.log("Pressed")}
+                onPress={handleCompleteSubtask}
                 isChecked={item.isCompleted}
             />
             <Text style={[
