@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { formatDateToLongDate } from 'utils/dateFormat';
 import Button, { buttonTypes } from 'components/button';
-import { spacing, typography } from 'styles';
+import { typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 
