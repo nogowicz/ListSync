@@ -91,28 +91,65 @@ export default function List({ navigation, route }: ListProps) {
 
     if (!currentList) {
         // TODO: Obsłużyć brak danych
-        return <Text>No data here</Text>;
+        return <View><Text>No data here</Text></View>;
     }
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
                 <ListTopBar name={listName} icon={icon[currentList.iconId]} color={color[currentList.colorVariant]} onTitlePress={handleModal} />
-                <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
-                    <FormattedMessage defaultMessage="Tasks " id="views.authenticated.home.list.tasks" /> - {unCompletedTasks.length}
-                </Text>
-                <TaskList tasks={unCompletedTasks} listId={currentList.IdList} />
+                {unCompletedTasks.length > 0 &&
+                    <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
+                        <FormattedMessage
+                            defaultMessage="Tasks "
+                            id="views.authenticated.home.list.tasks" />
+                        - {unCompletedTasks.length}
+
+                    </Text>}
+                {unCompletedTasks.length > 0 ?
+                    <TaskList
+                        tasks={unCompletedTasks}
+                        listId={currentList.IdList}
+                    /> :
+                    completedTasks.length > 0 ?
+                        <View>
+                            <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
+                                <FormattedMessage
+                                    id='views.authenticated.home.list.tasks-done'
+                                    defaultMessage='Congratulations! You have completed all the tasks excellently - well done!'
+                                />
+                            </Text>
+                        </View> :
+                        <View>
+                            <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
+                                <FormattedMessage
+                                    id='views.authenticated.home.list.no-tasks-here'
+                                    defaultMessage='There are no tasks here yet'
+                                />
+                            </Text>
+                            <Text style={[styles.noTasksMessage, { color: theme.HINT }]}>
+                                <FormattedMessage
+                                    id='views.authenticated.home.list.no-tasks.button'
+                                    defaultMessage="You can add a new task using the '+' button."
+                                />
+                            </Text>
+                        </View>
+
+                }
                 {completedTasks.length > 0 && (
                     <View>
                         <TouchableOpacity activeOpacity={constants.ACTIVE_OPACITY.HIGH} onPress={handleArrowPress} style={styles.completedButton}>
                             <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
-                                <FormattedMessage defaultMessage="Completed " id="views.authenticated.home.list.completed" /> - {completedTasks.length}
+                                <FormattedMessage defaultMessage="Completed "
+                                    id="views.authenticated.home.list.completed" />
+                                - {completedTasks.length}
                             </Text>
                             <Animated.View style={[rotateStyle]}>
                                 <Arrow width={constants.ICON_SIZE.COMPLETED_ARROW} height={constants.ICON_SIZE.COMPLETED_ARROW} />
                             </Animated.View>
                         </TouchableOpacity>
-                        {isCompletedVisible && <TaskList tasks={completedTasks} listId={currentList.IdList} />}
+                        {isCompletedVisible &&
+                            <TaskList tasks={completedTasks} listId={currentList.IdList} />}
                     </View>
                 )}
             </View>
@@ -155,4 +192,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: spacing.SCALE_20,
     },
+    noTasksMessage: {
+        textAlign: 'center',
+        fontSize: typography.FONT_SIZE_20,
+        marginVertical: spacing.SCALE_8,
+    }
 });

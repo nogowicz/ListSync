@@ -1,6 +1,6 @@
 import { StyleSheet, FlatList, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { List, Subtask, Task as TaskType } from 'data/types';
+import { List, Task as TaskType } from 'data/types';
 import Task from 'components/task';
 import { useListContext } from 'context/DataProvider';
 
@@ -10,7 +10,7 @@ type TaskListProps = {
 };
 
 export default function TaskList({ tasks, listId }: TaskListProps) {
-    const { listData, updateListData } = useListContext();
+    const { updateListData } = useListContext();
     const [currentTasks, setCurrentTasks] = useState<TaskType[]>([]);
 
     useEffect(() => {

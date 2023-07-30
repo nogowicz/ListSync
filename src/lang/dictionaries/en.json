@@ -35,5 +35,8 @@
   "views.authenticated.home.list.modal.title": "Change list name",
   "views.authenticated.home.list.modal.cancel": "Cancel",
   "views.authenticated.home.list.modal.save": "Save",
-  "views.authenticated.home.list.modal.placeholder": "Enter list name"
+  "views.authenticated.home.list.modal.placeholder": "Enter list name",
+  "views.authenticated.home.list.no-tasks-here": "There are no tasks here yet.",
+  "views.authenticated.home.list.no-tasks.button": "You can add a new task using the '+' button.",
+  "views.authenticated.home.list.tasks-done": "Congratulations! You have completed all the tasks excellently - well done!"
 }

@@ -196,6 +196,19 @@
           "subtasks": []
         }
       ]
+    },
+    {
+      "IdList": 4,
+      "listName": "Empty List",
+      "iconId": 2,
+      "canBeDeleted": false,
+      "isShared": false,
+      "createdAt": "2023-07-25 08:30:00",
+      "isFavorite": true,
+      "isArchived": false,
+      "createdBy": 2,
+      "colorVariant": 2,
+      "tasks": []
     }
   ]
 }

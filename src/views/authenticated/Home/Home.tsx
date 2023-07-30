@@ -24,7 +24,6 @@ type HomeProps = {
 export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
     const { listData } = useListContext();
-    console.log(listData)
     const newList = listData.filter((item: List) => item.isArchived === false);
     const [list, setList] = useState<List[]>(newList);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);

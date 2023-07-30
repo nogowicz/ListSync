@@ -36,6 +36,5 @@ export function DataProvider({ children }: DataProviderProps) { // Use DataProvi
     listData,
     updateListData,
   };
-  console.log(listData)
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

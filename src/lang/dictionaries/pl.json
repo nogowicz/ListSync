@@ -35,5 +35,8 @@
   "views.authenticated.home.list.modal.title": "Zmień nazwę listy",
   "views.authenticated.home.list.modal.cancel": "Anuluj",
   "views.authenticated.home.list.modal.save": "Zapisz",
-  "views.authenticated.home.list.modal.placeholder": "Wprowadź nazwę listy"
+  "views.authenticated.home.list.modal.placeholder": "Wprowadź nazwę listy",
+  "views.authenticated.home.list.no-tasks-here": "Tu jeszcze nie ma żadnych zadań.",
+  "views.authenticated.home.list.no-tasks.button": "Możesz dodać nowe zadanie za pomocą przycisku '+'.",
+  "views.authenticated.home.list.tasks-done": "Gratulacje! Wykonałeś wszystkie zadania znakomicie - dobra robota!"
 }
