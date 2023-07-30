@@ -99,60 +99,79 @@ export default function List({ navigation, route }: ListProps) {
             <View style={styles.container}>
                 <ListTopBar name={listName} icon={icon[currentList.iconId]} color={color[currentList.colorVariant]} onTitlePress={handleModal} />
                 {unCompletedTasks.length > 0 &&
-                    <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
+                    <Text style={[
+                        styles.sectionTitle,
+                        {
+                            color: theme.TEXT,
+                            marginBottom: spacing.SCALE_20,
+                        }]}>
                         <FormattedMessage
                             defaultMessage="Tasks "
                             id="views.authenticated.home.list.tasks" />
                         - {unCompletedTasks.length}
 
                     </Text>}
-                <ScrollView>
-                    {unCompletedTasks.length > 0 ?
-                        <TaskList
-                            tasks={unCompletedTasks}
-                            listId={currentList.IdList}
-                        /> :
-                        completedTasks.length > 0 ?
-                            <View>
-                                <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
-                                    <FormattedMessage
-                                        id='views.authenticated.home.list.tasks-done'
-                                        defaultMessage='Congratulations! You have completed all the tasks excellently - well done!'
-                                    />
-                                </Text>
-                            </View> :
-                            <View>
-                                <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
-                                    <FormattedMessage
-                                        id='views.authenticated.home.list.no-tasks-here'
-                                        defaultMessage='There are no tasks here yet'
-                                    />
-                                </Text>
-                                <Text style={[styles.noTasksMessage, { color: theme.HINT }]}>
-                                    <FormattedMessage
-                                        id='views.authenticated.home.list.no-tasks.button'
-                                        defaultMessage="You can add a new task using the '+' button."
-                                    />
-                                </Text>
-                            </View>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                        paddingBottom: spacing.SCALE_20,
+                    }}
+                >
+                    <View>
+                        {unCompletedTasks.length > 0 ?
+                            <TaskList
+                                tasks={unCompletedTasks}
+                                listId={currentList.IdList}
+                            /> :
+                            completedTasks.length > 0 ?
+                                <View>
+                                    <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
+                                        <FormattedMessage
+                                            id='views.authenticated.home.list.tasks-done'
+                                            defaultMessage='Congratulations! You have completed all the tasks excellently - well done!'
+                                        />
+                                    </Text>
+                                </View> :
+                                <View>
+                                    <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
+                                        <FormattedMessage
+                                            id='views.authenticated.home.list.no-tasks-here'
+                                            defaultMessage='There are no tasks here yet'
+                                        />
+                                    </Text>
+                                    <Text style={[styles.noTasksMessage, { color: theme.HINT }]}>
+                                        <FormattedMessage
+                                            id='views.authenticated.home.list.no-tasks.button'
+                                            defaultMessage="You can add a new task using the '+' button."
+                                        />
+                                    </Text>
+                                </View>
 
-                    }
-                    {completedTasks.length > 0 && (
-                        <View>
-                            <TouchableOpacity activeOpacity={constants.ACTIVE_OPACITY.HIGH} onPress={handleArrowPress} style={styles.completedButton}>
-                                <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
-                                    <FormattedMessage defaultMessage="Completed "
-                                        id="views.authenticated.home.list.completed" />
-                                    - {completedTasks.length}
-                                </Text>
-                                <Animated.View style={[rotateStyle]}>
-                                    <Arrow width={constants.ICON_SIZE.COMPLETED_ARROW} height={constants.ICON_SIZE.COMPLETED_ARROW} />
-                                </Animated.View>
-                            </TouchableOpacity>
-                            {isCompletedVisible &&
-                                <TaskList tasks={completedTasks} listId={currentList.IdList} />}
-                        </View>
-                    )}
+                        }
+                        {completedTasks.length > 0 && (
+                            <View>
+                                <TouchableOpacity
+                                    activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                                    onPress={handleArrowPress}
+                                    style={styles.completedButton}
+                                >
+                                    <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
+                                        <FormattedMessage defaultMessage="Completed "
+                                            id="views.authenticated.home.list.completed" />
+                                        - {completedTasks.length}
+                                    </Text>
+                                    <Animated.View style={[rotateStyle]}>
+                                        <Arrow
+                                            width={constants.ICON_SIZE.COMPLETED_ARROW}
+                                            height={constants.ICON_SIZE.COMPLETED_ARROW}
+                                        />
+                                    </Animated.View>
+                                </TouchableOpacity>
+                                {isCompletedVisible &&
+                                    <TaskList tasks={completedTasks} listId={currentList.IdList} />}
+                            </View>
+                        )}
+                    </View>
                 </ScrollView>
             </View>
             {!isModalVisible && (
@@ -189,10 +208,11 @@ const styles = StyleSheet.create({
         fontWeight: typography.FONT_WEIGHT_BOLD,
     },
     completedButton: {
+        flex: 1,
         flexDirection: 'row',
         gap: spacing.SCALE_8,
         alignItems: 'center',
-        marginTop: spacing.SCALE_20,
+        paddingVertical: spacing.SCALE_8,
     },
     noTasksMessage: {
         textAlign: 'center',

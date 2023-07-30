@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View } from 'react-native'
-import React, { useContext, Dispatch, SetStateAction } from 'react'
+import React from 'react'
 import ListItem from 'components/list-item'
 import { numColumns } from 'components/list-item/ListItem'
 import { useNavigation } from '@react-navigation/native';
