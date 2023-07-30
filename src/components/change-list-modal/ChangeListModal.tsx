@@ -1,15 +1,18 @@
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useContext, SetStateAction, Dispatch, cloneElement } from 'react'
+import React, { useContext, SetStateAction, Dispatch, cloneElement, useState, } from 'react'
 import Button, { buttonTypes } from 'components/button';
 import { color, icon } from 'components/list-item/ListItem';
 import { FormattedMessage } from 'react-intl';
 import { typography, spacing, constants } from 'styles';
 import { Modal } from 'components/modal/Modal';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useListContext } from 'context/DataProvider';
+import { List } from 'data/types';
 
 type ChangeListModalProps = {
     isModalVisible: boolean;
     listName: string;
+    IdList: string | number;
     selectedColor: number;
     placeholderText: string;
     setSelectedIcon: Dispatch<SetStateAction<number>>;
@@ -21,6 +24,7 @@ type ChangeListModalProps = {
 export default function ChangeListModal({
     isModalVisible,
     listName,
+    IdList,
     selectedColor,
     placeholderText,
     setSelectedIcon,
@@ -29,6 +33,32 @@ export default function ChangeListModal({
     handleModal,
 }: ChangeListModalProps) {
     const theme = useContext(ThemeContext);
+    const { updateListData } = useListContext();
+    const [newListName, setNewListName] = useState<string>(listName);
+
+
+    const handleUpdateList = (listId: number | string, listName: string, selectedIcon: number, selectedColor: number) => {
+        updateListData((prevListData: List[]) => {
+            const updatedLists = prevListData.map((list: List) => {
+                if (list.IdList === listId) {
+                    handleModal();
+                    return {
+                        ...list,
+                        listName: listName,
+                        iconId: selectedIcon,
+                        colorVariant: selectedColor,
+                    };
+                } else {
+                    return list;
+                }
+            });
+
+            return updatedLists;
+        });
+    };
+
+
+
     return (
         <Modal isVisible={isModalVisible}>
             <Modal.Container>
@@ -41,6 +71,8 @@ export default function ChangeListModal({
                 <Modal.Body>
                     <TextInput
                         defaultValue={listName}
+                        value={newListName}
+                        onChangeText={(text) => setNewListName(text)}
                         underlineColorAndroid={color[selectedColor]}
                         placeholder={placeholderText}
                         placeholderTextColor={theme.HINT}
@@ -74,7 +106,7 @@ export default function ChangeListModal({
                     </ScrollView>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {Object.keys(color).map((key) => {
-                            const colorElement = color[parseInt(key, 10)];
+                            const colorElement = color[parseInt(key)];
                             return (
                                 <TouchableOpacity
                                     onPress={() => setSelectedColor(parseInt(key))}
@@ -94,8 +126,8 @@ export default function ChangeListModal({
                                     {selectedColor === parseInt(key) &&
                                         <View
                                             style={{
-                                                width: 10,
-                                                height: 10,
+                                                width: constants.ICON_SIZE.COLOR_CIRCLE,
+                                                height: constants.ICON_SIZE.COLOR_CIRCLE,
                                                 backgroundColor: theme.BACKGROUND,
                                                 borderRadius: constants.BORDER_RADIUS.BUTTON,
 
@@ -124,7 +156,7 @@ export default function ChangeListModal({
                             id='views.authenticated.home.list.modal.save'
                         />
                     }
-                        onPress={handleModal}
+                        onPress={() => handleUpdateList(IdList, newListName, selectedIcon, selectedColor)}
                         type={buttonTypes.BUTTON_TYPES.FUNCTIONAL}
                     />
                 </Modal.Footer>

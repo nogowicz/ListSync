@@ -13,6 +13,7 @@ export const ICON_SIZE = {
   SUBTASK_ARROW: 10,
   SUBTASK_TREE: 18,
   COLOR: 40,
+  COLOR_CIRCLE: 10,
 };
 
 export const ACTIVE_OPACITY = {

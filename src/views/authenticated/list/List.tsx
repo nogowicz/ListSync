@@ -35,6 +35,7 @@ export default function List({ navigation, route }: ListProps) {
     const [selectedIcon, setSelectedIcon] = useState(1);
     const [selectedColor, setSelectedColor] = useState(1);
     const [listName, setListName] = useState(currentList?.listName || '');
+    const [IdList, setIdList] = useState(currentList?.IdList || '');
     const intl = useIntl();
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
@@ -59,6 +60,7 @@ export default function List({ navigation, route }: ListProps) {
     useEffect(() => {
         setUnCompletedTasks(currentList?.tasks.filter((item: Task) => !item.isCompleted) || []);
         setCompletedTasks(currentList?.tasks.filter((item: Task) => item.isCompleted) || []);
+        setListName(currentList?.listName || '');
     }, [currentList]);
 
     const handleArrowPress = () => {
@@ -184,6 +186,7 @@ export default function List({ navigation, route }: ListProps) {
                 handleModal={handleModal}
                 isModalVisible={isModalVisible}
                 listName={listName}
+                IdList={IdList}
                 placeholderText={placeholderText}
                 selectedColor={selectedColor}
                 selectedIcon={selectedIcon}

@@ -29,6 +29,10 @@ export default function Home({ navigation }: HomeProps) {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     useEffect(() => {
+        setList(listData.filter((item: List) => item.isArchived === false));
+    }, [listData]);
+
+    useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
