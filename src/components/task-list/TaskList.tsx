@@ -38,12 +38,16 @@ export default function TaskList({ tasks, listId }: TaskListProps) {
 
 
     return (
-        <View>
-            <FlatList
-                data={currentTasks}
-                keyExtractor={(item: TaskType) => item.IdTask.toString()}
-                renderItem={({ item }: { item: TaskType }) => <Task listId={listId} task={item} onTaskComplete={() => handleCompleteTask(item.IdTask)} />}
-            />
+        <View style={{ flex: 1 }}>
+            {currentTasks.map((item: TaskType) => (
+                <Task
+                    key={item.IdTask}
+                    listId={listId}
+                    task={item}
+                    onTaskComplete={() => handleCompleteTask(item.IdTask)}
+                />
+            )
+            )}
         </View>
     );
 }

@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, TouchableOpacity, View, FlatList, LayoutAnimation } from 'react-native'
+import { Platform, StyleSheet, Text, TouchableOpacity, View, LayoutAnimation } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
@@ -169,11 +169,14 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
                 <Animated.View
                     style={[styles.subtasks]}
                 >
-                    <FlatList
-                        data={sortedSubTasks}
-                        keyExtractor={(item: Subtask) => item.idSubtask.toString()}
-                        renderItem={({ item }: { item: Subtask }) => <SubTask handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)} item={item} />}
-                    />
+                    {sortedSubTasks.map((item: Subtask) => (
+                        <SubTask
+                            key={item.idSubtask}
+                            handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
+                            item={item}
+                        />)
+                    )
+                    }
                 </Animated.View>}
 
         </View>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { colors, constants, spacing, typography } from 'styles';
@@ -106,52 +106,54 @@ export default function List({ navigation, route }: ListProps) {
                         - {unCompletedTasks.length}
 
                     </Text>}
-                {unCompletedTasks.length > 0 ?
-                    <TaskList
-                        tasks={unCompletedTasks}
-                        listId={currentList.IdList}
-                    /> :
-                    completedTasks.length > 0 ?
-                        <View>
-                            <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
-                                <FormattedMessage
-                                    id='views.authenticated.home.list.tasks-done'
-                                    defaultMessage='Congratulations! You have completed all the tasks excellently - well done!'
-                                />
-                            </Text>
-                        </View> :
-                        <View>
-                            <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
-                                <FormattedMessage
-                                    id='views.authenticated.home.list.no-tasks-here'
-                                    defaultMessage='There are no tasks here yet'
-                                />
-                            </Text>
-                            <Text style={[styles.noTasksMessage, { color: theme.HINT }]}>
-                                <FormattedMessage
-                                    id='views.authenticated.home.list.no-tasks.button'
-                                    defaultMessage="You can add a new task using the '+' button."
-                                />
-                            </Text>
-                        </View>
+                <ScrollView>
+                    {unCompletedTasks.length > 0 ?
+                        <TaskList
+                            tasks={unCompletedTasks}
+                            listId={currentList.IdList}
+                        /> :
+                        completedTasks.length > 0 ?
+                            <View>
+                                <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
+                                    <FormattedMessage
+                                        id='views.authenticated.home.list.tasks-done'
+                                        defaultMessage='Congratulations! You have completed all the tasks excellently - well done!'
+                                    />
+                                </Text>
+                            </View> :
+                            <View>
+                                <Text style={[styles.noTasksMessage, { color: theme.TEXT }]}>
+                                    <FormattedMessage
+                                        id='views.authenticated.home.list.no-tasks-here'
+                                        defaultMessage='There are no tasks here yet'
+                                    />
+                                </Text>
+                                <Text style={[styles.noTasksMessage, { color: theme.HINT }]}>
+                                    <FormattedMessage
+                                        id='views.authenticated.home.list.no-tasks.button'
+                                        defaultMessage="You can add a new task using the '+' button."
+                                    />
+                                </Text>
+                            </View>
 
-                }
-                {completedTasks.length > 0 && (
-                    <View>
-                        <TouchableOpacity activeOpacity={constants.ACTIVE_OPACITY.HIGH} onPress={handleArrowPress} style={styles.completedButton}>
-                            <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
-                                <FormattedMessage defaultMessage="Completed "
-                                    id="views.authenticated.home.list.completed" />
-                                - {completedTasks.length}
-                            </Text>
-                            <Animated.View style={[rotateStyle]}>
-                                <Arrow width={constants.ICON_SIZE.COMPLETED_ARROW} height={constants.ICON_SIZE.COMPLETED_ARROW} />
-                            </Animated.View>
-                        </TouchableOpacity>
-                        {isCompletedVisible &&
-                            <TaskList tasks={completedTasks} listId={currentList.IdList} />}
-                    </View>
-                )}
+                    }
+                    {completedTasks.length > 0 && (
+                        <View>
+                            <TouchableOpacity activeOpacity={constants.ACTIVE_OPACITY.HIGH} onPress={handleArrowPress} style={styles.completedButton}>
+                                <Text style={[styles.sectionTitle, { color: theme.TEXT }]}>
+                                    <FormattedMessage defaultMessage="Completed "
+                                        id="views.authenticated.home.list.completed" />
+                                    - {completedTasks.length}
+                                </Text>
+                                <Animated.View style={[rotateStyle]}>
+                                    <Arrow width={constants.ICON_SIZE.COMPLETED_ARROW} height={constants.ICON_SIZE.COMPLETED_ARROW} />
+                                </Animated.View>
+                            </TouchableOpacity>
+                            {isCompletedVisible &&
+                                <TaskList tasks={completedTasks} listId={currentList.IdList} />}
+                        </View>
+                    )}
+                </ScrollView>
             </View>
             {!isModalVisible && (
                 <View>
