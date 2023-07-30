@@ -32,8 +32,8 @@ export default function List({ navigation, route }: ListProps) {
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedIcon, setSelectedIcon] = useState(1);
-    const [selectedColor, setSelectedColor] = useState(1);
+    const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
+    const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
     const [listName, setListName] = useState(currentList?.listName || '');
     const [IdList, setIdList] = useState(currentList?.IdList || '');
     const intl = useIntl();
