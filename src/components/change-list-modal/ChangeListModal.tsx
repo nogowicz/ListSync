@@ -99,7 +99,7 @@ export default function ChangeListModal({
                                         borderColor: selectedIcon === parseInt(key) ? listColorTheme[selectedColor] : theme.BACKGROUND,
                                     }}
                                 >
-                                    {cloneElement(iconElement as any, { fill: listColorTheme[selectedColor] })}
+                                    {cloneElement(iconElement as JSX.Element, { fill: listColorTheme[selectedColor] })}
                                 </TouchableOpacity>
                             );
                         })}

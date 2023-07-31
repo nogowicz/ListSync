@@ -48,7 +48,7 @@ export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopB
                 style={styles.iconAndNameContainer}
                 onPress={onTitlePress}
             >
-                {cloneElement(icon as any, { fill: color })}
+                {cloneElement(icon as JSX.Element, { fill: color })}
 
                 <Text style={{
                     fontSize: fontSize,
