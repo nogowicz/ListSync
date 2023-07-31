@@ -8,15 +8,15 @@ export interface Subtask {
 }
 
 export interface Task {
-  IdTask: number;
+  IdTask?: number;
   title: string;
-  isCompleted: boolean;
-  deadline: string | null;
-  importance: string;
-  effort: string;
-  note: string;
+  isCompleted?: boolean;
+  deadline?: string | null;
+  importance?: string;
+  effort?: string;
+  note?: string;
   addedBy: string;
-  assignedTo: number | null;
+  assignedTo?: number | null;
   createdAt: string;
   List_idList: number;
   subtasks: Subtask[];

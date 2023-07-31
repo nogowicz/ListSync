@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, Task, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { cloneElement, useContext, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing, typography } from 'styles';
@@ -20,15 +20,48 @@ type AddTaskFieldProps = {
 export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
-    const { listData } = useListContext();
+    const { listData, updateListData } = useListContext();
     const lists = listData.filter((item: List) => item.isArchived === false);
     const [list, setList] = useState<List[]>(lists);
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
+    const [textValue, setTextValue] = useState('');
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
         defaultMessage: 'Add new task',
     });
+
+    const handleAddTask = () => {
+        if (textValue.trim() === '') {
+            return;
+        }
+
+        const newListData = listData.map((list) => {
+            if (list.IdList === activeList?.IdList) {
+                const newTask: Task = {
+                    title: textValue,
+                    isCompleted: false,
+                    addedBy: 'john',
+                    createdAt: new Date().toISOString(),
+                    List_idList: activeList?.IdList,
+                    subtasks: [],
+                };
+                return {
+                    ...list,
+                    tasks: [...list.tasks, newTask],
+                };
+            } else {
+                return list;
+            }
+        });
+
+        updateListData(() => newListData);
+
+
+        setTextValue('');
+    };
+
+
     return (
         <View
             style={[
@@ -58,6 +91,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                                 }}
                                 onPress={() => {
                                     setActiveList(item);
+                                    setIsListVisible(false);
                                 }}
                             >
                                 {cloneElement(listIconTheme[item.iconId] as JSX.Element,
@@ -113,7 +147,10 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttons}>
-                        <ImportanceSelection />
+                        <ImportanceSelection
+                            stroke={theme.HINT}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />
                         <Text style={{ color: theme.HINT }}>
                             <FormattedMessage
                                 id='views.authenticated.home.text-input.importance'
@@ -129,8 +166,16 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     placeholderTextColor={theme.HINT}
                     style={[styles.textInput, { color: theme.TEXT, }]}
                     autoFocus={true}
+                    value={textValue}
+                    onChangeText={(text) => setTextValue(text)}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                    style={{
+                        padding: spacing.SCALE_8,
+                    }}
+                    onPress={handleAddTask}
+                >
                     <AddTaskIcon />
                 </TouchableOpacity>
             </View>
