@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
-import { colors, constants, spacing, typography } from 'styles';
+import { constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import ListTopBar from 'components/list-top-bar';
 import { RouteProp } from '@react-navigation/native';
@@ -13,9 +13,9 @@ import Arrow from 'assets/button-icons/Back.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import AddTaskField from 'components/add-task-field';
 import Button, { buttonTypes } from 'components/button';
-import ChangeListModal from 'components/change-list-modal/ChangeListModal';
-import { color, icon } from 'components/list-item/ListItem';
+import ChangeListModal from 'components/change-list-modal';
 import { useListContext } from 'context/DataProvider';
+import { listColorTheme, listIconTheme } from 'styles/list-styles';
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -35,15 +35,16 @@ export default function List({ navigation, route }: ListProps) {
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
     const [listName, setListName] = useState(currentList?.listName || '');
-    const [IdList, setIdList] = useState(currentList?.IdList || '');
+    const [IdList, setIdList] = useState(currentList?.IdList || 0);
+    const [unCompletedTasks, setUnCompletedTasks] = useState<Task[]>([]);
+    const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+    const [isCompletedVisible, setIsCompletedVisible] = useState(false);
     const intl = useIntl();
+
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
         setKeyboardVisible(false);
     };
-    const [unCompletedTasks, setUnCompletedTasks] = useState<Task[]>([]);
-    const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
-    const [isCompletedVisible, setIsCompletedVisible] = useState(false);
 
     const rotateAnimation = useSharedValue(isCompletedVisible ? -90 : -180);
 
@@ -52,6 +53,15 @@ export default function List({ navigation, route }: ListProps) {
             transform: [{ rotate: `${rotateAnimation.value}deg` }],
         };
     });
+
+    const handleArrowPress = () => {
+        const targetRotation = isCompletedVisible ? -180 : -90;
+        rotateAnimation.value = withTiming(targetRotation, {
+            duration: 200,
+            easing: Easing.ease,
+        });
+        setIsCompletedVisible(!isCompletedVisible);
+    };
 
     useEffect(() => {
         setCurrentList(listData.find((item: ListType) => item.IdList === data.IdList));
@@ -62,15 +72,6 @@ export default function List({ navigation, route }: ListProps) {
         setCompletedTasks(currentList?.tasks.filter((item: Task) => item.isCompleted) || []);
         setListName(currentList?.listName || '');
     }, [currentList]);
-
-    const handleArrowPress = () => {
-        const targetRotation = isCompletedVisible ? -180 : -90;
-        rotateAnimation.value = withTiming(targetRotation, {
-            duration: 200,
-            easing: Easing.ease,
-        });
-        setIsCompletedVisible(!isCompletedVisible);
-    };
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -92,14 +93,19 @@ export default function List({ navigation, route }: ListProps) {
     });
 
     if (!currentList) {
-        // TODO: Obsłużyć brak danych
+        // TODO: Handle no data state
         return <View><Text>No data here</Text></View>;
     }
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
-                <ListTopBar name={listName} icon={icon[currentList.iconId]} color={color[currentList.colorVariant]} onTitlePress={handleModal} />
+                <ListTopBar
+                    name={listName}
+                    icon={listIconTheme[currentList.iconId]}
+                    color={listColorTheme[currentList.colorVariant]}
+                    onTitlePress={handleModal}
+                />
                 {unCompletedTasks.length > 0 &&
                     <Text style={[
                         styles.sectionTitle,
@@ -170,7 +176,10 @@ export default function List({ navigation, route }: ListProps) {
                                     </Animated.View>
                                 </TouchableOpacity>
                                 {isCompletedVisible &&
-                                    <TaskList tasks={completedTasks} listId={currentList.IdList} />}
+                                    <TaskList
+                                        tasks={completedTasks}
+                                        listId={currentList.IdList}
+                                    />}
                             </View>
                         )}
                     </View>
@@ -178,7 +187,13 @@ export default function List({ navigation, route }: ListProps) {
             </View>
             {!isModalVisible && (
                 <View>
-                    {isKeyboardVisible ? <AddTaskField /> : <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
+                    {isKeyboardVisible ?
+                        <AddTaskField /> :
+                        <Button
+                            type={buttonTypes.BUTTON_TYPES.FAB}
+                            onPress={() => setKeyboardVisible(true)}
+                        />
+                    }
                 </View>
             )}
 

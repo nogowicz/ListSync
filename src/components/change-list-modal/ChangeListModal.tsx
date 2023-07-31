@@ -1,18 +1,18 @@
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useContext, SetStateAction, Dispatch, cloneElement, useState, } from 'react'
 import Button, { buttonTypes } from 'components/button';
-import { color, icon } from 'components/list-item/ListItem';
 import { FormattedMessage } from 'react-intl';
 import { typography, spacing, constants } from 'styles';
 import { Modal } from 'components/modal/Modal';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { useListContext } from 'context/DataProvider';
 import { List } from 'data/types';
+import { listColorTheme, listIconTheme } from 'styles/list-styles';
 
 type ChangeListModalProps = {
     isModalVisible: boolean;
     listName: string;
-    IdList: string | number;
+    IdList: number;
     selectedColor: number;
     placeholderText: string;
     setSelectedIcon: Dispatch<SetStateAction<number>>;
@@ -37,7 +37,7 @@ export default function ChangeListModal({
     const [newListName, setNewListName] = useState<string>(listName);
 
 
-    const handleUpdateList = (listId: number | string, listName: string, selectedIcon: number, selectedColor: number) => {
+    const handleUpdateList = (listId: number, listName: string, selectedIcon: number, selectedColor: number) => {
         updateListData((prevListData: List[]) => {
             const updatedLists = prevListData.map((list: List) => {
                 if (list.IdList === listId) {
@@ -73,7 +73,7 @@ export default function ChangeListModal({
                         defaultValue={listName}
                         value={newListName}
                         onChangeText={(text) => setNewListName(text)}
-                        underlineColorAndroid={color[selectedColor]}
+                        underlineColorAndroid={listColorTheme[selectedColor]}
                         placeholder={placeholderText}
                         placeholderTextColor={theme.HINT}
                         style={{
@@ -84,8 +84,8 @@ export default function ChangeListModal({
                     />
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {Object.keys(icon).map((key) => {
-                            const iconElement = icon[parseInt(key)];
+                        {Object.keys(listIconTheme).map((key) => {
+                            const iconElement = listIconTheme[parseInt(key)];
                             return (
                                 <TouchableOpacity
                                     key={key}
@@ -96,17 +96,17 @@ export default function ChangeListModal({
                                         marginRight: spacing.SCALE_8,
                                         borderWidth: 2,
                                         borderRadius: constants.BORDER_RADIUS.BUTTON,
-                                        borderColor: selectedIcon === parseInt(key) ? color[selectedColor] : theme.BACKGROUND,
+                                        borderColor: selectedIcon === parseInt(key) ? listColorTheme[selectedColor] : theme.BACKGROUND,
                                     }}
                                 >
-                                    {cloneElement(iconElement as any, { fill: color[selectedColor] })}
+                                    {cloneElement(iconElement as any, { fill: listColorTheme[selectedColor] })}
                                 </TouchableOpacity>
                             );
                         })}
                     </ScrollView>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {Object.keys(color).map((key) => {
-                            const colorElement = color[parseInt(key)];
+                        {Object.keys(listColorTheme).map((key) => {
+                            const colorElement = listColorTheme[parseInt(key)];
                             return (
                                 <TouchableOpacity
                                     onPress={() => setSelectedColor(parseInt(key))}
@@ -164,5 +164,3 @@ export default function ChangeListModal({
         </Modal>
     )
 }
-
-const styles = StyleSheet.create({})

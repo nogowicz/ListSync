@@ -124,5 +124,5 @@ const styles = StyleSheet.create({
         width: spacing.SCALE_2,
         marginRight: spacing.SCALE_12,
         alignSelf: 'center',
-    }
+    },
 })

@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import React from 'react'
 import ListItem from 'components/list-item'
 import { numColumns } from 'components/list-item/ListItem'
@@ -7,7 +7,6 @@ import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { List } from 'data/types';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
 
 
 type ListListProps = {
@@ -50,7 +49,3 @@ export default function ListList({ list }: ListListProps) {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-
-})
