@@ -80,7 +80,15 @@ export default function ListItem({
                     {isFavorite && <FavoriteList />}
                 </View>
             </View>
-            <Text style={[{ color: theme.TEXT, fontSize }]}>{listName}</Text>
+            <Text style={[{ color: theme.TEXT, fontSize }]}>
+                {listName === "All" ?
+                    <FormattedMessage
+                        id='views.authenticated.home.text-input.list-name.all'
+                        defaultMessage={'All'}
+                    /> :
+                    listName
+                }
+            </Text>
             <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmount} {tasks}</Text>
         </TouchableOpacity>
     )

@@ -11,6 +11,7 @@ export default function AuthenticatedStack() {
         <Stack.Navigator
             initialRouteName={SCREENS.AUTHENTICATED.HOME.ID}
             screenOptions={{
+                animation: 'fade',
                 headerShown: false,
             }}
         >
@@ -21,6 +22,7 @@ export default function AuthenticatedStack() {
 
             <Stack.Screen
                 name={SCREENS.AUTHENTICATED.LIST.ID}
+                //@ts-ignore
                 component={List}
             />
         </Stack.Navigator>

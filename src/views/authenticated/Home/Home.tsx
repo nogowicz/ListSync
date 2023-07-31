@@ -59,7 +59,10 @@ export default function Home({ navigation }: HomeProps) {
                 <TopPanel name='John' />
                 <FilterPanel setList={setList} />
                 <ListList list={list} />
-                {isKeyboardVisible ? <AddTaskField /> :
+                {isKeyboardVisible ?
+                    <AddTaskField
+                        currentListId={1}
+                    /> :
                     <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
 
             </View>
