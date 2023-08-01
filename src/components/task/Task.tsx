@@ -1,9 +1,9 @@
-import { Platform, StyleSheet, Text, TouchableOpacity, View, FlatList, LayoutAnimation } from 'react-native'
+import { Platform, StyleSheet, Text, TouchableOpacity, View, LayoutAnimation } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import Button, { buttonTypes } from 'components/button';
-import { Subtask, Task as TaskType } from 'data/types';
+import { List, Subtask, Task as TaskType } from 'data/types';
 import Animated, {
     Easing,
     useAnimatedStyle,
@@ -17,12 +17,15 @@ import { useIntl } from 'react-intl';
 import { getDayName } from 'utils/dateFormat';
 import { toggleAnimation } from './helpers';
 import SubTask from 'components/sub-task';
+import { useListContext } from 'context/DataProvider';
 
 type TaskProps = {
     task: TaskType;
+    onTaskComplete: any;
+    listId: number;
 };
 
-export default function Task({ task }: TaskProps) {
+export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
     const isCompleted = task.isCompleted;
@@ -33,6 +36,7 @@ export default function Task({ task }: TaskProps) {
     const deadlineDayName = getDayName(deadline.getDay(), intl);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
+    const { listData, updateListData } = useListContext();
     const now = new Date();
 
     const rotateStyle = useAnimatedStyle(() => {
@@ -62,13 +66,53 @@ export default function Task({ task }: TaskProps) {
         LayoutAnimation.configureNext(toggleAnimation);
     };
 
+    const [sortedSubTasks, setSortedSubTasks] = useState<Subtask[]>([]);
+
+    useEffect(() => {
+        const sortedTasks = [...subTasks].sort((a, b) => {
+            if (a.isCompleted && !b.isCompleted) {
+                return 1;
+            } else if (!a.isCompleted && b.isCompleted) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+        setSortedSubTasks(sortedTasks);
+    }, [subTasks]);
+
+    const handleCompleteSubtask = (taskId: number, subtaskId: number) => {
+        updateListData((prevListData: List[]) => {
+            const updatedLists = prevListData.map((list: List) => {
+                if (list.IdList === listId) {
+                    const updatedTasks = list.tasks.map((task: TaskType) => {
+                        if (task.IdTask === taskId) {
+                            const updatedSubtasks = task.subtasks.map((subtask) =>
+                                subtask.idSubtask === subtaskId ? { ...subtask, isCompleted: !subtask.isCompleted } : subtask
+                            );
+                            return { ...task, subtasks: updatedSubtasks };
+                        } else {
+                            return task;
+                        }
+                    });
+
+                    return { ...list, tasks: updatedTasks };
+                } else {
+                    return list;
+                }
+            });
+
+            return updatedLists;
+        });
+    };
+
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.upperContainer}>
                 <View style={styles.leftContainer}>
                     <Button
                         type={buttonTypes.BUTTON_TYPES.CHECK}
-                        onPress={() => console.log("Pressed")}
+                        onPress={onTaskComplete}
                         isChecked={isCompleted}
                     />
                     <Text style={[
@@ -125,11 +169,14 @@ export default function Task({ task }: TaskProps) {
                 <Animated.View
                     style={[styles.subtasks]}
                 >
-                    <FlatList
-                        data={subTasks}
-                        keyExtractor={(item: Subtask) => item.idSubtask.toString()}
-                        renderItem={({ item }: { item: Subtask }) => <SubTask item={item} />}
-                    />
+                    {sortedSubTasks.map((item: Subtask) => (
+                        <SubTask
+                            key={item.idSubtask}
+                            handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
+                            item={item}
+                        />)
+                    )
+                    }
                 </Animated.View>}
 
         </View>

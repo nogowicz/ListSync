@@ -27,6 +27,9 @@
   "views.authenticated.home.text-input.placeholder": "Dodaj nowe zadanie",
   "views.authenticated.home.text-input.list-name.all": "Wszystkie",
   "views.authenticated.home.text-input.deadline.today": "Dzisiaj",
+  "views.authenticated.home.text-input.deadline.tomorrow": "Jutro",
+  "views.authenticated.home.text-input.deadline.next-week": "Następny tydz.",
+  "views.authenticated.home.text-input.deadline.pick-date": "Wybierz datę",
   "views.authenticated.home.text-input.importance": "Priorytet",
   "views.authenticated.home.list-item.tasks": "zadań",
   "views.authenticated.home.list-item.task": "zadanie",
@@ -35,5 +38,8 @@
   "views.authenticated.home.list.modal.title": "Zmień nazwę listy",
   "views.authenticated.home.list.modal.cancel": "Anuluj",
   "views.authenticated.home.list.modal.save": "Zapisz",
-  "views.authenticated.home.list.modal.placeholder": "Wprowadź nazwę listy"
+  "views.authenticated.home.list.modal.placeholder": "Wprowadź nazwę listy",
+  "views.authenticated.home.list.no-tasks-here": "Tu jeszcze nie ma żadnych zadań.",
+  "views.authenticated.home.list.no-tasks.button": "Możesz dodać nowe zadanie za pomocą przycisku '+'.",
+  "views.authenticated.home.list.tasks-done": "Gratulacje! Wykonałeś wszystkie zadania znakomicie - dobra robota!"
 }

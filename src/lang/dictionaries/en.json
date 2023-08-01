@@ -27,6 +27,9 @@
   "views.authenticated.home.text-input.placeholder": "Add new task",
   "views.authenticated.home.text-input.list-name.all": "All",
   "views.authenticated.home.text-input.deadline.today": "Today",
+  "views.authenticated.home.text-input.deadline.tomorrow": "Tomorrow",
+  "views.authenticated.home.text-input.deadline.next-week": "Next week",
+  "views.authenticated.home.text-input.deadline.pick-date": "Pick date",
   "views.authenticated.home.text-input.importance": "Importance",
   "views.authenticated.home.list-item.tasks": "tasks",
   "views.authenticated.home.list-item.task": "task",
@@ -35,5 +38,8 @@
   "views.authenticated.home.list.modal.title": "Change list name",
   "views.authenticated.home.list.modal.cancel": "Cancel",
   "views.authenticated.home.list.modal.save": "Save",
-  "views.authenticated.home.list.modal.placeholder": "Enter list name"
+  "views.authenticated.home.list.modal.placeholder": "Enter list name",
+  "views.authenticated.home.list.no-tasks-here": "There are no tasks here yet.",
+  "views.authenticated.home.list.no-tasks.button": "You can add a new task using the '+' button.",
+  "views.authenticated.home.list.tasks-done": "Congratulations! You have completed all the tasks excellently - well done!"
 }

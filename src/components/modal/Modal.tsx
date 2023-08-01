@@ -55,6 +55,7 @@ const ModalFooter = ({ children }: { children?: React.ReactNode }) => (
 const styles = StyleSheet.create({
     container: {
         borderRadius: constants.BORDER_RADIUS.BUTTON,
+        paddingVertical: spacing.SCALE_12,
     },
     header: {
         alignItems: "center",

@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useContext } from 'react'
+import { FlatList, View } from 'react-native'
+import React from 'react'
 import ListItem from 'components/list-item'
 import { numColumns } from 'components/list-item/ListItem'
 import { useNavigation } from '@react-navigation/native';
@@ -7,9 +7,6 @@ import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { List } from 'data/types';
-import { FormattedMessage } from 'react-intl';
-import { theme } from 'styles/colors';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
 
 
 type ListListProps = {
@@ -18,17 +15,18 @@ type ListListProps = {
 
 export default function ListList({ list }: ListListProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const theme = useContext(ThemeContext);
 
     const renderItem = ({ item, index }: { item: List; index: number }) => {
+        const filteredTaskAmount = item.tasks.filter(task => !task.isCompleted).length;
         return (
             <View>
                 <ListItem
                     listName={item.listName}
-                    taskAmount={item.tasks.length}
+                    taskAmount={filteredTaskAmount}
                     isShared={item.isShared}
                     isFavorite={item.isFavorite}
                     listIcon={item.iconId}
+                    colorVariant={item.colorVariant}
                     onPress={() =>
                         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
                             data: item,
@@ -52,7 +50,3 @@ export default function ListList({ list }: ListListProps) {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-
-})

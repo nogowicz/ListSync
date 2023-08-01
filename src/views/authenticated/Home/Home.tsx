@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Dimensions, FlatList, Keyboard, StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../../../navigation/utils/ThemeProvider';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -11,9 +11,8 @@ import ListList from 'components/list-list';
 import Button, { buttonTypes } from 'components/button';
 
 import AddTaskField from 'components/add-task-field';
-
-import { data } from '../../../data/data.json';
 import { List } from 'data/types';
+import { useListContext } from 'context/DataProvider';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
 
@@ -24,9 +23,15 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
-    const newList = data.filter((item: List) => item.isArchived === false);
+    const { listData } = useListContext();
+    const newList = listData.filter((item: List) => item.isArchived === false);
     const [list, setList] = useState<List[]>(newList);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const filteredList = listData.filter((item: List) => item.isArchived === false);
+        setList(filteredList);
+    }, [listData]);
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
@@ -52,9 +57,13 @@ export default function Home({ navigation }: HomeProps) {
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
                 <TopPanel name='John' />
-                <FilterPanel data={data} setList={setList} />
+                <FilterPanel setList={setList} />
                 <ListList list={list} />
-                {isKeyboardVisible ? <AddTaskField /> :
+                {isKeyboardVisible ?
+                    <AddTaskField
+                        currentListId={1}
+                    />
+                    :
                     <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
 
             </View>

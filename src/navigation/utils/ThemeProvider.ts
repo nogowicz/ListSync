@@ -8,9 +8,9 @@ interface ThemeContextType {
   BACKGROUND: string;
   HINT: string;
   LIGHT_HINT: string;
-  GREEN: any;
-  YELLOW: any;
-  RED: any;
+  GREEN: string;
+  YELLOW: string;
+  RED: string;
 }
 
 export const ThemeContext = createContext<ThemeContextType>(

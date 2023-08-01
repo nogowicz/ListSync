@@ -5,19 +5,20 @@ import { FormattedMessage } from 'react-intl'
 import { spacing } from 'styles'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { List } from 'data/types'
+import { useListContext } from 'context/DataProvider'
 
 type FilterPanelProps = {
-    data: List[];
     setList: Dispatch<SetStateAction<List[]>>;
 };
 
-export default function FilterPanel({ data, setList }: FilterPanelProps) {
+export default function FilterPanel({ setList }: FilterPanelProps) {
     const theme = useContext(ThemeContext);
+    const { listData } = useListContext();
     const [activeListName, setActiveListName] = useState('all');
-    const allList = data.filter((item: List) => item.isArchived === false);
-    const favoriteList = data.filter((item: List) => item.isFavorite === true && item.isArchived === false);
-    const sharedList = data.filter((item: List) => item.isShared === true && item.isArchived === false);
-    const archivedList = data.filter((item: List) => item.isArchived === true);
+    const allList = listData.filter((item: List) => item.isArchived === false);
+    const favoriteList = listData.filter((item: List) => item.isFavorite === true && item.isArchived === false);
+    const sharedList = listData.filter((item: List) => item.isShared === true && item.isArchived === false);
+    const archivedList = listData.filter((item: List) => item.isArchived === true);
 
 
     const handleAllList = () => {
@@ -40,6 +41,45 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
         setActiveListName('archived');
     };
 
+    const filterButtons = [
+        {
+            type: buttonTypes.BUTTON_TYPES.FILTER,
+            isActive: activeListName === 'favorite',
+            onPress: handleFavoriteList,
+            text: (
+                <FormattedMessage
+                    id='views.authenticated.home.filter-button-text-favorite'
+                    defaultMessage={'Favorite'}
+                />
+            ),
+            amount: favoriteList.length
+        },
+        {
+            type: buttonTypes.BUTTON_TYPES.FILTER,
+            isActive: activeListName === 'shared',
+            onPress: handleSharedList,
+            text: (
+                <FormattedMessage
+                    defaultMessage={'Shared'}
+                    id='views.authenticated.home.filter-button-text-shared'
+                />
+            ),
+            amount: sharedList.length
+        },
+        {
+            type: buttonTypes.BUTTON_TYPES.FILTER,
+            isActive: activeListName === 'archived',
+            onPress: handleArchivedList,
+            text: (
+                <FormattedMessage
+                    id='views.authenticated.home.filter-button-text-archived'
+                    defaultMessage={'Archived'}
+                />
+            ),
+            amount: archivedList.length
+        }
+    ];
+
     return (
         <View style={styles.container}>
             <ScrollView
@@ -60,43 +100,16 @@ export default function FilterPanel({ data, setList }: FilterPanelProps) {
                 />
 
                 <View style={[styles.separator, { backgroundColor: theme.LIGHT_HINT }]} />
-
-                <Button
-                    type={buttonTypes.BUTTON_TYPES.FILTER}
-                    isActive={activeListName === 'favorite'}
-                    onPress={handleFavoriteList}
-                    text={
-                        <FormattedMessage
-                            id='views.authenticated.home.filter-button-text-favorite'
-                            defaultMessage={'Favorite'}
-                        />
-                    }
-                    amount={favoriteList.length}
-                />
-                <Button
-                    type={buttonTypes.BUTTON_TYPES.FILTER}
-                    isActive={activeListName === 'shared'}
-                    onPress={handleSharedList}
-                    text={
-                        <FormattedMessage
-                            defaultMessage={'Shared'}
-                            id='views.authenticated.home.filter-button-text-shared'
-                        />
-                    }
-                    amount={sharedList.length}
-                />
-                <Button
-                    type={buttonTypes.BUTTON_TYPES.FILTER}
-                    isActive={activeListName === 'archived'}
-                    onPress={handleArchivedList}
-                    text={
-                        <FormattedMessage
-                            id='views.authenticated.home.filter-button-text-archived'
-                            defaultMessage={'Archived'}
-                        />
-                    }
-                    amount={archivedList.length}
-                />
+                {filterButtons.map((button, index) => (
+                    <Button
+                        key={index}
+                        type={button.type}
+                        isActive={button.isActive}
+                        onPress={button.onPress}
+                        text={button.text}
+                        amount={button.amount}
+                    />
+                ))}
             </ScrollView>
         </View>
     )
@@ -111,5 +124,5 @@ const styles = StyleSheet.create({
         width: spacing.SCALE_2,
         marginRight: spacing.SCALE_12,
         alignSelf: 'center',
-    }
+    },
 })
