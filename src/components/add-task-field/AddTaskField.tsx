@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { cloneElement, useContext, useState } from 'react'
+import React, { cloneElement, useContext, useEffect, useRef, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -31,6 +31,12 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         defaultMessage: 'Add new task',
     });
 
+    const inputRef = useRef<TextInput>(null);
+
+    useEffect(() => {
+        // Ustawienie fokusu na polu tekstowym po załadowaniu komponentu na ekranie
+        inputRef.current?.focus();
+    }, []);
 
     const handleAddTask = () => {
         if (textValue.trim() === '') {
@@ -170,10 +176,11 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             </ScrollView>
             <View style={styles.bottomContainer}>
                 <TextInput
+                    ref={inputRef}
+                    autoFocus={true}
                     placeholder={placeholderText}
                     placeholderTextColor={theme.HINT}
                     style={[styles.textInput, { color: theme.TEXT, }]}
-                    autoFocus={true}
                     value={textValue}
                     onChangeText={(text) => setTextValue(text)}
                 />

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Keyboard, StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../../../navigation/utils/ThemeProvider';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -33,6 +33,7 @@ export default function Home({ navigation }: HomeProps) {
         setList(filteredList);
     }, [listData]);
 
+    console.log(isKeyboardVisible);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -62,7 +63,8 @@ export default function Home({ navigation }: HomeProps) {
                 {isKeyboardVisible ?
                     <AddTaskField
                         currentListId={1}
-                    /> :
+                    />
+                    :
                     <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
 
             </View>
