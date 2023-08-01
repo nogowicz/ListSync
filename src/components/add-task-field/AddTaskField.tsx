@@ -12,6 +12,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
 import { List, Task } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
+import ListSelector from './ListSelector';
+import DeadLineSelector from './DeadlineSelector';
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -25,6 +27,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [list, setList] = useState<List[]>(lists);
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
+    const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
     const [textValue, setTextValue] = useState('');
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
@@ -34,7 +37,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const inputRef = useRef<TextInput>(null);
 
     useEffect(() => {
-        // Ustawienie fokusu na polu tekstowym po załadowaniu komponentu na ekranie
         inputRef.current?.focus();
     }, []);
 
@@ -46,7 +48,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         const newListData = listData.map((list) => {
             if (list.IdList === activeList?.IdList) {
                 const newTask: Task = {
-                    IdTask: activeList.tasks.length + 1,
+                    IdTask: activeList.tasks.length + 10,
                     title: textValue,
                     isCompleted: false,
                     addedBy: 'john',
@@ -84,47 +86,19 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     borderColor: theme.HINT,
                     backgroundColor: theme.BACKGROUND,
                 }]}>
+
             {isListVisible &&
-                <ScrollView
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    keyboardShouldPersistTaps='always'
-                >
-                    <View style={{
-                        flexDirection: 'row',
-                        gap: spacing.SCALE_12,
-                        marginVertical: spacing.SCALE_12,
-                    }}>
-                        {list.map((item: List) => (
-                            <TouchableOpacity
-                                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                                key={item.IdList}
-                                style={{
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                                onPress={() => {
-                                    setActiveList(item);
-                                    setIsListVisible(false);
-                                }}
-                            >
-                                {cloneElement(listIconTheme[item.iconId] as JSX.Element,
-                                    {
-                                        fill: listColorTheme[item.colorVariant],
-                                        width: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
-                                        height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
-                                    })}
-                                <Text style={{
-                                    color: theme.TEXT,
-                                    fontSize: typography.FONT_SIZE_12,
-                                }}>
-                                    {item.listName}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </ScrollView>
+                <ListSelector
+                    list={list}
+                    setActiveList={setActiveList}
+                    setIsListVisible={setIsListVisible}
+                />
             }
+
+            {isDeadlineVisible &&
+                <DeadLineSelector />
+            }
+
             <ScrollView
                 showsHorizontalScrollIndicator={false}
                 horizontal
@@ -133,7 +107,10 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                 <View style={styles.upperContainer}>
                     <TouchableOpacity
                         style={styles.buttons}
-                        onPress={() => setIsListVisible(!isListVisible)}
+                        onPress={() => {
+                            setIsListVisible(!isListVisible)
+                            setIsDeadlineVisible(false);
+                        }}
                     >
                         <ListSelection
                             stroke={activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY}
@@ -151,7 +128,13 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             }
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttons}>
+                    <TouchableOpacity
+                        style={styles.buttons}
+                        onPress={() => {
+                            setIsDeadlineVisible(!isDeadlineVisible)
+                            setIsListVisible(false);
+                        }}
+                    >
                         <CalendarSelection fill={theme.HINT} />
                         <Text style={{ color: theme.HINT }}>
                             <FormattedMessage
