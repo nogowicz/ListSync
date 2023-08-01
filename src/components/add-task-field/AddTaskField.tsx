@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Task, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { cloneElement, useContext, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing, typography } from 'styles';
@@ -10,7 +10,7 @@ import CalendarSelection from 'assets/button-icons/calendar-input-selection.svg'
 import ImportanceSelection from 'assets/button-icons/importance-input-selection.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
-import { List } from 'data/types';
+import { List, Task } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 
 type AddTaskFieldProps = {
@@ -39,9 +39,15 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         const newListData = listData.map((list) => {
             if (list.IdList === activeList?.IdList) {
                 const newTask: Task = {
+                    IdTask: activeList.tasks.length + 1,
                     title: textValue,
                     isCompleted: false,
                     addedBy: 'john',
+                    assignedTo: null,
+                    deadline: null,
+                    effort: '',
+                    importance: '',
+                    note: '',
                     createdAt: new Date().toISOString(),
                     List_idList: activeList?.IdList,
                     subtasks: [],
@@ -54,6 +60,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                 return list;
             }
         });
+
 
         updateListData(() => newListData);
 

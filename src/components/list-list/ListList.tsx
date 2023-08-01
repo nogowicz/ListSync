@@ -17,11 +17,12 @@ export default function ListList({ list }: ListListProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const renderItem = ({ item, index }: { item: List; index: number }) => {
+        const filteredTaskAmount = item.tasks.filter(task => !task.isCompleted).length;
         return (
             <View>
                 <ListItem
                     listName={item.listName}
-                    taskAmount={item.tasks.length}
+                    taskAmount={filteredTaskAmount}
                     isShared={item.isShared}
                     isFavorite={item.isFavorite}
                     listIcon={item.iconId}
