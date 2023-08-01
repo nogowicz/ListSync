@@ -28,6 +28,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
+    const [deadline, setDeadline] = useState<string>("Today");
     const [textValue, setTextValue] = useState('');
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
@@ -96,7 +97,11 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             }
 
             {isDeadlineVisible &&
-                <DeadLineSelector />
+                <DeadLineSelector
+                    setDeadline={setDeadline}
+                    deadline={deadline}
+                    setIsDeadlineVisible={setIsDeadlineVisible}
+                />
             }
 
             <ScrollView
@@ -135,12 +140,35 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             setIsListVisible(false);
                         }}
                     >
-                        <CalendarSelection fill={theme.HINT} />
-                        <Text style={{ color: theme.HINT }}>
-                            <FormattedMessage
-                                id='views.authenticated.home.text-input.deadline.today'
-                                defaultMessage={'Today'}
-                            />
+                        <CalendarSelection
+                            fill={deadline === 'Today' ? theme.HINT : theme.PRIMARY}
+                        />
+                        <Text
+                            style={{
+                                color: deadline === 'Today' ? theme.HINT : theme.PRIMARY,
+
+                            }}>
+                            {deadline === 'Today' &&
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.deadline.today'
+                                    defaultMessage={deadline}
+                                />}
+                            {deadline === 'Tomorrow' &&
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.deadline.tomorrow'
+                                    defaultMessage={deadline}
+                                />}
+                            {deadline === 'Next week' &&
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.deadline.next-week'
+                                    defaultMessage={deadline}
+                                />}
+                            {deadline === 'Pick date' &&
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.deadline.pick-date'
+                                    defaultMessage={deadline}
+                                />}
+
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttons}>

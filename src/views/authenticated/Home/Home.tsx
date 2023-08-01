@@ -33,7 +33,6 @@ export default function Home({ navigation }: HomeProps) {
         setList(filteredList);
     }, [listData]);
 
-    console.log(isKeyboardVisible);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
