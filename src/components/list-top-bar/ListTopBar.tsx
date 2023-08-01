@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Keyboard, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { ReactNode, cloneElement, useContext, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing, typography } from 'styles';
@@ -38,7 +38,9 @@ export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopB
             <TouchableOpacity
                 activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
                 style={[styles.backButton, { borderColor: theme.LIGHT_HINT, }]}
-                onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)}
+                onPress={() => {
+                    navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
+                }}
             >
                 <GoBack />
             </TouchableOpacity>

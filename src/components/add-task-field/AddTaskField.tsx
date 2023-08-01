@@ -31,6 +31,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         defaultMessage: 'Add new task',
     });
 
+
     const handleAddTask = () => {
         if (textValue.trim() === '') {
             return;

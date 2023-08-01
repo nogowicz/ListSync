@@ -188,7 +188,9 @@ export default function List({ navigation, route }: ListProps) {
             {!isModalVisible && (
                 <View>
                     {isKeyboardVisible ?
-                        <AddTaskField /> :
+                        <AddTaskField
+                            currentListId={currentList.IdList}
+                        /> :
                         <Button
                             type={buttonTypes.BUTTON_TYPES.FAB}
                             onPress={() => setKeyboardVisible(true)}
