@@ -9,46 +9,94 @@ import PickDateCalendar from 'assets/button-icons/calendar-pick-date.svg';
 import TomorrowCalendar from 'assets/button-icons/calendar-tomorrow.svg';
 import NextWeekCalendar from 'assets/button-icons/calendar-next-week.svg';
 import CalendarRemove from 'assets/button-icons/calendar-none.svg';
+import { getFormattedDate } from 'utils/dateFormat';
+
+export const deadlineNames = {
+    TODAY: "Today",
+    TOMORROW: "Tomorrow",
+    NEXT_WEEK: "Next week",
+    PICK_DATE: "Pick date",
+    REMOVE: "Set deadline",
+}
 
 type DeadLineSelectorProps = {
     setDeadline: Dispatch<SetStateAction<string>>;
     deadline: string;
     setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
+    setDeadlineDate: Dispatch<SetStateAction<string | null>>;
 }
 
-export default function DeadLineSelector({ setDeadline, deadline, setIsDeadlineVisible }: DeadLineSelectorProps) {
+
+export default function DeadLineSelector({
+    setDeadline,
+    deadline,
+    setIsDeadlineVisible,
+    setDeadlineDate,
+}: DeadLineSelectorProps) {
     const theme = useContext(ThemeContext);
 
     const dates = [
         {
             id: "views.authenticated.home.text-input.deadline.today",
             icon: (<TodayCalendar />),
-            value: "Today",
-            isVisible: (deadline !== "Today")
+            value: deadlineNames.TODAY,
+            isVisible: (deadline !== deadlineNames.TODAY),
+            onPress: () => {
+                setDeadline(deadlineNames.TODAY);
+                const date: string | null = getFormattedDate(deadlineNames.TODAY);
+                setDeadlineDate(date);
+                setIsDeadlineVisible(false);
+            }
         },
         {
             id: "views.authenticated.home.text-input.deadline.tomorrow",
             icon: (<TomorrowCalendar />),
-            value: "Tomorrow",
-            isVisible: (deadline !== "Tomorrow")
+            value: deadlineNames.TOMORROW,
+            isVisible: (deadline !== deadlineNames.TOMORROW),
+            onPress: () => {
+                setDeadline(deadlineNames.TOMORROW);
+                const date: string | null = getFormattedDate(deadlineNames.TOMORROW);
+                setDeadlineDate(date);
+                setIsDeadlineVisible(false);
+            }
         },
         {
             id: "views.authenticated.home.text-input.deadline.next-week",
             icon: (<NextWeekCalendar />),
-            value: "Next week",
-            isVisible: (deadline !== "Next week")
+            value: deadlineNames.NEXT_WEEK,
+            isVisible: (deadline !== deadlineNames.NEXT_WEEK),
+            onPress: () => {
+                setDeadline(deadlineNames.NEXT_WEEK);
+                const date: string | null = getFormattedDate(deadlineNames.NEXT_WEEK);
+                setDeadlineDate(date);
+                setIsDeadlineVisible(false);
+            }
         },
         {
             id: "views.authenticated.home.text-input.deadline.pick-date",
             icon: (<PickDateCalendar />),
-            value: "Pick date",
-            isVisible: (deadline !== "Pick date")
+            value: deadlineNames.PICK_DATE,
+            isVisible: (deadline !== deadlineNames.PICK_DATE),
+            onPress: () => {
+                setDeadline(deadlineNames.PICK_DATE);
+
+                //TODO:
+                const date: string | null = getFormattedDate(deadlineNames.PICK_DATE, new Date());
+                setDeadlineDate(date);
+                setIsDeadlineVisible(false);
+            }
         },
         {
             id: "views.authenticated.home.text-input.deadline.remove",
             icon: (<CalendarRemove />),
-            value: "Set deadline",
-            isVisible: (deadline !== "Set deadline")
+            value: deadlineNames.REMOVE,
+            isVisible: (deadline !== deadlineNames.REMOVE),
+            onPress: () => {
+                setDeadline(deadlineNames.REMOVE);
+                const date: string | null = getFormattedDate(deadlineNames.REMOVE);
+                setDeadlineDate(date);
+                setIsDeadlineVisible(false);
+            }
         },
     ]
 
@@ -74,10 +122,7 @@ export default function DeadLineSelector({ setDeadline, deadline, setIsDeadlineV
                                 width: spacing.SCALE_85,
                                 marginLeft: -spacing.SCALE_12,
                             }}
-                            onPress={() => {
-                                setDeadline(date.value);
-                                setIsDeadlineVisible(false);
-                            }}
+                            onPress={date.onPress}
                         >
                             {cloneElement(date.icon as JSX.Element, {
                                 stroke: theme.TEXT,

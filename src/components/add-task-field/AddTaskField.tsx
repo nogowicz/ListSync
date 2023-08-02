@@ -11,9 +11,9 @@ import ImportanceSelection from 'assets/button-icons/importance-input-selection.
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
 import { List, Task } from 'data/types';
-import { listColorTheme, listIconTheme } from 'styles/list-styles';
 import ListSelector from './ListSelector';
-import DeadLineSelector from './DeadlineSelector';
+import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
+import NotificationBell from 'assets/button-icons/notification-bell.svg';
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -30,6 +30,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
     const [deadline, setDeadline] = useState<string>("Set deadline");
     const [textValue, setTextValue] = useState('');
+    const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
         defaultMessage: 'Add new task',
@@ -54,7 +55,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     isCompleted: false,
                     addedBy: 'john',
                     assignedTo: null,
-                    deadline: null,
+                    deadline: deadlineDate,
                     effort: '',
                     importance: '',
                     note: '',
@@ -79,6 +80,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     };
 
 
+
+
+
     return (
         <View
             style={[
@@ -101,6 +105,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     setDeadline={setDeadline}
                     deadline={deadline}
                     setIsDeadlineVisible={setIsDeadlineVisible}
+                    setDeadlineDate={setDeadlineDate}
                 />
             }
 
@@ -141,40 +146,52 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                         }}
                     >
                         <CalendarSelection
-                            fill={deadline === 'Set deadline' ? theme.HINT : theme.PRIMARY}
+                            fill={deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY}
                         />
                         <Text
                             style={{
-                                color: deadline === 'Set deadline' ? theme.HINT : theme.PRIMARY,
+                                color: deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY,
 
                             }}>
-                            {deadline === 'Set deadline' &&
+                            {deadline === deadlineNames.REMOVE &&
                                 <FormattedMessage
                                     id='views.authenticated.home.text-input.deadline.set'
                                     defaultMessage={deadline}
                                 />
                             }
-                            {deadline === 'Today' &&
+                            {deadline === deadlineNames.TODAY &&
                                 <FormattedMessage
                                     id='views.authenticated.home.text-input.deadline.today'
                                     defaultMessage={deadline}
                                 />}
-                            {deadline === 'Tomorrow' &&
+                            {deadline === deadlineNames.TOMORROW &&
                                 <FormattedMessage
                                     id='views.authenticated.home.text-input.deadline.tomorrow'
                                     defaultMessage={deadline}
                                 />}
-                            {deadline === 'Next week' &&
+                            {deadline === deadlineNames.NEXT_WEEK &&
                                 <FormattedMessage
                                     id='views.authenticated.home.text-input.deadline.next-week'
                                     defaultMessage={deadline}
                                 />}
-                            {deadline === 'Pick date' &&
+                            {deadline === deadlineNames.PICK_DATE &&
                                 <FormattedMessage
                                     id='views.authenticated.home.text-input.deadline.pick-date'
                                     defaultMessage={deadline}
                                 />}
 
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttons}>
+                        <NotificationBell
+                            stroke={theme.HINT}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />
+                        <Text style={{ color: theme.HINT }}>
+                            <FormattedMessage
+                                id='views.authenticated.home.text-input.notification'
+                                defaultMessage={'Notification'}
+                            />
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttons}>

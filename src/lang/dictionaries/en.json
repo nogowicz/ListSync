@@ -33,6 +33,7 @@
   "views.authenticated.home.text-input.deadline.pick-date": "Pick date",
   "views.authenticated.home.text-input.deadline.remove": "Remove",
   "views.authenticated.home.text-input.importance": "Importance",
+  "views.authenticated.home.text-input.notification": "Notification",
   "views.authenticated.home.list-item.tasks": "tasks",
   "views.authenticated.home.list-item.task": "task",
   "views.authenticated.home.list.tasks": "Tasks ",
