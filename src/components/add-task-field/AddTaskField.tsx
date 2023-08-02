@@ -28,7 +28,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
-    const [deadline, setDeadline] = useState<string>("Today");
+    const [deadline, setDeadline] = useState<string>("Set deadline");
     const [textValue, setTextValue] = useState('');
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
@@ -141,13 +141,19 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                         }}
                     >
                         <CalendarSelection
-                            fill={deadline === 'Today' ? theme.HINT : theme.PRIMARY}
+                            fill={deadline === 'Set deadline' ? theme.HINT : theme.PRIMARY}
                         />
                         <Text
                             style={{
-                                color: deadline === 'Today' ? theme.HINT : theme.PRIMARY,
+                                color: deadline === 'Set deadline' ? theme.HINT : theme.PRIMARY,
 
                             }}>
+                            {deadline === 'Set deadline' &&
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.deadline.set'
+                                    defaultMessage={deadline}
+                                />
+                            }
                             {deadline === 'Today' &&
                                 <FormattedMessage
                                     id='views.authenticated.home.text-input.deadline.today'
