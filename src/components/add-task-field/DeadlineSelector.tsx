@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { Dispatch, SetStateAction, cloneElement, useContext } from 'react'
+import React, { Dispatch, SetStateAction, cloneElement, useContext, useState, useEffect } from 'react'
 import { constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage } from 'react-intl';
@@ -10,6 +10,7 @@ import TomorrowCalendar from 'assets/button-icons/calendar-tomorrow.svg';
 import NextWeekCalendar from 'assets/button-icons/calendar-next-week.svg';
 import CalendarRemove from 'assets/button-icons/calendar-none.svg';
 import { getFormattedDate } from 'utils/dateFormat';
+
 
 export const deadlineNames = {
     TODAY: "Today",
@@ -24,6 +25,8 @@ type DeadLineSelectorProps = {
     deadline: string;
     setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
     setDeadlineDate: Dispatch<SetStateAction<string | null>>;
+    setShowDateTimePicker: Dispatch<SetStateAction<boolean>>;
+    onPickDatePress: any;
 }
 
 
@@ -32,8 +35,12 @@ export default function DeadLineSelector({
     deadline,
     setIsDeadlineVisible,
     setDeadlineDate,
+    onPickDatePress
 }: DeadLineSelectorProps) {
     const theme = useContext(ThemeContext);
+    // useEffect(() => {
+    //     console.log("DeadlineSelector: ", dateTimePickerDate)
+    // }, [dateTimePickerDate])
 
     const dates = [
         {
@@ -78,12 +85,7 @@ export default function DeadLineSelector({
             value: deadlineNames.PICK_DATE,
             isVisible: (deadline !== deadlineNames.PICK_DATE),
             onPress: () => {
-                setDeadline(deadlineNames.PICK_DATE);
-
-                //TODO:
-                const date: string | null = getFormattedDate(deadlineNames.PICK_DATE, new Date());
-                setDeadlineDate(date);
-                setIsDeadlineVisible(false);
+                onPickDatePress();
             }
         },
         {
@@ -146,5 +148,3 @@ export default function DeadLineSelector({
         </ScrollView>
     )
 }
-
-const styles = StyleSheet.create({})

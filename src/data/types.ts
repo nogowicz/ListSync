@@ -11,7 +11,7 @@ export interface Task {
   IdTask: number;
   title: string;
   isCompleted: boolean;
-  deadline: string | null;
+  deadline?: string | null;
   importance: string;
   effort: string;
   note: string;
