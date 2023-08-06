@@ -14,6 +14,10 @@ import { List, Task } from 'data/types';
 import ListSelector from './ListSelector';
 import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
 import NotificationBell from 'assets/button-icons/notification-bell.svg';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { formatDateToShortDate, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
+import NotificationSelector from './NotificationSelector';
+
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -28,9 +32,15 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
-    const [deadline, setDeadline] = useState<string>("Set deadline");
+    const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+    const [deadline, setDeadline] = useState<string>("Deadline");
     const [textValue, setTextValue] = useState('');
     const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
+    const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+    const [dateTimePickerDate, setDateTimePickerDate] = useState<Date>();
+    const [mode, setMode] = useState<any>('date');
+    const [formattedShortDate, setFormattedShortDate] = useState();
+
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
         defaultMessage: 'Add new task',
@@ -79,156 +89,223 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         setTextValue('');
     };
 
+    const onChange = (event: any, selectedDate?: Date | undefined) => {
+        if (event.type === 'set') {
+            setShowDateTimePicker(Platform.OS === 'ios' ? true : false);
+            const currentDate = selectedDate || dateTimePickerDate;
+            setDateTimePickerDate(currentDate);
+            setDeadline(deadlineNames.PICK_DATE);
+        }
+        setShowDateTimePicker(false);
+    };
 
 
+
+    const handlePickDate = () => {
+        setShowDateTimePicker(true);
+        setIsDeadlineVisible(false);
+    }
+
+
+    const deadlineTranslation: { [key: string]: React.JSX.Element } = {
+        'Deadline': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.set'
+                defaultMessage={deadline}
+            />
+        ),
+        'Today': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.today'
+                defaultMessage={deadline}
+            />
+        ),
+        'Tomorrow': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.tomorrow'
+                defaultMessage={deadline}
+            />
+        ),
+        'Next week': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.next-week'
+                defaultMessage={deadline}
+            />
+        ),
+        'Pick date': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.pick-date'
+                defaultMessage={deadline}
+            />
+        )
+    };
+
+    useEffect(() => {
+        setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, dateTimePickerDate) as string);
+    }, [dateTimePickerDate]);
 
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    borderColor: theme.HINT,
-                    backgroundColor: theme.BACKGROUND,
-                }]}>
+        <>
+            {showDateTimePicker &&
+                <DateTimePicker
+                    testID='dateTimePicker'
+                    value={dateTimePickerDate || new Date()}
+                    mode={mode}
+                    is24Hour={true}
+                    display='default'
+                    onChange={onChange}
+                />}
+            <View
+                style={[
+                    styles.container,
+                    {
+                        borderColor: theme.HINT,
+                        backgroundColor: theme.BACKGROUND,
+                    }]}>
 
-            {isListVisible &&
-                <ListSelector
-                    list={list}
-                    setActiveList={setActiveList}
-                    setIsListVisible={setIsListVisible}
-                />
-            }
+                {isListVisible &&
+                    <ListSelector
+                        list={list}
+                        setActiveList={setActiveList}
+                        setIsListVisible={setIsListVisible}
+                    />
+                }
 
-            {isDeadlineVisible &&
-                <DeadLineSelector
-                    setDeadline={setDeadline}
-                    deadline={deadline}
-                    setIsDeadlineVisible={setIsDeadlineVisible}
-                    setDeadlineDate={setDeadlineDate}
-                />
-            }
+                {isDeadlineVisible &&
+                    <DeadLineSelector
+                        setDeadline={setDeadline}
+                        deadline={deadline}
+                        setIsDeadlineVisible={setIsDeadlineVisible}
+                        setDeadlineDate={setDeadlineDate}
+                        setShowDateTimePicker={setShowDateTimePicker}
+                        onPickDatePress={handlePickDate}
+                    />
+                }
 
-            <ScrollView
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                keyboardShouldPersistTaps='always'
-            >
-                <View style={styles.upperContainer}>
-                    <TouchableOpacity
-                        style={styles.buttons}
-                        onPress={() => {
-                            setIsListVisible(!isListVisible)
-                            setIsDeadlineVisible(false);
-                        }}
-                    >
-                        <ListSelection
-                            stroke={activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                        />
-                        <Text style={{
-                            color: activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY,
-                        }}>
-                            {activeList?.listName === 'All' ?
-                                <FormattedMessage
-                                    id='views.authenticated.home.text-input.list-name.all'
-                                    defaultMessage={'All'}
-                                /> :
-                                activeList?.listName
-                            }
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.buttons}
-                        onPress={() => {
-                            setIsDeadlineVisible(!isDeadlineVisible)
-                            setIsListVisible(false);
-                        }}
-                    >
-                        <CalendarSelection
-                            fill={deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY}
-                        />
-                        <Text
-                            style={{
-                                color: deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY,
+                {isNotificationVisible &&
+                    <NotificationSelector
+                        setDeadline={setDeadline}
+                        deadline={deadline}
+                        setIsDeadlineVisible={setIsDeadlineVisible}
+                        setDeadlineDate={setDeadlineDate}
+                        setShowDateTimePicker={setShowDateTimePicker}
+                        onPickDatePress={handlePickDate}
+                    />
 
+                }
+
+                <ScrollView
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    keyboardShouldPersistTaps='always'
+                >
+                    <View style={styles.upperContainer}>
+                        <TouchableOpacity
+                            style={styles.buttons}
+                            onPress={() => {
+                                setIsListVisible(!isListVisible)
+                                setIsDeadlineVisible(false);
+                                setIsNotificationVisible(false);
+                            }}
+                        >
+                            <ListSelection
+                                stroke={activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
+                            />
+                            <Text style={{
+                                color: activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY,
                             }}>
-                            {deadline === deadlineNames.REMOVE &&
-                                <FormattedMessage
-                                    id='views.authenticated.home.text-input.deadline.set'
-                                    defaultMessage={deadline}
-                                />
-                            }
-                            {deadline === deadlineNames.TODAY &&
-                                <FormattedMessage
-                                    id='views.authenticated.home.text-input.deadline.today'
-                                    defaultMessage={deadline}
-                                />}
-                            {deadline === deadlineNames.TOMORROW &&
-                                <FormattedMessage
-                                    id='views.authenticated.home.text-input.deadline.tomorrow'
-                                    defaultMessage={deadline}
-                                />}
-                            {deadline === deadlineNames.NEXT_WEEK &&
-                                <FormattedMessage
-                                    id='views.authenticated.home.text-input.deadline.next-week'
-                                    defaultMessage={deadline}
-                                />}
-                            {deadline === deadlineNames.PICK_DATE &&
-                                <FormattedMessage
-                                    id='views.authenticated.home.text-input.deadline.pick-date'
-                                    defaultMessage={deadline}
-                                />}
+                                {activeList?.listName === 'All' ?
+                                    <FormattedMessage
+                                        id='views.authenticated.home.text-input.list-name.all'
+                                        defaultMessage={'All'}
+                                    /> :
+                                    activeList?.listName
+                                }
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.buttons}
+                            onPress={() => {
+                                setIsDeadlineVisible(!isDeadlineVisible)
+                                setIsListVisible(false);
+                                setIsNotificationVisible(false);
+                            }}
+                        >
+                            <CalendarSelection
+                                fill={deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY}
+                            />
+                            <Text
+                                style={{
+                                    color: deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY,
+                                }}
+                            >
+                                {deadline !== deadlineNames.NEXT_WEEK && deadline !== deadlineNames.PICK_DATE ? (
+                                    deadline === deadlineNames.TODAY ? deadlineNames.TODAY : deadline === deadlineNames.TOMORROW ? deadlineNames.TOMORROW : deadlineTranslation[deadline]
+                                ) : (
+                                    isToday(new Date(deadlineDate as string)) ? deadlineNames.TODAY : isTomorrow(new Date(deadlineDate as string)) ? deadlineNames.TOMORROW : formatDateToShortDate(new Date(deadlineDate as string), intl)
+                                )}
+                            </Text>
 
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttons}>
-                        <NotificationBell
-                            stroke={theme.HINT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                        />
-                        <Text style={{ color: theme.HINT }}>
-                            <FormattedMessage
-                                id='views.authenticated.home.text-input.notification'
-                                defaultMessage={'Notification'}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.buttons}
+                            onPress={() => {
+                                setIsNotificationVisible(!isNotificationVisible)
+                                setIsListVisible(false);
+                                setIsDeadlineVisible(false);
+                            }}
+                        >
+                            <NotificationBell
+                                stroke={theme.HINT}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
                             />
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttons}>
-                        <ImportanceSelection
-                            stroke={theme.HINT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                        />
-                        <Text style={{ color: theme.HINT }}>
-                            <FormattedMessage
-                                id='views.authenticated.home.text-input.importance'
-                                defaultMessage={'Importance'}
+                            <Text style={{ color: theme.HINT }}>
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.notification'
+                                    defaultMessage={'Notification'}
+                                />
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttons}>
+                            <ImportanceSelection
+                                stroke={theme.HINT}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
                             />
-                        </Text>
+                            <Text style={{ color: theme.HINT }}>
+                                <FormattedMessage
+                                    id='views.authenticated.home.text-input.importance'
+                                    defaultMessage={'Importance'}
+                                />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+                <View style={styles.bottomContainer}>
+                    <TextInput
+                        ref={inputRef}
+                        autoFocus={true}
+                        placeholder={placeholderText}
+                        placeholderTextColor={theme.HINT}
+                        style={[styles.textInput, { color: theme.TEXT, }]}
+                        value={textValue}
+                        onChangeText={(text) => setTextValue(text)}
+                    />
+                    <TouchableOpacity
+                        activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                        style={{
+                            padding: spacing.SCALE_8,
+                        }}
+                        onPress={handleAddTask}
+                    >
+                        <AddTaskIcon />
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
-            <View style={styles.bottomContainer}>
-                <TextInput
-                    ref={inputRef}
-                    autoFocus={true}
-                    placeholder={placeholderText}
-                    placeholderTextColor={theme.HINT}
-                    style={[styles.textInput, { color: theme.TEXT, }]}
-                    value={textValue}
-                    onChangeText={(text) => setTextValue(text)}
-                />
-                <TouchableOpacity
-                    activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                    style={{
-                        padding: spacing.SCALE_8,
-                    }}
-                    onPress={handleAddTask}
-                >
-                    <AddTaskIcon />
-                </TouchableOpacity>
             </View>
-        </View>
+
+        </>
+
     )
 }
 

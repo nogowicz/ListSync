@@ -22,15 +22,15 @@ import CalendarRemove from 'assets/button-icons/calendar-none.svg';
 import { getFormattedDate } from 'utils/dateFormat';
 
 
-export const deadlineNames = {
+export const notificationTimeNames = {
     TODAY: "Today",
     TOMORROW: "Tomorrow",
     NEXT_WEEK: "Next week",
     PICK_DATE: "Pick date",
-    REMOVE: "Deadline",
+    REMOVE: "Set notification",
 }
 
-type DeadLineSelectorProps = {
+type NotificationSelectorProps = {
     setDeadline: Dispatch<SetStateAction<string>>;
     deadline: string;
     setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
@@ -40,24 +40,24 @@ type DeadLineSelectorProps = {
 }
 
 
-export default function DeadLineSelector({
+export default function NotificationSelector({
     setDeadline,
     deadline,
     setIsDeadlineVisible,
     setDeadlineDate,
     onPickDatePress
-}: DeadLineSelectorProps) {
+}: NotificationSelectorProps) {
     const theme = useContext(ThemeContext);
 
     const dates = [
         {
             id: "views.authenticated.home.text-input.deadline.today",
             icon: (<TodayCalendar />),
-            value: deadlineNames.TODAY,
-            isVisible: (deadline !== deadlineNames.TODAY),
+            value: notificationTimeNames.TODAY,
+            isVisible: (deadline !== notificationTimeNames.TODAY),
             onPress: () => {
-                setDeadline(deadlineNames.TODAY);
-                const date: string | null = getFormattedDate(deadlineNames.TODAY);
+                setDeadline(notificationTimeNames.TODAY);
+                const date: string | null = getFormattedDate(notificationTimeNames.TODAY);
                 setDeadlineDate(date);
                 setIsDeadlineVisible(false);
             }
@@ -65,11 +65,11 @@ export default function DeadLineSelector({
         {
             id: "views.authenticated.home.text-input.deadline.tomorrow",
             icon: (<TomorrowCalendar />),
-            value: deadlineNames.TOMORROW,
-            isVisible: (deadline !== deadlineNames.TOMORROW),
+            value: notificationTimeNames.TOMORROW,
+            isVisible: (deadline !== notificationTimeNames.TOMORROW),
             onPress: () => {
-                setDeadline(deadlineNames.TOMORROW);
-                const date: string | null = getFormattedDate(deadlineNames.TOMORROW);
+                setDeadline(notificationTimeNames.TOMORROW);
+                const date: string | null = getFormattedDate(notificationTimeNames.TOMORROW);
                 setDeadlineDate(date);
                 setIsDeadlineVisible(false);
             }
@@ -77,11 +77,11 @@ export default function DeadLineSelector({
         {
             id: "views.authenticated.home.text-input.deadline.next-week",
             icon: (<NextWeekCalendar />),
-            value: deadlineNames.NEXT_WEEK,
-            isVisible: (deadline !== deadlineNames.NEXT_WEEK),
+            value: notificationTimeNames.NEXT_WEEK,
+            isVisible: (deadline !== notificationTimeNames.NEXT_WEEK),
             onPress: () => {
-                setDeadline(deadlineNames.NEXT_WEEK);
-                const date: string | null = getFormattedDate(deadlineNames.NEXT_WEEK);
+                setDeadline(notificationTimeNames.NEXT_WEEK);
+                const date: string | null = getFormattedDate(notificationTimeNames.NEXT_WEEK);
                 setDeadlineDate(date);
                 setIsDeadlineVisible(false);
             }
@@ -89,8 +89,8 @@ export default function DeadLineSelector({
         {
             id: "views.authenticated.home.text-input.deadline.pick-date",
             icon: (<PickDateCalendar />),
-            value: deadlineNames.PICK_DATE,
-            isVisible: (deadline !== deadlineNames.PICK_DATE),
+            value: notificationTimeNames.PICK_DATE,
+            isVisible: (deadline !== notificationTimeNames.PICK_DATE),
             onPress: () => {
                 onPickDatePress();
             }
@@ -98,11 +98,11 @@ export default function DeadLineSelector({
         {
             id: "views.authenticated.home.text-input.deadline.remove",
             icon: (<CalendarRemove />),
-            value: deadlineNames.REMOVE,
-            isVisible: (deadline !== deadlineNames.REMOVE),
+            value: notificationTimeNames.REMOVE,
+            isVisible: (deadline !== notificationTimeNames.REMOVE),
             onPress: () => {
-                setDeadline(deadlineNames.REMOVE);
-                const date: string | null = getFormattedDate(deadlineNames.REMOVE);
+                setDeadline(notificationTimeNames.REMOVE);
+                const date: string | null = getFormattedDate(notificationTimeNames.REMOVE);
                 setDeadlineDate(date);
                 setIsDeadlineVisible(false);
             }
