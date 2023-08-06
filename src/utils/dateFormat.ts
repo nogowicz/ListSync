@@ -42,6 +42,44 @@ export function formatDateToLongDate(date: Date, intl: IntlShape): string {
   return `${dayName}, ${day} ${monthName} ${year}`;
 }
 
+export function formatDateToShortDate(date: Date, intl: IntlShape): string {
+  function getShortMonthName(month: number): string {
+    const monthId: { [key: string]: string } = {
+      '0': 'date.month.short.january',
+      '1': 'date.month.short.february',
+      '2': 'date.month.short.march',
+      '3': 'date.month.short.april',
+      '4': 'date.month.short.may',
+      '5': 'date.month.short.june',
+      '6': 'date.month.short.july',
+      '7': 'date.month.short.august',
+      '8': 'date.month.short.september',
+      '9': 'date.month.short.october',
+      '10': 'date.month.short.november',
+      '11': 'date.month.short.december',
+    };
+    return intl.formatMessage({ id: monthId[month] });
+  }
+  function getShortDayName(day: number): string {
+    const dayId: { [key: string]: string } = {
+      '0': 'date.day.short.sunday',
+      '1': 'date.day.short.monday',
+      '2': 'date.day.short.tuesday',
+      '3': 'date.day.short.wednesday',
+      '4': 'date.day.short.thursday',
+      '5': 'date.day.short.friday',
+      '6': 'date.day.short.saturday',
+    };
+    return intl.formatMessage({ id: dayId[day] });
+  }
+
+  const dayOfWeekAbbreviation: string = getShortDayName(date.getDay());
+  const monthAbbreviation: string = getShortMonthName(date.getMonth());
+  const day: number = date.getDate();
+
+  return `${dayOfWeekAbbreviation}, ${monthAbbreviation} ${day}`;
+}
+
 function formatDate(date: Date): string {
   return date.toISOString().slice(0, 19).replace('T', ' ');
 }
@@ -76,4 +114,23 @@ export function getFormattedDate(
   } else {
     return null;
   }
+}
+
+export function isToday(date: Date): boolean {
+  const today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
+export function isTomorrow(date: Date): boolean {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return (
+    date.getDate() === tomorrow.getDate() &&
+    date.getMonth() === tomorrow.getMonth() &&
+    date.getFullYear() === tomorrow.getFullYear()
+  );
 }

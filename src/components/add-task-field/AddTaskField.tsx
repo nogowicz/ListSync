@@ -14,8 +14,9 @@ import { List, Task } from 'data/types';
 import ListSelector from './ListSelector';
 import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
 import NotificationBell from 'assets/button-icons/notification-bell.svg';
-import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
-import { getFormattedDate } from 'utils/dateFormat';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { formatDateToShortDate, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
+import NotificationSelector from './NotificationSelector';
 
 
 type AddTaskFieldProps = {
@@ -31,12 +32,14 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
-    const [deadline, setDeadline] = useState<string>("Set deadline");
+    const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+    const [deadline, setDeadline] = useState<string>("Deadline");
     const [textValue, setTextValue] = useState('');
     const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [dateTimePickerDate, setDateTimePickerDate] = useState<Date>();
     const [mode, setMode] = useState<any>('date');
+    const [formattedShortDate, setFormattedShortDate] = useState();
 
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
@@ -88,21 +91,59 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
 
     const onChange = (event: any, selectedDate?: Date | undefined) => {
         if (event.type === 'set') {
+            setShowDateTimePicker(Platform.OS === 'ios' ? true : false);
             const currentDate = selectedDate || dateTimePickerDate;
             setDateTimePickerDate(currentDate);
-            setShowDateTimePicker(false);
-        } else {
-            setShowDateTimePicker(false);
+            setDeadline(deadlineNames.PICK_DATE);
         }
+        setShowDateTimePicker(false);
     };
+
+
 
     const handlePickDate = () => {
         setShowDateTimePicker(true);
         setIsDeadlineVisible(false);
-        const date: string | null = getFormattedDate(deadlineNames.PICK_DATE, dateTimePickerDate);
-        setDeadlineDate(date);
-        setDeadline(deadlineNames.PICK_DATE);
     }
+
+
+    const deadlineTranslation: { [key: string]: React.JSX.Element } = {
+        'Deadline': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.set'
+                defaultMessage={deadline}
+            />
+        ),
+        'Today': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.today'
+                defaultMessage={deadline}
+            />
+        ),
+        'Tomorrow': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.tomorrow'
+                defaultMessage={deadline}
+            />
+        ),
+        'Next week': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.next-week'
+                defaultMessage={deadline}
+            />
+        ),
+        'Pick date': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.deadline.pick-date'
+                defaultMessage={deadline}
+            />
+        )
+    };
+
+    useEffect(() => {
+        setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, dateTimePickerDate) as string);
+    }, [dateTimePickerDate]);
+
 
     return (
         <>
@@ -142,6 +183,18 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     />
                 }
 
+                {isNotificationVisible &&
+                    <NotificationSelector
+                        setDeadline={setDeadline}
+                        deadline={deadline}
+                        setIsDeadlineVisible={setIsDeadlineVisible}
+                        setDeadlineDate={setDeadlineDate}
+                        setShowDateTimePicker={setShowDateTimePicker}
+                        onPickDatePress={handlePickDate}
+                    />
+
+                }
+
                 <ScrollView
                     showsHorizontalScrollIndicator={false}
                     horizontal
@@ -153,6 +206,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             onPress={() => {
                                 setIsListVisible(!isListVisible)
                                 setIsDeadlineVisible(false);
+                                setIsNotificationVisible(false);
                             }}
                         >
                             <ListSelection
@@ -176,6 +230,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             onPress={() => {
                                 setIsDeadlineVisible(!isDeadlineVisible)
                                 setIsListVisible(false);
+                                setIsNotificationVisible(false);
                             }}
                         >
                             <CalendarSelection
@@ -184,38 +239,24 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             <Text
                                 style={{
                                     color: deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY,
-
-                                }}>
-                                {deadline === deadlineNames.REMOVE &&
-                                    <FormattedMessage
-                                        id='views.authenticated.home.text-input.deadline.set'
-                                        defaultMessage={deadline}
-                                    />
-                                }
-                                {deadline === deadlineNames.TODAY &&
-                                    <FormattedMessage
-                                        id='views.authenticated.home.text-input.deadline.today'
-                                        defaultMessage={deadline}
-                                    />}
-                                {deadline === deadlineNames.TOMORROW &&
-                                    <FormattedMessage
-                                        id='views.authenticated.home.text-input.deadline.tomorrow'
-                                        defaultMessage={deadline}
-                                    />}
-                                {deadline === deadlineNames.NEXT_WEEK &&
-                                    <FormattedMessage
-                                        id='views.authenticated.home.text-input.deadline.next-week'
-                                        defaultMessage={deadline}
-                                    />}
-                                {deadline === deadlineNames.PICK_DATE &&
-                                    <FormattedMessage
-                                        id='views.authenticated.home.text-input.deadline.pick-date'
-                                        defaultMessage={deadline}
-                                    />}
-
+                                }}
+                            >
+                                {deadline !== deadlineNames.NEXT_WEEK && deadline !== deadlineNames.PICK_DATE ? (
+                                    deadline === deadlineNames.TODAY ? deadlineNames.TODAY : deadline === deadlineNames.TOMORROW ? deadlineNames.TOMORROW : deadlineTranslation[deadline]
+                                ) : (
+                                    isToday(new Date(deadlineDate as string)) ? deadlineNames.TODAY : isTomorrow(new Date(deadlineDate as string)) ? deadlineNames.TOMORROW : formatDateToShortDate(new Date(deadlineDate as string), intl)
+                                )}
                             </Text>
+
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttons}>
+                        <TouchableOpacity
+                            style={styles.buttons}
+                            onPress={() => {
+                                setIsNotificationVisible(!isNotificationVisible)
+                                setIsListVisible(false);
+                                setIsDeadlineVisible(false);
+                            }}
+                        >
                             <NotificationBell
                                 stroke={theme.HINT}
                                 strokeWidth={constants.STROKE_WIDTH.ICON}
