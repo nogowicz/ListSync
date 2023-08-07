@@ -14,11 +14,11 @@ import { constants, spacing, typography } from 'styles';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage } from 'react-intl';
 
-import TodayCalendar from 'assets/button-icons/calendar-today.svg';
-import PickDateCalendar from 'assets/button-icons/calendar-pick-date.svg';
-import TomorrowCalendar from 'assets/button-icons/calendar-tomorrow.svg';
-import NextWeekCalendar from 'assets/button-icons/calendar-next-week.svg';
-import CalendarRemove from 'assets/button-icons/calendar-none.svg';
+import TodayLater from 'assets/button-icons/later_today.svg';
+import Tomorrow from 'assets/button-icons/tomorrow.svg';
+import NextWeek from 'assets/button-icons/next_week.svg';
+import PickTime from 'assets/button-icons/pick_time.svg';
+import RemoveNotification from 'assets/button-icons/remove_notification.svg';
 import { getFormattedDate } from 'utils/dateFormat';
 
 
@@ -52,7 +52,7 @@ export default function NotificationSelector({
     const dates = [
         {
             id: "views.authenticated.home.text-input.deadline.today",
-            icon: (<TodayCalendar />),
+            icon: (<TodayLater />),
             value: notificationTimeNames.TODAY,
             isVisible: (deadline !== notificationTimeNames.TODAY),
             onPress: () => {
@@ -64,7 +64,7 @@ export default function NotificationSelector({
         },
         {
             id: "views.authenticated.home.text-input.deadline.tomorrow",
-            icon: (<TomorrowCalendar />),
+            icon: (<Tomorrow />),
             value: notificationTimeNames.TOMORROW,
             isVisible: (deadline !== notificationTimeNames.TOMORROW),
             onPress: () => {
@@ -76,7 +76,7 @@ export default function NotificationSelector({
         },
         {
             id: "views.authenticated.home.text-input.deadline.next-week",
-            icon: (<NextWeekCalendar />),
+            icon: (<NextWeek />),
             value: notificationTimeNames.NEXT_WEEK,
             isVisible: (deadline !== notificationTimeNames.NEXT_WEEK),
             onPress: () => {
@@ -88,7 +88,7 @@ export default function NotificationSelector({
         },
         {
             id: "views.authenticated.home.text-input.deadline.pick-date",
-            icon: (<PickDateCalendar />),
+            icon: (<PickTime />),
             value: notificationTimeNames.PICK_DATE,
             isVisible: (deadline !== notificationTimeNames.PICK_DATE),
             onPress: () => {
@@ -97,7 +97,7 @@ export default function NotificationSelector({
         },
         {
             id: "views.authenticated.home.text-input.deadline.remove",
-            icon: (<CalendarRemove />),
+            icon: (<RemoveNotification />),
             value: notificationTimeNames.REMOVE,
             isVisible: (deadline !== notificationTimeNames.REMOVE),
             onPress: () => {
@@ -134,12 +134,13 @@ export default function NotificationSelector({
                             onPress={date.onPress}
                         >
                             {cloneElement(date.icon as JSX.Element, {
-                                stroke: theme.TEXT,
+                                stroke: theme.PRIMARY,
                                 width: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
                                 height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
+                                strokeWidth: 1.5,
                             })}
                             <Text style={{
-                                color: theme.TEXT,
+                                color: theme.PRIMARY,
                                 fontSize: typography.FONT_SIZE_12,
                                 textAlign: 'center',
 
