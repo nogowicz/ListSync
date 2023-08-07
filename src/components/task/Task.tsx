@@ -14,7 +14,7 @@ import Arrow from 'assets/button-icons/Back.svg';
 import SubtaskTree from 'assets/button-icons/subtasks-icon.svg';
 import Calendar from 'assets/button-icons/calendar-input-selection.svg';
 import { useIntl } from 'react-intl';
-import { getDayName } from 'utils/dateFormat';
+import { formatDateToShortDate, getDayName } from 'utils/dateFormat';
 import { toggleAnimation } from './helpers';
 import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
@@ -33,7 +33,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     const completedSubTasks: Subtask[] = subTasks.filter(item => item.isCompleted);
     const hasDeadline = task.deadline;
     const deadline = new Date(task.deadline as string);
-    const deadlineDayName = getDayName(deadline.getDay(), intl);
+    const deadlineAsString = formatDateToShortDate(deadline, intl);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
     const { listData, updateListData } = useListContext();
@@ -159,7 +159,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
                             fill={deadlineColor()}
                         />
                         <Text style={[styles.subtasksAmount, { color: deadlineColor() }]}>
-                            {deadlineDayName}
+                            {deadlineAsString}
                         </Text>
                     </View>}
 
