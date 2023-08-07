@@ -14,10 +14,11 @@ import Arrow from 'assets/button-icons/Back.svg';
 import SubtaskTree from 'assets/button-icons/subtasks-icon.svg';
 import Calendar from 'assets/button-icons/calendar-input-selection.svg';
 import { useIntl } from 'react-intl';
-import { formatDateToShortDate, getDayName } from 'utils/dateFormat';
+import { formatDateToShortDate, getDayName, isToday, isTomorrow } from 'utils/dateFormat';
 import { toggleAnimation } from './helpers';
 import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
+import { deadlineNames } from 'components/add-task-field/DeadlineSelector';
 
 type TaskProps = {
     task: TaskType;
@@ -159,7 +160,9 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
                             fill={deadlineColor()}
                         />
                         <Text style={[styles.subtasksAmount, { color: deadlineColor() }]}>
-                            {deadlineAsString}
+                            {isToday(deadline) ? deadlineNames.TODAY :
+                                (isTomorrow(deadline) ? deadlineNames.TOMORROW : deadlineAsString)
+                            }
                         </Text>
                     </View>}
 
