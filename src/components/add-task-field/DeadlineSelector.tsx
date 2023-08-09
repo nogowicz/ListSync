@@ -35,7 +35,6 @@ type DeadLineSelectorProps = {
     deadline: string;
     setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
     setDeadlineDate: Dispatch<SetStateAction<string | null>>;
-    setShowDateTimePicker: Dispatch<SetStateAction<boolean>>;
     onPickDatePress: any;
 }
 

@@ -26,32 +26,12 @@ export default function Home({ navigation }: HomeProps) {
     const { listData } = useListContext();
     const newList = listData.filter((item: List) => item.isArchived === false);
     const [list, setList] = useState<List[]>(newList);
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     useEffect(() => {
         const filteredList = listData.filter((item: List) => item.isArchived === false);
         setList(filteredList);
     }, [listData]);
 
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            () => {
-                setKeyboardVisible(true);
-            }
-        );
-        const keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            () => {
-                setKeyboardVisible(false);
-            }
-        );
-
-        return () => {
-            keyboardDidHideListener.remove();
-            keyboardDidShowListener.remove();
-        };
-    }, []);
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -59,13 +39,9 @@ export default function Home({ navigation }: HomeProps) {
                 <TopPanel name='John' />
                 <FilterPanel setList={setList} />
                 <ListList list={list} />
-                {isKeyboardVisible ?
-                    <AddTaskField
-                        currentListId={1}
-                    />
-                    :
-                    <Button type={buttonTypes.BUTTON_TYPES.FAB} onPress={() => setKeyboardVisible(true)} />}
-
+                <AddTaskField
+                    currentListId={1}
+                />
             </View>
         </View>
     );

@@ -31,80 +31,73 @@ export const notificationTimeNames = {
 }
 
 type NotificationSelectorProps = {
-    setDeadline: Dispatch<SetStateAction<string>>;
-    deadline: string;
-    setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
-    setDeadlineDate: Dispatch<SetStateAction<string | null>>;
-    setShowDateTimePicker: Dispatch<SetStateAction<boolean>>;
+    setNotification: Dispatch<SetStateAction<string>>;
+    notification: string;
+    setIsNotificationVisible: Dispatch<SetStateAction<boolean>>;
     onPickDatePress: any;
 }
 
 
 export default function NotificationSelector({
-    setDeadline,
-    deadline,
-    setIsDeadlineVisible,
-    setDeadlineDate,
+    setNotification,
+    notification,
+    setIsNotificationVisible,
     onPickDatePress
 }: NotificationSelectorProps) {
     const theme = useContext(ThemeContext);
 
     const dates = [
         {
-            id: "views.authenticated.home.text-input.deadline.today",
+            id: "views.authenticated.home.text-input.notification.today",
             icon: (<TodayLater />),
             value: notificationTimeNames.TODAY,
-            isVisible: (deadline !== notificationTimeNames.TODAY),
+            isVisible: (notification !== notificationTimeNames.TODAY),
             onPress: () => {
-                setDeadline(notificationTimeNames.TODAY);
+                setNotification(notificationTimeNames.TODAY);
                 const date: string | null = getFormattedDate(notificationTimeNames.TODAY);
-                setDeadlineDate(date);
-                setIsDeadlineVisible(false);
+                setIsNotificationVisible(false);
             }
         },
         {
-            id: "views.authenticated.home.text-input.deadline.tomorrow",
+            id: "views.authenticated.home.text-input.notification.tomorrow",
             icon: (<Tomorrow />),
             value: notificationTimeNames.TOMORROW,
-            isVisible: (deadline !== notificationTimeNames.TOMORROW),
+            isVisible: (notification !== notificationTimeNames.TOMORROW),
             onPress: () => {
-                setDeadline(notificationTimeNames.TOMORROW);
+                setNotification(notificationTimeNames.TOMORROW);
                 const date: string | null = getFormattedDate(notificationTimeNames.TOMORROW);
-                setDeadlineDate(date);
-                setIsDeadlineVisible(false);
+                setIsNotificationVisible(false);
             }
         },
         {
-            id: "views.authenticated.home.text-input.deadline.next-week",
+            id: "views.authenticated.home.text-input.notification.next-week",
             icon: (<NextWeek />),
             value: notificationTimeNames.NEXT_WEEK,
-            isVisible: (deadline !== notificationTimeNames.NEXT_WEEK),
+            isVisible: (notification !== notificationTimeNames.NEXT_WEEK),
             onPress: () => {
-                setDeadline(notificationTimeNames.NEXT_WEEK);
+                setNotification(notificationTimeNames.NEXT_WEEK);
                 const date: string | null = getFormattedDate(notificationTimeNames.NEXT_WEEK);
-                setDeadlineDate(date);
-                setIsDeadlineVisible(false);
+                setIsNotificationVisible(false);
             }
         },
         {
-            id: "views.authenticated.home.text-input.deadline.pick-date",
+            id: "views.authenticated.home.text-input.notification.pick-date",
             icon: (<PickTime />),
             value: notificationTimeNames.PICK_DATE,
-            isVisible: (deadline !== notificationTimeNames.PICK_DATE),
+            isVisible: (notification !== notificationTimeNames.PICK_DATE),
             onPress: () => {
                 onPickDatePress();
             }
         },
         {
-            id: "views.authenticated.home.text-input.deadline.remove",
+            id: "views.authenticated.home.text-input.notification.remove",
             icon: (<RemoveNotification />),
             value: notificationTimeNames.REMOVE,
-            isVisible: (deadline !== notificationTimeNames.REMOVE),
+            isVisible: (notification !== notificationTimeNames.REMOVE),
             onPress: () => {
-                setDeadline(notificationTimeNames.REMOVE);
+                setNotification(notificationTimeNames.REMOVE);
                 const date: string | null = getFormattedDate(notificationTimeNames.REMOVE);
-                setDeadlineDate(date);
-                setIsDeadlineVisible(false);
+                setIsNotificationVisible(false);
             }
         },
     ]

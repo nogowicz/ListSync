@@ -42,7 +42,9 @@ export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopB
                     navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
                 }}
             >
-                <GoBack />
+                <GoBack
+                    fill={theme.TEXT}
+                />
             </TouchableOpacity>
 
             <TouchableOpacity
