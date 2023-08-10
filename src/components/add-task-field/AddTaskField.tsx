@@ -209,7 +209,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
 
-
+    console.log(notificationTime)
     if (isInputVisible) {
         return (
             <View>
