@@ -16,7 +16,7 @@ import ListSelector from './ListSelector';
 import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
 import NotificationBell from 'assets/button-icons/notification-bell.svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { formatDateToShortDate, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
+import { formatDateToShortDate, formatDateToShortDateWithTime, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
 import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
 
@@ -45,8 +45,11 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
     const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
     const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date>();
-    const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>();
+    const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
     const [showNotificationTimePicker, setShowNotificationTimePicker] = useState(false);
+    const [notificationTime, setNotificationTime] = useState<Date>();
+    const [notificationTodayHour, setNotificationTodayHour] = useState<string>('18:00');
+    const [notificationTomorrowHour, setNotificationTomorrowHour] = useState<string>('18:00');
 
 
     const placeholderText = intl.formatMessage({
@@ -58,7 +61,18 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
 
     useEffect(() => {
         inputRef.current?.focus();
+
+        const now = new Date();
+        if (now.getHours() > 17 || (now.getHours() === 17 && now.getMinutes() > 50)) {
+            setNotificationTodayHour('22:00');
+        } else if (now.getHours() > 21 || (now.getHours() === 21 && now.getMinutes() > 50)) {
+            setNotificationTodayHour('23:30');
+        } else {
+            setNotificationTodayHour('18:00');
+        }
+
     }, []);
+
 
     const handleAddTask = () => {
         if (textValue.trim() === '') {
@@ -98,22 +112,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     };
 
 
-
-    const onChangeTime = (event: any, selectedDate?: Date | undefined) => {
-        if (event.type === 'set') {
-            // setShowNotificationTimePicker(Platform.OS === 'ios' ? true : false);
-            const currentDate = selectedDate || timePickerTime;
-            setTimePickerTime(currentDate);
-            setNotification(notificationTimeNames.PICK_DATE);
-
-        } else if (event.type === 'dismissed') {
-            setShowNotificationDatePicker(false);
-            setShowNotificationTimePicker(false);
-        }
-    };
-
-
-
     const onChangeDeadlineDate = (event: any, selectedDate?: Date | undefined) => {
         if (event.type === 'set') {
             setShowDeadlineDatePicker(Platform.OS === 'ios' ? true : false);
@@ -125,13 +123,39 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         }
     };
 
+
+    const onChangeNotificationTime = (event: any, selectedDate?: Date | undefined) => {
+        if (event.type === 'set') {
+            setShowNotificationTimePicker(Platform.OS === 'ios' ? true : false);
+            const currentDate = selectedDate ?? timePickerTime ?? new Date();
+
+            setTimePickerTime(currentDate);
+
+            const combinedDate = new Date(
+                notificationDatePickerDate.getFullYear(),
+                notificationDatePickerDate.getMonth(),
+                notificationDatePickerDate.getDate(),
+                currentDate.getHours(),
+                currentDate.getMinutes()
+            );
+
+            console.log(combinedDate.toISOString())
+            setNotificationTime(combinedDate);
+            setNotification(notificationTimeNames.PICK_DATE);
+        } else if (event.type === 'dismissed') {
+            setShowNotificationDatePicker(false);
+            setShowNotificationTimePicker(false);
+        }
+    };
+
+
+
     const onChangeNotificationDate = (event: any, selectedDate?: Date | undefined) => {
         if (event.type === 'set') {
             setShowNotificationDatePicker(Platform.OS === 'ios' ? true : false);
             const currentDate = selectedDate || notificationDatePickerDate;
             setNotificationDatePickerDate(currentDate);
             setShowNotificationTimePicker(true);
-            // setNotification(notificationTimeNames.PICK_DATE);
         } else if (event.type === 'dismissed') {
             setShowNotificationDatePicker(false);
         }
@@ -144,7 +168,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             setShowNotificationDatePicker(false);
         } else if (isNotificationVisible) {
             setShowNotificationDatePicker(true);
-            // setShowNotificationTimePicker(true);
             setShowDeadlineDatePicker(false);
         }
     };
@@ -186,6 +209,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
 
+
     if (isInputVisible) {
         return (
             <View>
@@ -216,7 +240,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                         mode={'time'}
                         is24Hour={true}
                         display='default'
-                        onChange={onChangeTime}
+                        onChange={onChangeNotificationTime}
                     />}
                 <View
                     style={[
@@ -249,9 +273,11 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             setNotification={setNotification}
                             notification={notification}
                             setIsNotificationVisible={setIsNotificationVisible}
+                            setNotificationTime={setNotificationTime}
                             onPickDatePress={handlePickDate}
+                            notificationTodayHour={notificationTodayHour}
+                            notificationTomorrowHour={notificationTomorrowHour}
                         />
-
                     }
                     <View style={styles.functionPanel}>
                         <ScrollView
@@ -317,14 +343,22 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                                     }}
                                 >
                                     <NotificationBell
-                                        stroke={theme.HINT}
+                                        stroke={notification === notificationTimeNames.REMOVE ? theme.HINT : theme.PRIMARY}
                                         strokeWidth={constants.STROKE_WIDTH.ICON}
                                     />
-                                    <Text style={{ color: theme.HINT }}>
-                                        <FormattedMessage
-                                            id='views.authenticated.home.text-input.notification'
-                                            defaultMessage={'Notification'}
-                                        />
+                                    <Text
+                                        style={{
+                                            color: notification === notificationTimeNames.REMOVE ? theme.HINT : theme.PRIMARY,
+                                        }}
+                                    >
+                                        {(!notificationTime || notification === notificationTimeNames.REMOVE) ?
+                                            <FormattedMessage
+                                                id='views.authenticated.home.text-input.notification'
+                                                defaultMessage={'Notification'}
+                                            /> :
+                                            formatDateToShortDateWithTime(notificationTime, intl)
+                                        }
+
                                     </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.buttons}>
