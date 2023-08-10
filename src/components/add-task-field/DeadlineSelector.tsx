@@ -35,7 +35,6 @@ type DeadLineSelectorProps = {
     deadline: string;
     setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
     setDeadlineDate: Dispatch<SetStateAction<string | null>>;
-    setShowDateTimePicker: Dispatch<SetStateAction<boolean>>;
     onPickDatePress: any;
 }
 
@@ -134,12 +133,13 @@ export default function DeadLineSelector({
                             onPress={date.onPress}
                         >
                             {cloneElement(date.icon as JSX.Element, {
-                                stroke: theme.TEXT,
+                                stroke: theme.PRIMARY,
                                 width: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
                                 height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
+                                strokeWidth: 1.5,
                             })}
                             <Text style={{
-                                color: theme.TEXT,
+                                color: theme.PRIMARY,
                                 fontSize: typography.FONT_SIZE_12,
                                 textAlign: 'center',
 

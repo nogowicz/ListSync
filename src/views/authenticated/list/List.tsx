@@ -12,7 +12,6 @@ import { Task, List as ListType } from 'data/types';
 import Arrow from 'assets/button-icons/Back.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import AddTaskField from 'components/add-task-field';
-import Button, { buttonTypes } from 'components/button';
 import ChangeListModal from 'components/change-list-modal';
 import { useListContext } from 'context/DataProvider';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
@@ -30,7 +29,6 @@ export default function List({ navigation, route }: ListProps) {
     const { data }: any = route.params;
     const { listData } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
@@ -43,7 +41,6 @@ export default function List({ navigation, route }: ListProps) {
 
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
-        setKeyboardVisible(false);
     };
 
     const rotateAnimation = useSharedValue(isCompletedVisible ? -90 : -180);
@@ -72,20 +69,6 @@ export default function List({ navigation, route }: ListProps) {
         setCompletedTasks(currentList?.tasks.filter((item: Task) => item.isCompleted) || []);
         setListName(currentList?.listName || '');
     }, [currentList]);
-
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardVisible(true);
-        });
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardVisible(false);
-        });
-
-        return () => {
-            keyboardDidHideListener.remove();
-            keyboardDidShowListener.remove();
-        };
-    }, []);
 
     const placeholderText = intl.formatMessage({
         defaultMessage: 'Enter list name',
@@ -186,17 +169,9 @@ export default function List({ navigation, route }: ListProps) {
                 </ScrollView>
             </View>
             {!isModalVisible && (
-                <View>
-                    {isKeyboardVisible ?
-                        <AddTaskField
-                            currentListId={currentList.IdList}
-                        /> :
-                        <Button
-                            type={buttonTypes.BUTTON_TYPES.FAB}
-                            onPress={() => setKeyboardVisible(true)}
-                        />
-                    }
-                </View>
+                <AddTaskField
+                    currentListId={currentList.IdList}
+                />
             )}
 
             <ChangeListModal
