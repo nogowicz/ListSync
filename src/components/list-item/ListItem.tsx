@@ -38,10 +38,16 @@ export default function ListItem({
 }: ListItemProps) {
     const theme = useContext(ThemeContext);
     const tasks = taskAmount !== 1 ?
-        (<FormattedMessage
-            defaultMessage="tasks"
-            id='views.authenticated.home.list-item.tasks'
-        />) :
+        (taskAmount > 4 || taskAmount === 0 ?
+            (<FormattedMessage
+                defaultMessage="tasks"
+                id='views.authenticated.home.list-item.tasks'
+            />) :
+            (<FormattedMessage
+                defaultMessage="tasks"
+                id='views.authenticated.home.list-item.tasks_more-than-four'
+            />
+            )) :
         (<FormattedMessage
             defaultMessage="task"
             id='views.authenticated.home.list-item.task'

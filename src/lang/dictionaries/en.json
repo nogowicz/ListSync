@@ -40,6 +40,7 @@
   "views.authenticated.home.text-input.notification.pick-date": "Pick time",
   "views.authenticated.home.text-input.notification.remove": "Remove",
   "views.authenticated.home.list-item.tasks": "tasks",
+  "views.authenticated.home.list-item.tasks_more-than-four": "tasks",
   "views.authenticated.home.list-item.task": "task",
   "views.authenticated.home.list.tasks": "Tasks ",
   "views.authenticated.home.list.completed": "Completed ",
