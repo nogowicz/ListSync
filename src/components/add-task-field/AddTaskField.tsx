@@ -5,22 +5,23 @@ import { constants, spacing } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import AddTaskIcon from 'assets/button-icons/add-task.svg';
-import ListSelection from 'assets/button-icons/list-input-selection.svg';
-import CalendarSelection from 'assets/button-icons/calendar-input-selection.svg';
-import ImportanceSelectionIcon from 'assets/button-icons/importance-input-selection.svg';
+
+
+
 import HideArrow from 'assets/button-icons/Back.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
 import { List, Task } from 'data/types';
 import ListSelector from './ListSelector';
 import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
-import NotificationBell from 'assets/button-icons/notification-bell.svg';
-import { formatDateToShortDate, formatDateToShortDateWithTime, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
+
+import { formatDateToShortDateWithTime, getFormattedDate } from 'utils/dateFormat';
 import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
 import ImportanceSelector, { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePickers from './DateTimePickers';
+import FunctionPanelButtons, { FUNCTIONAL_BUTTONS_NAMES } from './FunctionPanelButtons';
 
 
 type AddTaskFieldProps = {
@@ -180,65 +181,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         }
     };
 
-    const deadlineTranslation: { [key: string]: React.JSX.Element } = {
-        'Deadline': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.deadline.set'
-                defaultMessage={deadline}
-            />
-        ),
-        'Today': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.deadline.today'
-                defaultMessage={deadline}
-            />
-        ),
-        'Tomorrow': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.deadline.tomorrow'
-                defaultMessage={deadline}
-            />
-        ),
-        'Next week': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.deadline.next-week'
-                defaultMessage={deadline}
-            />
-        ),
-        'Pick date': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.deadline.pick-date'
-                defaultMessage={deadline}
-            />
-        )
-    };
 
-    const importanceTranslation: { [key: string]: React.JSX.Element } = {
-        'Empty': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.importance.empty'
-                defaultMessage={importance}
-            />
-        ),
-        'Low': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.importance.low'
-                defaultMessage={importance}
-            />
-        ),
-        'Medium': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.importance.medium'
-                defaultMessage={importance}
-            />
-        ),
-        'High': (
-            <FormattedMessage
-                id='views.authenticated.home.text-input.importance.high'
-                defaultMessage={importance}
-            />
-        ),
-    };
+
+
 
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
@@ -324,108 +269,49 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             keyboardShouldPersistTaps='always'
                         >
                             <View style={styles.upperContainer}>
-                                <TouchableOpacity
-                                    style={styles.buttons}
-                                    onPress={() => {
-                                        setIsListVisible(!isListVisible)
-                                        setIsDeadlineVisible(false);
-                                        setIsNotificationVisible(false);
-                                    }}
-                                >
-                                    <ListSelection
-                                        stroke={activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY}
-                                        strokeWidth={constants.STROKE_WIDTH.ICON}
-                                    />
-                                    <Text style={{
-                                        color: activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY,
-                                    }}>
-                                        {activeList?.listName === 'All' ?
-                                            <FormattedMessage
-                                                id='views.authenticated.home.text-input.list-name.all'
-                                                defaultMessage={'All'}
-                                            /> :
-                                            activeList?.listName
-                                        }
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.buttons}
-                                    onPress={() => {
-                                        setIsDeadlineVisible(!isDeadlineVisible)
-                                        setIsListVisible(false);
-                                        setIsNotificationVisible(false);
-                                        setIsImportanceVisible(false);
-                                    }}
-                                >
-                                    <CalendarSelection
-                                        fill={deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY}
-                                    />
-                                    <Text
-                                        style={{
-                                            color: deadline === deadlineNames.REMOVE ? theme.HINT : theme.PRIMARY,
-                                        }}
-                                    >
-                                        {deadline !== deadlineNames.NEXT_WEEK && deadline !== deadlineNames.PICK_DATE ? (
-                                            deadline === deadlineNames.TODAY ? deadlineNames.TODAY : deadline === deadlineNames.TOMORROW ? deadlineNames.TOMORROW : deadlineTranslation[deadline]
-                                        ) : (
-                                            isToday(new Date(deadlineDate as string)) ? deadlineNames.TODAY : isTomorrow(new Date(deadlineDate as string)) ? deadlineNames.TOMORROW : formatDateToShortDate(new Date(deadlineDate as string), intl)
-                                        )}
-                                    </Text>
+                                <FunctionPanelButtons
+                                    isListVisible={isListVisible}
+                                    setIsListVisible={setIsListVisible}
+                                    setIsDeadlineVisible={setIsDeadlineVisible}
+                                    setIsNotificationVisible={setIsNotificationVisible}
+                                    setIsImportanceVisible={setIsImportanceVisible}
+                                    type={FUNCTIONAL_BUTTONS_NAMES.LIST}
+                                    activeList={activeList}
+                                />
 
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.buttons}
-                                    onPress={() => {
-                                        setIsNotificationVisible(!isNotificationVisible)
-                                        setIsListVisible(false);
-                                        setIsDeadlineVisible(false);
-                                        setIsImportanceVisible(false);
-                                    }}
-                                >
-                                    <NotificationBell
-                                        stroke={notification === notificationTimeNames.REMOVE ? theme.HINT : theme.PRIMARY}
-                                        strokeWidth={constants.STROKE_WIDTH.ICON}
-                                    />
-                                    <Text
-                                        style={{
-                                            color: notification === notificationTimeNames.REMOVE ? theme.HINT : theme.PRIMARY,
-                                        }}
-                                    >
-                                        {(!notificationTime || notification === notificationTimeNames.REMOVE) ?
-                                            <FormattedMessage
-                                                id='views.authenticated.home.text-input.notification'
-                                                defaultMessage={'Notification'}
-                                            /> :
-                                            formatDateToShortDateWithTime(notificationTime, intl)
-                                        }
+                                <FunctionPanelButtons
+                                    isDeadlineVisible={isDeadlineVisible}
+                                    setIsListVisible={setIsListVisible}
+                                    setIsDeadlineVisible={setIsDeadlineVisible}
+                                    setIsNotificationVisible={setIsNotificationVisible}
+                                    setIsImportanceVisible={setIsImportanceVisible}
+                                    type={FUNCTIONAL_BUTTONS_NAMES.DEADLINE}
+                                    deadline={deadline}
+                                    deadlineDate={deadlineDate}
+                                />
 
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.buttons}
-                                    onPress={() => {
-                                        setIsImportanceVisible(!isImportanceVisible)
-                                        setIsListVisible(false);
-                                        setIsDeadlineVisible(false);
-                                        setIsNotificationVisible(false);
-                                    }}
-                                >
-                                    <ImportanceSelectionIcon
-                                        stroke={importance === importanceNames.REMOVE ? theme.HINT : theme.PRIMARY}
-                                        strokeWidth={constants.STROKE_WIDTH.ICON}
-                                    />
-                                    <Text style={{
-                                        color: importance === importanceNames.REMOVE ? theme.HINT : theme.PRIMARY,
-                                    }}>
-                                        {importance === importanceNames.REMOVE ?
-                                            <FormattedMessage
-                                                id='views.authenticated.home.text-input.importance'
-                                                defaultMessage={'Importance'}
-                                            /> :
-                                            importanceTranslation[importance]
-                                        }
-                                    </Text>
-                                </TouchableOpacity>
+
+                                <FunctionPanelButtons
+                                    isNotificationVisible={isNotificationVisible}
+                                    setIsListVisible={setIsListVisible}
+                                    setIsDeadlineVisible={setIsDeadlineVisible}
+                                    setIsNotificationVisible={setIsNotificationVisible}
+                                    setIsImportanceVisible={setIsImportanceVisible}
+                                    type={FUNCTIONAL_BUTTONS_NAMES.NOTIFICATION}
+                                    notification={notification}
+                                    notificationTime={notificationTime}
+                                />
+
+                                <FunctionPanelButtons
+                                    isImportanceVisible={isImportanceVisible}
+                                    setIsListVisible={setIsListVisible}
+                                    setIsDeadlineVisible={setIsDeadlineVisible}
+                                    setIsNotificationVisible={setIsNotificationVisible}
+                                    setIsImportanceVisible={setIsImportanceVisible}
+                                    type={FUNCTIONAL_BUTTONS_NAMES.IMPORTANCE}
+                                    importance={importance}
+                                />
+
                             </View>
                         </ScrollView>
                         <TouchableOpacity
