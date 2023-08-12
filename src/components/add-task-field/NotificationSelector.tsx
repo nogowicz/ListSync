@@ -66,14 +66,16 @@ export default function NotificationSelector({
                 if (now.getHours() > 17 || (now.getHours() === 17 && now.getMinutes() > 50)) {
                     dateAsDate.setHours(22);
                     dateAsDate.setMinutes(0);
+                    setNotificationTime(dateAsDate);
                 } else if (now.getHours() > 21 || (now.getHours() === 21 && now.getMinutes() > 50)) {
                     dateAsDate.setHours(23);
                     dateAsDate.setMinutes(30);
+                    setNotificationTime(dateAsDate);
                 } else {
                     dateAsDate.setHours(18);
                     dateAsDate.setMinutes(0);
+                    setNotificationTime(dateAsDate);
                 }
-                setNotificationTime(dateAsDate);
                 setIsNotificationVisible(false);
             }
         },
@@ -85,7 +87,9 @@ export default function NotificationSelector({
             onPress: () => {
                 setNotification(notificationTimeNames.TOMORROW);
                 const date: string | null = getFormattedDate(notificationTimeNames.TOMORROW);
-                setNotificationTime(new Date(date as string));
+                const dateAsDate = new Date(date as string);
+                dateAsDate.setHours(18);
+                setNotificationTime(dateAsDate);
                 setIsNotificationVisible(false);
             }
         },
@@ -97,7 +101,9 @@ export default function NotificationSelector({
             onPress: () => {
                 setNotification(notificationTimeNames.NEXT_WEEK);
                 const date: string | null = getFormattedDate(notificationTimeNames.NEXT_WEEK);
-                setNotificationTime(new Date(date as string));
+                const dateAsDate = new Date(date as string);
+                dateAsDate.setHours(18);
+                setNotificationTime(dateAsDate);
                 setIsNotificationVisible(false);
             }
         },
@@ -140,8 +146,8 @@ export default function NotificationSelector({
                             activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                             key={date.id}
                             style={{
-                                justifyContent: 'center',
                                 alignItems: 'center',
+                                paddingHorizontal: spacing.SCALE_12,
                                 width: spacing.SCALE_85,
                                 marginLeft: -spacing.SCALE_12,
                             }}

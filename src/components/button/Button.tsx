@@ -4,9 +4,10 @@ import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { buttonTypes } from '.';
 
-
+//icons:
 import Plus from 'assets/button-icons/plus.svg';
 import Check from 'assets/button-icons/Check.svg';
+import HideArrow from 'assets/button-icons/Back.svg';
 
 type ButtonProps = {
     text?: string | ReactNode;
@@ -99,7 +100,22 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
                 <Text style={[styles.addText, { color: theme.PRIMARY }]}>{text}</Text>
             </TouchableOpacity>
         );
-    } else {
+    } else if (type === buttonTypes.BUTTON_TYPES.HIDE_INPUT) {
+        return (
+            <TouchableOpacity
+                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                style={styles.hideArrow}
+                onPress={onPress}
+            >
+                <HideArrow
+                    fill={theme.HINT}
+                    strokeWidth={constants.STROKE_WIDTH.ICON}
+                    width={15}
+                />
+            </TouchableOpacity>
+        );
+    }
+    else {
         return (
             <View style={[styles.filterContainer, { backgroundColor: theme.TERTIARY }]}>
                 <Text>{text}</Text>
@@ -166,5 +182,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: spacing.SCALE_8,
         paddingHorizontal: spacing.SCALE_12,
-    }
+    },
+    hideArrow: {
+        transform: [{ rotate: '-90deg' }],
+        paddingHorizontal: spacing.SCALE_12,
+        paddingVertical: spacing.SCALE_8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: spacing.SCALE_6,
+        marginRight: -spacing.SCALE_12,
+    },
 })

@@ -40,6 +40,7 @@
   "views.authenticated.home.text-input.notification.pick-date": "Ustaw datę",
   "views.authenticated.home.text-input.notification.remove": "Usuń",
   "views.authenticated.home.list-item.tasks": "zadań",
+  "views.authenticated.home.list-item.tasks_more-than-four": "zadania",
   "views.authenticated.home.list-item.task": "zadanie",
   "views.authenticated.home.list.tasks": "Zadania ",
   "views.authenticated.home.list.completed": "Ukończone ",
@@ -68,5 +69,10 @@
   "date.day.short.wednesday": "Śr.",
   "date.day.short.thursday": "Czw.",
   "date.day.short.friday": "Pt.",
-  "date.day.short.saturday": "Sb."
+  "date.day.short.saturday": "Sb.",
+  "views.authenticated.home.text-input.importance.empty": "Brak",
+  "views.authenticated.home.text-input.importance.low": "Niski",
+  "views.authenticated.home.text-input.importance.medium": "Średni",
+  "views.authenticated.home.text-input.importance.high": "Wysoki",
+  "views.authenticated.home.text-input.importance.remove": "Usuń"
 }

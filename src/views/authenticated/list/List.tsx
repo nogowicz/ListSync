@@ -153,6 +153,7 @@ export default function List({ navigation, route }: ListProps) {
                                     </Text>
                                     <Animated.View style={[rotateStyle]}>
                                         <Arrow
+                                            fill={theme.TEXT}
                                             width={constants.ICON_SIZE.COMPLETED_ARROW}
                                             height={constants.ICON_SIZE.COMPLETED_ARROW}
                                         />
@@ -167,12 +168,12 @@ export default function List({ navigation, route }: ListProps) {
                         )}
                     </View>
                 </ScrollView>
+                {!isModalVisible && (
+                    <AddTaskField
+                        currentListId={currentList.IdList}
+                    />
+                )}
             </View>
-            {!isModalVisible && (
-                <AddTaskField
-                    currentListId={currentList.IdList}
-                />
-            )}
 
             <ChangeListModal
                 handleModal={handleModal}
