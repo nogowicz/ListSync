@@ -1,4 +1,4 @@
-export interface Subtask {
+export interface SubtaskType {
   idSubtask: number;
   title: string;
   isCompleted: boolean;
@@ -7,7 +7,7 @@ export interface Subtask {
   Task_idTask: number;
 }
 
-export interface Task {
+export interface TaskType {
   IdTask: number;
   title: string;
   isCompleted: boolean;
@@ -19,10 +19,10 @@ export interface Task {
   assignedTo: number | null;
   createdAt: string;
   List_idList: number;
-  subtasks: Subtask[];
+  subtasks: SubtaskType[];
 }
 
-export interface List {
+export interface ListType {
   IdList: number;
   listName: string;
   iconId: number;
@@ -33,5 +33,5 @@ export interface List {
   isArchived: boolean;
   createdBy: number;
   colorVariant: number;
-  tasks: Task[];
+  tasks: TaskType[];
 }

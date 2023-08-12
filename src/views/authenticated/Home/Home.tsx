@@ -11,7 +11,7 @@ import ListList from 'components/list-list';
 import Button, { buttonTypes } from 'components/button';
 
 import AddTaskField from 'components/add-task-field';
-import { List } from 'data/types';
+import { ListType } from 'data/types';
 import { useListContext } from 'context/DataProvider';
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
@@ -24,11 +24,11 @@ type HomeProps = {
 export default function Home({ navigation }: HomeProps) {
     const theme = useContext(ThemeContext);
     const { listData } = useListContext();
-    const newList = listData.filter((item: List) => item.isArchived === false);
-    const [list, setList] = useState<List[]>(newList);
+    const newList = listData.filter((item: ListType) => item.isArchived === false);
+    const [list, setList] = useState<ListType[]>(newList);
 
     useEffect(() => {
-        const filteredList = listData.filter((item: List) => item.isArchived === false);
+        const filteredList = listData.filter((item: ListType) => item.isArchived === false);
         setList(filteredList);
     }, [listData]);
 

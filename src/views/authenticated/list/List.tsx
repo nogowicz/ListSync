@@ -8,7 +8,7 @@ import ListTopBar from 'components/list-top-bar';
 import { RouteProp } from '@react-navigation/native';
 import TaskList from 'components/task-list';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Task, List as ListType } from 'data/types';
+import { TaskType, ListType } from 'data/types';
 import Arrow from 'assets/button-icons/Back.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import AddTaskField from 'components/add-task-field';
@@ -34,8 +34,8 @@ export default function List({ navigation, route }: ListProps) {
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
     const [listName, setListName] = useState(currentList?.listName || '');
     const [IdList, setIdList] = useState(currentList?.IdList || 0);
-    const [unCompletedTasks, setUnCompletedTasks] = useState<Task[]>([]);
-    const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+    const [unCompletedTasks, setUnCompletedTasks] = useState<TaskType[]>([]);
+    const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);
     const intl = useIntl();
 
@@ -65,8 +65,8 @@ export default function List({ navigation, route }: ListProps) {
     }, [listData, data.IdList]);
 
     useEffect(() => {
-        setUnCompletedTasks(currentList?.tasks.filter((item: Task) => !item.isCompleted) || []);
-        setCompletedTasks(currentList?.tasks.filter((item: Task) => item.isCompleted) || []);
+        setUnCompletedTasks(currentList?.tasks.filter((item: TaskType) => !item.isCompleted) || []);
+        setCompletedTasks(currentList?.tasks.filter((item: TaskType) => item.isCompleted) || []);
         setListName(currentList?.listName || '');
     }, [currentList]);
 

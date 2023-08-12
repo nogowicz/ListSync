@@ -4,12 +4,12 @@ import DeadLineSelector from './DeadlineSelector'
 import NotificationSelector from './NotificationSelector'
 import ImportanceSelector from './ImportanceSelector'
 import ListSelector from './ListSelector'
-import { List } from 'data/types'
+import { ListType } from 'data/types'
 
 type SelectorsProps = {
     isListVisible: boolean;
-    list: List[];
-    setActiveList: Dispatch<SetStateAction<List | undefined>>;
+    list: ListType[];
+    setActiveList: Dispatch<SetStateAction<ListType | undefined>>;
     setIsListVisible: Dispatch<SetStateAction<boolean>>;
     isDeadlineVisible: boolean;
     deadline: string;

@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React, { Dispatch, SetStateAction, } from 'react'
 import { spacing } from 'styles'
 import FunctionPanelButtons, { FUNCTIONAL_BUTTONS_NAMES } from './FunctionPanelButtons'
-import { List } from 'data/types'
+import { ListType } from 'data/types'
 
 type FunctionalPanelProps = {
     isListVisible: boolean,
@@ -10,7 +10,7 @@ type FunctionalPanelProps = {
     setIsDeadlineVisible: Dispatch<SetStateAction<boolean>>;
     setIsNotificationVisible: Dispatch<SetStateAction<boolean>>;
     setIsImportanceVisible: Dispatch<SetStateAction<boolean>>;
-    activeList: List | undefined;
+    activeList: ListType | undefined;
     deadline: string;
     deadlineDate: string | null;
     notification: string;

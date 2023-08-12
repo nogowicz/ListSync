@@ -16,7 +16,7 @@ import { constants, spacing } from 'styles';
 import { useIntl } from 'react-intl';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
-import { List, Task } from 'data/types';
+import { ListType, TaskType } from 'data/types';
 import { deadlineNames } from './DeadlineSelector';
 import { getFormattedDate } from 'utils/dateFormat';
 import Button, { buttonTypes } from 'components/button';
@@ -40,9 +40,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const intl = useIntl();
     const { listData, updateListData } = useListContext();
     const [isInputVisible, setIsInputVisible] = useState(false);
-    const lists = listData.filter((item: List) => item.isArchived === false);
-    const [list, setList] = useState<List[]>(lists);
-    const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
+    const lists = listData.filter((item: ListType) => item.isArchived === false);
+    const [list, setList] = useState<ListType[]>(lists);
+    const [activeList, setActiveList] = useState(list.find((item: ListType) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
 
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
@@ -95,8 +95,8 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         }
 
         const newListData = listData.map((list) => {
-            if (list.IdList === activeList?.IdList) {
-                const newTask: Task = {
+            if (list.IdList === activeList?.IdList && activeList) {
+                const newTask: TaskType = {
                     IdTask: activeList.tasks.length + 10,
                     title: textValue,
                     isCompleted: false,
