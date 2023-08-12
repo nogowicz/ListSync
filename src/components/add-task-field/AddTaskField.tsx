@@ -1,20 +1,28 @@
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler, } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import {
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+    BackHandler,
+} from 'react-native'
+import React, {
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing } from 'styles';
 import { useIntl } from 'react-intl';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
 import { List, Task } from 'data/types';
-import ListSelector from './ListSelector';
-import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
+import { deadlineNames } from './DeadlineSelector';
 import { getFormattedDate } from 'utils/dateFormat';
-import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
-import ImportanceSelector, { importanceNames } from './ImportanceSelector';
+import { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePickers from './DateTimePickers';
-import FunctionPanelButtons, { FUNCTIONAL_BUTTONS_NAMES } from './FunctionPanelButtons';
 
 //icons:
 import AddTaskIcon from 'assets/button-icons/add-task.svg';
