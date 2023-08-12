@@ -147,7 +147,7 @@ export default function NotificationSelector({
                             key={date.id}
                             style={{
                                 alignItems: 'center',
-                                paddingHorizontal: spacing.SCALE_7,
+                                paddingHorizontal: spacing.SCALE_12,
                                 width: spacing.SCALE_85,
                                 marginLeft: -spacing.SCALE_12,
                             }}

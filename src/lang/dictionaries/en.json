@@ -68,5 +68,10 @@
   "date.day.short.wednesday": "Wed",
   "date.day.short.thursday": "Thu",
   "date.day.short.friday": "Fri",
-  "date.day.short.saturday": "Sat"
+  "date.day.short.saturday": "Sat",
+  "views.authenticated.home.text-input.importance.empty": "Empty ",
+  "views.authenticated.home.text-input.importance.low": "Low",
+  "views.authenticated.home.text-input.importance.medium": "Medium",
+  "views.authenticated.home.text-input.importance.high": "High",
+  "views.authenticated.home.text-input.importance.remove": "Remove"
 }

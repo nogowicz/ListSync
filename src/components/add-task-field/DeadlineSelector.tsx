@@ -125,8 +125,8 @@ export default function DeadLineSelector({
                             activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                             key={date.id}
                             style={{
-                                justifyContent: 'center',
                                 alignItems: 'center',
+                                paddingHorizontal: spacing.SCALE_12,
                                 width: spacing.SCALE_85,
                                 marginLeft: -spacing.SCALE_12,
                             }}

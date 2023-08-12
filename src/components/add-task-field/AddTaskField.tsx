@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import AddTaskIcon from 'assets/button-icons/add-task.svg';
 import ListSelection from 'assets/button-icons/list-input-selection.svg';
 import CalendarSelection from 'assets/button-icons/calendar-input-selection.svg';
-import ImportanceSelection from 'assets/button-icons/importance-input-selection.svg';
+import ImportanceSelectionIcon from 'assets/button-icons/importance-input-selection.svg';
 import HideArrow from 'assets/button-icons/Back.svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
@@ -19,6 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDateToShortDate, formatDateToShortDateWithTime, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
 import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
+import ImportanceSelector, { importanceNames } from './ImportanceSelector';
 
 
 type AddTaskFieldProps = {
@@ -34,22 +35,27 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [list, setList] = useState<List[]>(lists);
     const [activeList, setActiveList] = useState(list.find((item: List) => item.IdList === currentListId));
     const [isListVisible, setIsListVisible] = useState(false);
+
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
-    const [isNotificationVisible, setIsNotificationVisible] = useState(false);
     const [deadline, setDeadline] = useState<string>("Deadline");
     const [textValue, setTextValue] = useState('');
     const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
-    const [datePickerDate, setDatePickerDate] = useState<Date>();
-    const [timePickerTime, setTimePickerTime] = useState<Date>();
-    const [notification, setNotification] = useState<string>("Notification");
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
     const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
     const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date>();
+
+    const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+    const [notification, setNotification] = useState<string>("Notification");
     const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
     const [showNotificationTimePicker, setShowNotificationTimePicker] = useState(false);
     const [notificationTime, setNotificationTime] = useState<Date>();
     const [notificationTodayHour, setNotificationTodayHour] = useState<string>('18:00');
     const [notificationTomorrowHour, setNotificationTomorrowHour] = useState<string>('18:00');
+    const [datePickerDate, setDatePickerDate] = useState<Date>();
+    const [timePickerTime, setTimePickerTime] = useState<Date>();
+
+    const [isImportanceVisible, setIsImportanceVisible] = useState(false);
+    const [importance, setImportance] = useState<string>(importanceNames.REMOVE);
 
 
     const placeholderText = intl.formatMessage({
@@ -89,7 +95,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     assignedTo: null,
                     deadline: deadlineDate,
                     effort: '',
-                    importance: '',
+                    importance: importance,
                     note: '',
                     createdAt: new Date().toISOString(),
                     List_idList: activeList?.IdList,
@@ -205,11 +211,37 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         )
     };
 
+    const importanceTranslation: { [key: string]: React.JSX.Element } = {
+        'Empty': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.importance.empty'
+                defaultMessage={importance}
+            />
+        ),
+        'Low': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.importance.low'
+                defaultMessage={importance}
+            />
+        ),
+        'Medium': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.importance.medium'
+                defaultMessage={importance}
+            />
+        ),
+        'High': (
+            <FormattedMessage
+                id='views.authenticated.home.text-input.importance.high'
+                defaultMessage={importance}
+            />
+        ),
+    };
+
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
 
-    console.log(notificationTime)
     if (isInputVisible) {
         return (
             <View>
@@ -279,6 +311,14 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             notificationTomorrowHour={notificationTomorrowHour}
                         />
                     }
+
+                    {isImportanceVisible &&
+                        <ImportanceSelector
+                            importance={importance}
+                            setImportance={setImportance}
+                            setIsImportanceVisible={setIsImportanceVisible}
+                        />
+                    }
                     <View style={styles.functionPanel}>
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
@@ -316,6 +356,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                                         setIsDeadlineVisible(!isDeadlineVisible)
                                         setIsListVisible(false);
                                         setIsNotificationVisible(false);
+                                        setIsImportanceVisible(false);
                                     }}
                                 >
                                     <CalendarSelection
@@ -340,6 +381,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                                         setIsNotificationVisible(!isNotificationVisible)
                                         setIsListVisible(false);
                                         setIsDeadlineVisible(false);
+                                        setIsImportanceVisible(false);
                                     }}
                                 >
                                     <NotificationBell
@@ -361,16 +403,29 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
 
                                     </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttons}>
-                                    <ImportanceSelection
-                                        stroke={theme.HINT}
+                                <TouchableOpacity
+                                    style={styles.buttons}
+                                    onPress={() => {
+                                        setIsImportanceVisible(!isImportanceVisible)
+                                        setIsListVisible(false);
+                                        setIsDeadlineVisible(false);
+                                        setIsNotificationVisible(false);
+                                    }}
+                                >
+                                    <ImportanceSelectionIcon
+                                        stroke={importance === importanceNames.REMOVE ? theme.HINT : theme.PRIMARY}
                                         strokeWidth={constants.STROKE_WIDTH.ICON}
                                     />
-                                    <Text style={{ color: theme.HINT }}>
-                                        <FormattedMessage
-                                            id='views.authenticated.home.text-input.importance'
-                                            defaultMessage={'Importance'}
-                                        />
+                                    <Text style={{
+                                        color: importance === importanceNames.REMOVE ? theme.HINT : theme.PRIMARY,
+                                    }}>
+                                        {importance === importanceNames.REMOVE ?
+                                            <FormattedMessage
+                                                id='views.authenticated.home.text-input.importance'
+                                                defaultMessage={'Importance'}
+                                            /> :
+                                            importanceTranslation[importance]
+                                        }
                                     </Text>
                                 </TouchableOpacity>
                             </View>
