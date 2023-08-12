@@ -1,7 +1,7 @@
-import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react'
+import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHandler, } from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
-import { constants, spacing, typography } from 'styles';
+import { constants, spacing } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import AddTaskIcon from 'assets/button-icons/add-task.svg';
@@ -20,6 +20,7 @@ import { formatDateToShortDate, formatDateToShortDateWithTime, getFormattedDate,
 import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
 import ImportanceSelector, { importanceNames } from './ImportanceSelector';
+import { useNavigation } from '@react-navigation/native';
 
 
 type AddTaskFieldProps = {
@@ -27,6 +28,7 @@ type AddTaskFieldProps = {
 }
 
 export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
+    const navigation = useNavigation();
     const theme = useContext(ThemeContext);
     const intl = useIntl();
     const { listData, updateListData } = useListContext();
@@ -241,6 +243,20 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
+
+
+    BackHandler.addEventListener('hardwareBackPress', () => {
+        if (isInputVisible) {
+            setIsInputVisible(false);
+            return true;
+        } else {
+            if (navigation.canGoBack()) {
+                navigation.goBack();
+                return true;
+            }
+            BackHandler.exitApp();
+        }
+    });
 
     if (isInputVisible) {
         return (
