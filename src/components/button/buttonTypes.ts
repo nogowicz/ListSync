@@ -4,4 +4,5 @@ export enum BUTTON_TYPES {
   FAB = 'fab',
   CHECK = 'check',
   FUNCTIONAL = 'functional',
+  HIDE_INPUT = 'hideInput',
 }

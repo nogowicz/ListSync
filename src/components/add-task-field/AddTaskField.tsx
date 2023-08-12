@@ -2,26 +2,24 @@ import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, BackHand
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing } from 'styles';
-import { FormattedMessage, useIntl } from 'react-intl';
-
-import AddTaskIcon from 'assets/button-icons/add-task.svg';
-
-
-
-import HideArrow from 'assets/button-icons/Back.svg';
+import { useIntl } from 'react-intl';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
 import { List, Task } from 'data/types';
 import ListSelector from './ListSelector';
 import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
-
-import { formatDateToShortDateWithTime, getFormattedDate } from 'utils/dateFormat';
+import { getFormattedDate } from 'utils/dateFormat';
 import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
 import ImportanceSelector, { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePickers from './DateTimePickers';
 import FunctionPanelButtons, { FUNCTIONAL_BUTTONS_NAMES } from './FunctionPanelButtons';
+
+//icons:
+import AddTaskIcon from 'assets/button-icons/add-task.svg';
+import Selectors from './Selectors';
+import FunctionalPanel from './FunctionalPanel';
 
 
 type AddTaskFieldProps = {
@@ -82,7 +80,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
 
     }, []);
 
-
+    // TODO: Temporary code
     const handleAddTask = () => {
         if (textValue.trim() === '') {
             return;
@@ -121,69 +119,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     };
 
 
-    const onChangeDeadlineDate = (event: any, selectedDate?: Date | undefined) => {
-        if (event.type === 'set') {
-            setShowDeadlineDatePicker(Platform.OS === 'ios' ? true : false);
-            const currentDate = selectedDate || deadlineDatePickerDate;
-            setDeadlineDatePickerDate(currentDate);
-            setDeadline(deadlineNames.PICK_DATE);
-        } else if (event.type === 'dismissed') {
-            setShowDeadlineDatePicker(false);
-        }
-    };
-
-
-    const onChangeNotificationTime = (event: any, selectedDate?: Date | undefined) => {
-        if (event.type === 'set') {
-            setShowNotificationTimePicker(Platform.OS === 'ios' ? true : false);
-            const currentDate = selectedDate ?? timePickerTime ?? new Date();
-
-            setTimePickerTime(currentDate);
-
-            const combinedDate = new Date(
-                notificationDatePickerDate.getFullYear(),
-                notificationDatePickerDate.getMonth(),
-                notificationDatePickerDate.getDate(),
-                currentDate.getHours(),
-                currentDate.getMinutes()
-            );
-
-            console.log(combinedDate.toISOString())
-            setNotificationTime(combinedDate);
-            setNotification(notificationTimeNames.PICK_DATE);
-        } else if (event.type === 'dismissed') {
-            setShowNotificationDatePicker(false);
-            setShowNotificationTimePicker(false);
-        }
-    };
-
-
-
-    const onChangeNotificationDate = (event: any, selectedDate?: Date | undefined) => {
-        if (event.type === 'set') {
-            setShowNotificationDatePicker(Platform.OS === 'ios' ? true : false);
-            const currentDate = selectedDate || notificationDatePickerDate;
-            setNotificationDatePickerDate(currentDate);
-            setShowNotificationTimePicker(true);
-        } else if (event.type === 'dismissed') {
-            setShowNotificationDatePicker(false);
-        }
-    };
-
-
-    const handlePickDate = () => {
-        if (isDeadlineVisible) {
-            setShowDeadlineDatePicker(true);
-            setShowNotificationDatePicker(false);
-        } else if (isNotificationVisible) {
-            setShowNotificationDatePicker(true);
-            setShowDeadlineDatePicker(false);
-        }
-    };
-
-
-
-
 
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
@@ -213,9 +148,15 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                     showDeadlineDatePicker={showDeadlineDatePicker}
                     showNotificationDatePicker={showNotificationDatePicker}
                     showNotificationTimePicker={showNotificationTimePicker}
-                    onChangeDeadlineDate={onChangeDeadlineDate}
-                    onChangeNotificationDate={onChangeNotificationDate}
-                    onChangeNotificationTime={onChangeNotificationTime}
+                    setShowDeadlineDatePicker={setShowDeadlineDatePicker}
+                    setDeadlineDatePickerDate={setDeadlineDatePickerDate}
+                    setDeadline={setDeadline}
+                    setShowNotificationTimePicker={setShowNotificationTimePicker}
+                    setTimePickerTime={setTimePickerTime}
+                    setNotificationTime={setNotificationTime}
+                    setNotification={setNotification}
+                    setShowNotificationDatePicker={setShowNotificationDatePicker}
+                    setNotificationDatePickerDate={setNotificationDatePickerDate}
                 />
                 <View
                     style={[
@@ -225,108 +166,59 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             backgroundColor: theme.BACKGROUND,
                         }]}>
 
-                    {isListVisible &&
-                        <ListSelector
-                            list={list}
-                            setActiveList={setActiveList}
-                            setIsListVisible={setIsListVisible}
-                        />
-                    }
+                    <Selectors
+                        isListVisible={isListVisible}
+                        list={list}
+                        setActiveList={setActiveList}
+                        setIsListVisible={setIsListVisible}
+                        isDeadlineVisible={isDeadlineVisible}
+                        deadline={deadline}
+                        setDeadline={setDeadline}
+                        setIsDeadlineVisible={setIsDeadlineVisible}
+                        setDeadlineDate={setDeadlineDate}
+                        isNotificationVisible={isNotificationVisible}
+                        notification={notification}
+                        setNotification={setNotification}
+                        setIsNotificationVisible={setIsNotificationVisible}
+                        setNotificationTime={setNotificationTime}
+                        isImportanceVisible={isImportanceVisible}
+                        importance={importance}
+                        setImportance={setImportance}
+                        setIsImportanceVisible={setIsImportanceVisible}
+                        setShowDeadlineDatePicker={setShowDeadlineDatePicker}
+                        setShowNotificationDatePicker={setShowNotificationDatePicker}
+                        notificationTodayHour={notificationTodayHour}
+                        notificationTomorrowHour={notificationTomorrowHour}
+                    />
 
-                    {isDeadlineVisible &&
-                        <DeadLineSelector
-                            setDeadline={setDeadline}
-                            deadline={deadline}
-                            setIsDeadlineVisible={setIsDeadlineVisible}
-                            setDeadlineDate={setDeadlineDate}
-                            onPickDatePress={handlePickDate}
-                        />
-                    }
-
-                    {isNotificationVisible &&
-                        <NotificationSelector
-                            setNotification={setNotification}
-                            notification={notification}
-                            setIsNotificationVisible={setIsNotificationVisible}
-                            setNotificationTime={setNotificationTime}
-                            onPickDatePress={handlePickDate}
-                            notificationTodayHour={notificationTodayHour}
-                            notificationTomorrowHour={notificationTomorrowHour}
-                        />
-                    }
-
-                    {isImportanceVisible &&
-                        <ImportanceSelector
-                            importance={importance}
-                            setImportance={setImportance}
-                            setIsImportanceVisible={setIsImportanceVisible}
-                        />
-                    }
                     <View style={styles.functionPanel}>
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
                             horizontal
                             keyboardShouldPersistTaps='always'
                         >
-                            <View style={styles.upperContainer}>
-                                <FunctionPanelButtons
-                                    isListVisible={isListVisible}
-                                    setIsListVisible={setIsListVisible}
-                                    setIsDeadlineVisible={setIsDeadlineVisible}
-                                    setIsNotificationVisible={setIsNotificationVisible}
-                                    setIsImportanceVisible={setIsImportanceVisible}
-                                    type={FUNCTIONAL_BUTTONS_NAMES.LIST}
-                                    activeList={activeList}
-                                />
-
-                                <FunctionPanelButtons
-                                    isDeadlineVisible={isDeadlineVisible}
-                                    setIsListVisible={setIsListVisible}
-                                    setIsDeadlineVisible={setIsDeadlineVisible}
-                                    setIsNotificationVisible={setIsNotificationVisible}
-                                    setIsImportanceVisible={setIsImportanceVisible}
-                                    type={FUNCTIONAL_BUTTONS_NAMES.DEADLINE}
-                                    deadline={deadline}
-                                    deadlineDate={deadlineDate}
-                                />
-
-
-                                <FunctionPanelButtons
-                                    isNotificationVisible={isNotificationVisible}
-                                    setIsListVisible={setIsListVisible}
-                                    setIsDeadlineVisible={setIsDeadlineVisible}
-                                    setIsNotificationVisible={setIsNotificationVisible}
-                                    setIsImportanceVisible={setIsImportanceVisible}
-                                    type={FUNCTIONAL_BUTTONS_NAMES.NOTIFICATION}
-                                    notification={notification}
-                                    notificationTime={notificationTime}
-                                />
-
-                                <FunctionPanelButtons
-                                    isImportanceVisible={isImportanceVisible}
-                                    setIsListVisible={setIsListVisible}
-                                    setIsDeadlineVisible={setIsDeadlineVisible}
-                                    setIsNotificationVisible={setIsNotificationVisible}
-                                    setIsImportanceVisible={setIsImportanceVisible}
-                                    type={FUNCTIONAL_BUTTONS_NAMES.IMPORTANCE}
-                                    importance={importance}
-                                />
-
-                            </View>
-                        </ScrollView>
-                        <TouchableOpacity
-                            activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                            style={styles.hideArrow}
-                            onPress={() => {
-                                setIsInputVisible(false);
-                            }}
-                        >
-                            <HideArrow
-                                fill={theme.HINT}
-                                strokeWidth={constants.STROKE_WIDTH.ICON}
-                                width={15}
+                            <FunctionalPanel
+                                isListVisible={isListVisible}
+                                setIsListVisible={setIsListVisible}
+                                isDeadlineVisible={isDeadlineVisible}
+                                setIsDeadlineVisible={setIsDeadlineVisible}
+                                isNotificationVisible={isNotificationVisible}
+                                setIsNotificationVisible={setIsNotificationVisible}
+                                isImportanceVisible={isImportanceVisible}
+                                setIsImportanceVisible={setIsImportanceVisible}
+                                activeList={activeList}
+                                deadline={deadline}
+                                deadlineDate={deadlineDate}
+                                notification={notification}
+                                notificationTime={notificationTime}
+                                importance={importance}
                             />
-                        </TouchableOpacity>
+                        </ScrollView>
+                        <Button
+                            type={buttonTypes.BUTTON_TYPES.HIDE_INPUT}
+                            onPress={() => setIsInputVisible(false)}
+                        />
+
                     </View>
                     <View style={styles.bottomContainer}>
                         <TextInput
@@ -379,26 +271,8 @@ const styles = StyleSheet.create({
     textInput: {
         maxWidth: '90%',
     },
-    upperContainer: {
-        flexDirection: 'row',
-        gap: spacing.SCALE_20,
-        alignItems: 'center',
-        marginBottom: spacing.SCALE_8,
-    },
-    buttons: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.SCALE_8,
-    },
-    hideArrow: {
-        transform: [{ rotate: '-90deg' }],
-        paddingHorizontal: spacing.SCALE_12,
-        paddingVertical: spacing.SCALE_8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: spacing.SCALE_6,
-        marginRight: -spacing.SCALE_12,
-    },
+
+
     functionPanel: {
         flexDirection: 'row',
         justifyContent: 'center',
