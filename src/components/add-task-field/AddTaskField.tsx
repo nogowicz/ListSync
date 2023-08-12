@@ -15,12 +15,12 @@ import { List, Task } from 'data/types';
 import ListSelector from './ListSelector';
 import DeadLineSelector, { deadlineNames } from './DeadlineSelector';
 import NotificationBell from 'assets/button-icons/notification-bell.svg';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDateToShortDate, formatDateToShortDateWithTime, getFormattedDate, isToday, isTomorrow } from 'utils/dateFormat';
 import NotificationSelector, { notificationTimeNames } from './NotificationSelector';
 import Button, { buttonTypes } from 'components/button';
 import ImportanceSelector, { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
+import DateTimePickers from './DateTimePickers';
 
 
 type AddTaskFieldProps = {
@@ -261,35 +261,17 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     if (isInputVisible) {
         return (
             <View>
-                {showDeadlineDatePicker && (
-                    <DateTimePicker
-                        testID='dateTimePicker'
-                        value={deadlineDatePickerDate || new Date()}
-                        mode={'date'}
-                        is24Hour={true}
-                        display='default'
-                        onChange={onChangeDeadlineDate}
-                    />
-                )}
-                {showNotificationDatePicker && (
-                    <DateTimePicker
-                        testID='dateTimePicker'
-                        value={notificationDatePickerDate || new Date()}
-                        mode={'date'}
-                        is24Hour={true}
-                        display='default'
-                        onChange={onChangeNotificationDate}
-                    />
-                )}
-                {showNotificationTimePicker &&
-                    <DateTimePicker
-                        testID='dateTimePicker'
-                        value={timePickerTime || new Date()}
-                        mode={'time'}
-                        is24Hour={true}
-                        display='default'
-                        onChange={onChangeNotificationTime}
-                    />}
+                <DateTimePickers
+                    deadlineDatePickerDate={deadlineDatePickerDate}
+                    timePickerTime={timePickerTime}
+                    notificationDatePickerDate={notificationDatePickerDate}
+                    showDeadlineDatePicker={showDeadlineDatePicker}
+                    showNotificationDatePicker={showNotificationDatePicker}
+                    showNotificationTimePicker={showNotificationTimePicker}
+                    onChangeDeadlineDate={onChangeDeadlineDate}
+                    onChangeNotificationDate={onChangeNotificationDate}
+                    onChangeNotificationTime={onChangeNotificationTime}
+                />
                 <View
                     style={[
                         styles.container,
