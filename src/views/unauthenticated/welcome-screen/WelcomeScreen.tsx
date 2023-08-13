@@ -7,8 +7,17 @@ import { FormattedMessage } from 'react-intl';
 //icons:
 import WelcomeScreenIcon from 'assets/images/welcome-screen.svg';
 import Button, { buttonTypes } from 'components/button';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from 'navigation/navigation';
+import { SCREENS } from 'navigation/utils/screens';
 
-export default function WelcomeScreen() {
+type WelcomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'WELCOME_SCREEN'>;
+
+type WelcomeScreenProps = {
+  navigation: WelcomeScreenNavigationProp['navigation'];
+};
+
+export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
   const theme = useContext(ThemeContext);
   return (
     <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -47,7 +56,7 @@ export default function WelcomeScreen() {
           />
           <Button
             type={buttonTypes.BUTTON_TYPES.SIGN_IN}
-            onPress={() => console.log('Sign in with email')}
+            onPress={() => navigation.navigate(SCREENS.UNAUTHENTICATED.SING_IN_SCREEN.ID)}
           />
         </View>
         <TouchableOpacity

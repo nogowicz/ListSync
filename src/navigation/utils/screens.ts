@@ -11,5 +11,8 @@ export const SCREENS = {
     WELCOME_SCREEN: {
       ID: 'WELCOME_SCREEN',
     },
+    SING_IN_SCREEN: {
+      ID: 'SIGN_IN_SCREEN',
+    },
   },
 };

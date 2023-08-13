@@ -3,6 +3,7 @@ import React, { useContext, ReactNode } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { buttonTypes } from '.';
+import { FormattedMessage } from 'react-intl';
 
 //icons:
 import Plus from 'assets/button-icons/plus.svg';
@@ -10,7 +11,8 @@ import Check from 'assets/button-icons/Check.svg';
 import HideArrow from 'assets/button-icons/Back.svg';
 import GoogleSignInIcon from 'assets/button-icons/google-icon.svg';
 import SignInIcon from 'assets/button-icons/login-in-icon.svg';
-import { FormattedMessage } from 'react-intl';
+import PasswordVisibleIcon from 'assets/button-icons/visible-password.svg';
+import PasswordInvisibleIcon from 'assets/button-icons/invisible-password.svg';
 
 type ButtonProps = {
     text?: string | ReactNode;
@@ -20,9 +22,19 @@ type ButtonProps = {
     onPress: () => void;
     isChecked?: boolean;
     activeOpacity?: number;
+    secureTextEntry?: boolean;
 };
 
-export default function Button({ text, type, amount, onPress, isChecked, isActive = false, activeOpacity = constants.ACTIVE_OPACITY.HIGH }: ButtonProps) {
+export default function Button({
+    text,
+    type,
+    amount,
+    onPress,
+    isChecked,
+    isActive = false,
+    activeOpacity = constants.ACTIVE_OPACITY.HIGH,
+    secureTextEntry = false,
+}: ButtonProps) {
     const theme = useContext(ThemeContext);
     if (type === buttonTypes.BUTTON_TYPES.ADD) {
         return (
@@ -167,6 +179,24 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
                         defaultMessage='Sign in with email'
                     />
                 </Text>
+            </TouchableOpacity>
+        );
+    } else if (type === buttonTypes.BUTTON_TYPES.PASSWORD_VISIBILITY) {
+        return (
+            <TouchableOpacity
+                activeOpacity={activeOpacity}
+                onPress={onPress}
+            >
+                {secureTextEntry ?
+                    <PasswordInvisibleIcon
+                        stroke={theme.TEXT}
+                        strokeWidth={constants.STROKE_WIDTH.ICON}
+                    /> :
+                    <PasswordVisibleIcon
+                        stroke={theme.TEXT}
+                        strokeWidth={constants.STROKE_WIDTH.ICON}
+                    />
+                }
             </TouchableOpacity>
         );
     }

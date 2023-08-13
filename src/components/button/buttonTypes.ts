@@ -7,4 +7,5 @@ export enum BUTTON_TYPES {
   HIDE_INPUT = 'hideInput',
   GOOGLE_SIGN_IN = 'googleSignin',
   SIGN_IN = 'signIn',
+  PASSWORD_VISIBILITY = 'passwordVisibility',
 }

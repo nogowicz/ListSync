@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS } from '../utils/screens';
 import WelcomeScreen from 'views/unauthenticated/welcome-screen';
+import SignInScreen from 'views/unauthenticated/sign-in-screen';
 
 
 export default function UnauthenticatedStack() {
@@ -17,6 +18,11 @@ export default function UnauthenticatedStack() {
             <Stack.Screen
                 name={SCREENS.UNAUTHENTICATED.WELCOME_SCREEN.ID}
                 component={WelcomeScreen}
+            />
+
+            <Stack.Screen
+                name={SCREENS.UNAUTHENTICATED.SING_IN_SCREEN.ID}
+                component={SignInScreen}
             />
 
         </Stack.Navigator>

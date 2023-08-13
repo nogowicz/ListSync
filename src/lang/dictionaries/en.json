@@ -81,5 +81,11 @@
   "views.unauthenticated.welcome-screen.sign-in": "Sign in with your email",
   "views.unauthenticated.welcome-screen.sign-up-text.question": "Don’t have an account yet?",
   "views.unauthenticated.welcome-screen.sign-up-text.sign-up": "Sign Up",
-  "views.unauthenticated.welcome-screen.sign-up-text.here": "here!"
+  "views.unauthenticated.welcome-screen.sign-up-text.here": "here!",
+  "views.unauthenticated.welcome-screen.sign-in.email": "Email",
+  "views.unauthenticated.welcome-screen.sign-in.password": "Password",
+  "views.unauthenticated.welcome-screen.sign-in.sign-in": "Sign In",
+  "views.unauthenticated.welcome-screen.sign-in.text": "Welcome back to ListSync! Enter your credentials to seamlessly dive back into your task lists and stay organized. Let's make your task management experience even better!",
+  "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partI": "By clicking 'Sign In,' you agree to our",
+  "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII": "terms and conditions."
 }
