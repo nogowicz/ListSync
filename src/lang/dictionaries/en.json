@@ -74,5 +74,12 @@
   "views.authenticated.home.text-input.importance.low": "Low",
   "views.authenticated.home.text-input.importance.medium": "Medium",
   "views.authenticated.home.text-input.importance.high": "High",
-  "views.authenticated.home.text-input.importance.remove": "Remove"
+  "views.authenticated.home.text-input.importance.remove": "Remove",
+  "views.unauthenticated.welcome-screen.title": "Welcome to ListSync",
+  "views.unauthenticated.welcome-screen.sub-title": "Welcome to ListSync - your new companion in task organization! ListSync helps you effortlessly manage shopping lists, tasks, and projects. Start using ListSync today!",
+  "views.unauthenticated.welcome-screen.google-sign-in": "Sign in with Google account",
+  "views.unauthenticated.welcome-screen.sign-in": "Sign in with your email",
+  "views.unauthenticated.welcome-screen.sign-up-text.question": "Don’t have an account yet?",
+  "views.unauthenticated.welcome-screen.sign-up-text.sign-up": "Sign Up",
+  "views.unauthenticated.welcome-screen.sign-up-text.here": "here!"
 }

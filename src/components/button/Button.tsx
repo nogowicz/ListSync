@@ -8,6 +8,9 @@ import { buttonTypes } from '.';
 import Plus from 'assets/button-icons/plus.svg';
 import Check from 'assets/button-icons/Check.svg';
 import HideArrow from 'assets/button-icons/Back.svg';
+import GoogleSignInIcon from 'assets/button-icons/google-icon.svg';
+import SignInIcon from 'assets/button-icons/login-in-icon.svg';
+import { FormattedMessage } from 'react-intl';
 
 type ButtonProps = {
     text?: string | ReactNode;
@@ -114,6 +117,58 @@ export default function Button({ text, type, amount, onPress, isChecked, isActiv
                 />
             </TouchableOpacity>
         );
+    } else if (type === buttonTypes.BUTTON_TYPES.GOOGLE_SIGN_IN) {
+        return (
+            <TouchableOpacity
+                activeOpacity={activeOpacity}
+                onPress={onPress}
+                style={[
+                    styles.googleButton,
+                    {
+                        backgroundColor: theme.PRIMARY
+                    }
+                ]}
+            >
+                <GoogleSignInIcon />
+                <Text
+                    style={[
+                        styles.googleButtonText,
+                    ]}
+                >
+                    <FormattedMessage
+                        id='views.unauthenticated.welcome-screen.google-sign-in'
+                        defaultMessage='Sign in with Google account'
+                    />
+                </Text>
+            </TouchableOpacity>
+        );
+    } else if (type === buttonTypes.BUTTON_TYPES.SIGN_IN) {
+        return (
+            <TouchableOpacity
+                activeOpacity={activeOpacity}
+                style={[
+                    styles.signInButton,
+                    {
+                        backgroundColor: theme.TERTIARY
+                    }
+                ]}
+                onPress={onPress}
+            >
+                <SignInIcon
+                    fill={theme.TEXT}
+                />
+                <Text
+                    style={[
+                        styles.signInButtonText,
+                    ]}
+                >
+                    <FormattedMessage
+                        id='views.unauthenticated.welcome-screen.sign-in'
+                        defaultMessage='Sign in with email'
+                    />
+                </Text>
+            </TouchableOpacity>
+        );
     }
     else {
         return (
@@ -191,5 +246,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: spacing.SCALE_6,
         marginRight: -spacing.SCALE_12,
+    },
+    googleButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: spacing.SCALE_12,
+        paddingHorizontal: spacing.SCALE_30,
+        gap: spacing.SCALE_20,
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+    },
+    googleButtonText: {
+        color: 'white',
+        fontSize: typography.FONT_SIZE_16,
+    },
+    signInButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: spacing.SCALE_12,
+        paddingHorizontal: spacing.SCALE_30,
+        gap: spacing.SCALE_20,
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+    },
+    signInButtonText: {
+        color: 'black',
+        fontSize: typography.FONT_SIZE_16,
     },
 })

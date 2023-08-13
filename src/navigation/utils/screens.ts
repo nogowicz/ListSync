@@ -7,4 +7,9 @@ export const SCREENS = {
       ID: 'LIST',
     },
   },
+  UNAUTHENTICATED: {
+    WELCOME_SCREEN: {
+      ID: 'WELCOME_SCREEN',
+    },
+  },
 };
