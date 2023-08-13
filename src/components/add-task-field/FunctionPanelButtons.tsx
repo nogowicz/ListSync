@@ -3,7 +3,7 @@ import React, { useContext, Dispatch, SetStateAction, } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { constants, spacing } from 'styles'
 import { ThemeContext } from 'navigation/utils/ThemeProvider'
-import { List } from 'data/types'
+import { ListType } from 'data/types'
 import { deadlineNames } from './DeadlineSelector'
 import { formatDateToShortDate, formatDateToShortDateWithTime, isToday, isTomorrow } from 'utils/dateFormat'
 import { notificationTimeNames } from './NotificationSelector'
@@ -33,7 +33,7 @@ type FunctionPanelButtonsProps = {
     isNotificationVisible?: boolean;
     setIsImportanceVisible: Dispatch<SetStateAction<boolean>>;
     isImportanceVisible?: boolean;
-    activeList?: List;
+    activeList?: ListType;
     deadline?: string;
     notification?: string;
     notificationTime?: Date;
