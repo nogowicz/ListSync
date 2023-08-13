@@ -19,6 +19,7 @@ import Button from 'components/button/Button';
 
 //TODO:
 // - make logo container smaller when keyboard appears
+// - fields validation
 
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
