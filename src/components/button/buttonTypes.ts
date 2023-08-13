@@ -8,4 +8,5 @@ export enum BUTTON_TYPES {
   GOOGLE_SIGN_IN = 'googleSignin',
   SIGN_IN = 'signIn',
   PASSWORD_VISIBILITY = 'passwordVisibility',
+  SUBMIT = 'submit',
 }

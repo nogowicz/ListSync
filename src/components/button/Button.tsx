@@ -13,6 +13,7 @@ import GoogleSignInIcon from 'assets/button-icons/google-icon.svg';
 import SignInIcon from 'assets/button-icons/login-in-icon.svg';
 import PasswordVisibleIcon from 'assets/button-icons/visible-password.svg';
 import PasswordInvisibleIcon from 'assets/button-icons/invisible-password.svg';
+import { theme } from 'styles/colors';
 
 type ButtonProps = {
     text?: string | ReactNode;
@@ -199,6 +200,30 @@ export default function Button({
                 }
             </TouchableOpacity>
         );
+    } else if (type === buttonTypes.BUTTON_TYPES.SUBMIT) {
+        return (
+            <TouchableOpacity
+                activeOpacity={activeOpacity}
+                onPress={onPress}
+                style={[
+                    {
+                        backgroundColor: theme.PRIMARY,
+                    },
+                    styles.submitButton,
+                ]}
+            >
+                <Text
+                    style={[
+                        {
+                            color: 'white'
+                        },
+                        styles.submitButtonText
+                    ]}
+                >
+                    {text}
+                </Text>
+            </TouchableOpacity>
+        );
     }
     else {
         return (
@@ -301,4 +326,14 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: typography.FONT_SIZE_16,
     },
+    submitButton: {
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: spacing.SCALE_12,
+    },
+    submitButtonText: {
+        fontWeight: typography.FONT_WEIGHT_BOLD,
+        fontSize: typography.FONT_SIZE_20,
+    }
 })
