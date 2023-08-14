@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useContext } from 'react'
+import { StyleSheet, Text, View, Animated, Keyboard, } from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
@@ -12,10 +12,10 @@ import CustomTextField from 'components/custom-text-field';
 
 
 //icons:
-import LogoIcon from 'assets/logo/logo.svg';
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import Button from 'components/button/Button';
+import Logo from 'components/logo';
 
 //TODO:
 // - make logo container smaller when keyboard appears
@@ -46,17 +46,68 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     });
 
 
+    const translateYValue = useRef(new Animated.Value(0)).current;
+    const [textContainerHeight, setTextContainerHeight] = useState(new Animated.Value(120));
+
+
+    const animationDuration = 400;
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                handleKeyboardOut();
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                handleKeyboardIn();
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
+    const handleKeyboardIn = () => {
+        Animated.parallel([
+            Animated.timing(translateYValue, {
+                toValue: 0,
+                duration: animationDuration,
+                useNativeDriver: true,
+            }),
+            Animated.timing(textContainerHeight, {
+                toValue: 120,
+                duration: animationDuration,
+                useNativeDriver: false,
+            })
+        ]).start();
+    };
+
+    const handleKeyboardOut = () => {
+        Animated.parallel([
+            Animated.timing(translateYValue, {
+                toValue: -20,
+                duration: animationDuration,
+                useNativeDriver: true,
+            }),
+            Animated.timing(textContainerHeight, {
+                toValue: 0,
+                duration: animationDuration,
+                useNativeDriver: false,
+            })
+        ]).start();
+    };
+
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
-            <View style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <LogoIcon />
-                    <Text
-                        style={[styles.logoText, { color: theme.TEXT }]}
-                    >
-                        ListSync
-                    </Text>
-                </View>
+            <Animated.View style={[
+                styles.container,
+                { transform: [{ translateY: translateYValue }] }
+            ]}>
+                <Logo />
                 <View
                     style={styles.textFieldsContainer}
                 >
@@ -76,19 +127,28 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                         isPasswordField={true}
                     />
                 </View>
-                <Text
-                    style={[{
-                        color: theme.TEXT,
-                    },
-                    styles.subTitleText,
-                    ]}
+                <Animated.View style={[
+                    styles.textContainer,
+                    { height: textContainerHeight }
+                ]}>
+                    <Text
+                        style={[{
+                            color: theme.TEXT,
+                        },
+                        styles.subTitleText,
+                        ]}
+                    >
+                        <FormattedMessage
+                            id='views.unauthenticated.welcome-screen.sign-in.text'
+                            defaultMessage="Welcome back to ListSync! Enter your credentials to seamlessly dive back into your task lists and stay organized. Let's make your task management experience even better!"
+                        />
+                    </Text>
+                </Animated.View>
+                <View
+                    style={{
+                        marginTop: spacing.SCALE_20,
+                    }}
                 >
-                    <FormattedMessage
-                        id='views.unauthenticated.welcome-screen.sign-in.text'
-                        defaultMessage="Welcome back to ListSync! Enter your credentials to seamlessly dive back into your task lists and stay organized. Let's make your task management experience even better!"
-                    />
-                </Text>
-                <View>
                     <Button
                         text={signInTranslation}
                         onPress={() => console.log('signing in...')}
@@ -122,7 +182,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                         </Text>
                     </Text>
                 </View>
-            </View>
+            </Animated.View>
         </View>
     )
 }
@@ -137,14 +197,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
     },
-    logoContainer: {
-        alignItems: 'center',
-        gap: spacing.SCALE_12,
-    },
-    logoText: {
-        fontSize: typography.FONT_SIZE_32,
-        fontWeight: typography.FONT_WEIGHT_BOLD,
-    },
     textFieldsContainer: {
 
     },
@@ -152,5 +204,8 @@ const styles = StyleSheet.create({
         fontSize: typography.FONT_SIZE_16,
         textAlign: 'center',
         paddingHorizontal: spacing.SCALE_20,
+    },
+    textContainer: {
+        overflow: 'hidden',
     },
 })

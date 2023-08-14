@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import Button, { buttonTypes } from 'components/button';
-import { List, Subtask, Task as TaskType } from 'data/types';
+import { ListType, SubtaskType, TaskType } from 'data/types';
 import Animated, {
     Easing,
     useAnimatedStyle,
@@ -14,7 +14,7 @@ import Arrow from 'assets/button-icons/Back.svg';
 import SubtaskTree from 'assets/button-icons/subtasks-icon.svg';
 import Calendar from 'assets/button-icons/calendar-input-selection.svg';
 import { useIntl } from 'react-intl';
-import { formatDateToShortDate, getDayName, isToday, isTomorrow } from 'utils/dateFormat';
+import { formatDateToShortDate, isToday, isTomorrow } from 'utils/dateFormat';
 import { toggleAnimation } from './helpers';
 import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
@@ -30,8 +30,8 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
     const isCompleted = task.isCompleted;
-    const subTasks: Subtask[] = task.subtasks;
-    const completedSubTasks: Subtask[] = subTasks.filter(item => item.isCompleted);
+    const subTasks: SubtaskType[] = task.subtasks;
+    const completedSubTasks: SubtaskType[] = subTasks.filter(item => item.isCompleted);
     const hasDeadline = task.deadline;
     const deadline = new Date(task.deadline as string);
     const deadlineAsString = formatDateToShortDate(deadline, intl);
@@ -67,7 +67,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
         LayoutAnimation.configureNext(toggleAnimation);
     };
 
-    const [sortedSubTasks, setSortedSubTasks] = useState<Subtask[]>([]);
+    const [sortedSubTasks, setSortedSubTasks] = useState<SubtaskType[]>([]);
 
     useEffect(() => {
         const sortedTasks = [...subTasks].sort((a, b) => {
@@ -83,12 +83,12 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     }, [subTasks]);
 
     const handleCompleteSubtask = (taskId: number, subtaskId: number) => {
-        updateListData((prevListData: List[]) => {
-            const updatedLists = prevListData.map((list: List) => {
+        updateListData((prevListData: ListType[]) => {
+            const updatedLists = prevListData.map((list: ListType) => {
                 if (list.IdList === listId) {
                     const updatedTasks = list.tasks.map((task: TaskType) => {
                         if (task.IdTask === taskId) {
-                            const updatedSubtasks = task.subtasks.map((subtask) =>
+                            const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
                                 subtask.idSubtask === subtaskId ? { ...subtask, isCompleted: !subtask.isCompleted } : subtask
                             );
                             return { ...task, subtasks: updatedSubtasks };
@@ -172,7 +172,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
                 <Animated.View
                     style={[styles.subtasks]}
                 >
-                    {sortedSubTasks.map((item: Subtask) => (
+                    {sortedSubTasks.map((item: SubtaskType) => (
                         <SubTask
                             key={item.idSubtask}
                             handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
