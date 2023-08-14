@@ -52,9 +52,10 @@ export default function CustomTextField({
                     height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
                 })}
                 <TextInput
-                    style={styles.textInput}
+                    style={[styles.textInput, { color: theme.TEXT }]}
                     placeholder={placeholder}
                     inputMode={inputMode}
+                    placeholderTextColor={theme.HINT}
                     secureTextEntry={passwordVisibility}
                 />
                 {isPasswordField ?
