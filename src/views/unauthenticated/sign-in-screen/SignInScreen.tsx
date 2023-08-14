@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, Animated, Keyboard, } from 'react-native'
+import { StyleSheet, Text, View, Animated, Keyboard, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
-import { spacing, typography } from 'styles';
+import { constants, spacing, typography } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { buttonTypes } from 'components/button';
 
@@ -18,7 +18,6 @@ import Button from 'components/button/Button';
 import Logo from 'components/logo';
 
 //TODO:
-// - make logo container smaller when keyboard appears
 // - fields validation
 
 
@@ -154,33 +153,39 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                         onPress={() => console.log('signing in...')}
                         type={buttonTypes.BUTTON_TYPES.SUBMIT}
                     />
-                    <Text
-                        style={[
-                            {
-                                color: theme.TEXT,
-                                fontSize: typography.FONT_SIZE_12,
-                                textAlign: 'center',
-                                marginTop: spacing.SCALE_12,
-                            }
-                        ]}
+                    <TouchableOpacity
+                        activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                        onPress={() => console.log("Terms and conditions")}
                     >
-                        <FormattedMessage
-                            id='views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partI'
-                            defaultMessage=" By clicking 'Sign In,' you agree to our"
-                        />
                         <Text
                             style={[
                                 {
-                                    color: theme.PRIMARY,
+                                    color: theme.TEXT,
+                                    fontSize: typography.FONT_SIZE_12,
+                                    textAlign: 'center',
+                                    marginTop: spacing.SCALE_12,
                                 }
-                            ]}>
+                            ]}
+                        >
                             <FormattedMessage
-                                id='views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII'
-                                defaultMessage=" terms and conditions."
+                                id='views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partI'
+                                defaultMessage=" By clicking 'Sign In,' you agree to our"
                             />
-                            .
+
+                            <Text
+                                style={[
+                                    {
+                                        color: theme.PRIMARY,
+                                    }
+                                ]}>
+                                <FormattedMessage
+                                    id='views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII'
+                                    defaultMessage=" terms and conditions."
+                                />
+                                .
+                            </Text>
                         </Text>
-                    </Text>
+                    </TouchableOpacity>
                 </View>
             </Animated.View>
         </View>
