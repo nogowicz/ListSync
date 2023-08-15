@@ -91,5 +91,6 @@
   "views.unauthenticated.error.email-invalid": "Email is not valid",
   "views.unauthenticated.error.email-required": "Please provide your email",
   "views.unauthenticated.error.password.too-short": "Password must be at least 6 characters",
-  "views.unauthenticated.error.password-required": "Please provide your password"
+  "views.unauthenticated.error.password-required": "Please provide your password",
+  "views.unauthenticated.button.loading": "Loading..."
 }

@@ -4,6 +4,7 @@ import { constants, spacing, typography } from 'styles'
 import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import Button from 'components/button/Button';
 import { buttonTypes } from 'components/button';
+import { FieldError, Merge, FieldErrorsImpl } from 'react-hook-form';
 
 
 type CustomTextFieldProps = {
@@ -13,8 +14,11 @@ type CustomTextFieldProps = {
     inputMode: InputModeOptions;
     secureTextEntry?: boolean;
     isPasswordField?: boolean;
-    isError?: boolean;
-    errorMessage?: string;
+    error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+    onBlur?: () => void;
+    onFocus?: () => void;
+    onChangeText: (text: string) => void;
+    value: string;
 };
 
 export default function CustomTextField({
@@ -24,8 +28,8 @@ export default function CustomTextField({
     inputMode,
     secureTextEntry = false,
     isPasswordField = false,
-    isError = false,
-    errorMessage = '',
+    error,
+    ...props
 }: CustomTextFieldProps) {
     const theme = useContext(ThemeContext);
     const [passwordVisibility, setPasswordVisibility] = useState(secureTextEntry);
@@ -35,7 +39,7 @@ export default function CustomTextField({
                 style={[
                     styles.labelText,
                     {
-                        color: isError ? theme.RED : theme.TEXT
+                        color: error ? theme.RED : theme.TEXT
                     }
                 ]}
             >
@@ -44,9 +48,9 @@ export default function CustomTextField({
             <View
                 style={[
                     styles.textFieldContainer,
-                    isError && styles.textFieldWithError,
+                    error && styles.textFieldWithError,
                     {
-                        backgroundColor: isError ? theme.ERROR : theme.TERTIARY,
+                        backgroundColor: error ? theme.ERROR : theme.TERTIARY,
                     }
                 ]}
             >
@@ -57,6 +61,7 @@ export default function CustomTextField({
                     height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
                 })}
                 <TextInput
+                    {...props}
                     style={[
                         styles.textInput,
                         {
@@ -65,8 +70,9 @@ export default function CustomTextField({
                     ]}
                     placeholder={placeholder}
                     inputMode={inputMode}
-                    placeholderTextColor={isError ? theme.LIGHT_HINT : theme.HINT}
+                    placeholderTextColor={error ? theme.LIGHT_HINT : theme.HINT}
                     secureTextEntry={passwordVisibility}
+
                 />
                 {isPasswordField ?
                     <Button
@@ -77,14 +83,14 @@ export default function CustomTextField({
                     <View />
                 }
             </View>
-            {isError && <Text
+            {error && <Text
                 style={[
                     {
                         color: theme.RED,
                         marginLeft: spacing.SCALE_6,
                     }
                 ]}
-            >{errorMessage}</Text>}
+            >{error.message?.toString()}</Text>}
         </View>
     )
 }

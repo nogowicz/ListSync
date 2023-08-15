@@ -91,5 +91,6 @@
   "views.unauthenticated.error.email-invalid": "Email jest niepoprawny",
   "views.unauthenticated.error.email-required": "Proszę podaj swój email email",
   "views.unauthenticated.error.password.too-short": "Hasło musi mieć co najmniej 6 znaków",
-  "views.unauthenticated.error.password-required": "Proszę podaj swoje hasło"
+  "views.unauthenticated.error.password-required": "Proszę podaj swoje hasło",
+  "views.unauthenticated.button.loading": "Ładowanie..."
 }

@@ -33,10 +33,29 @@ type SignInScreenProps = {
 export default function SignInScreen({ navigation }: SignInScreenProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
+    const [loading, setLoading] = useState(false);
 
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         resolver: yupResolver(schema(intl))
     });
+
+    const onSubmit: SubmitHandler<FieldValues> = async ({ email, password }) => {
+        setLoading(true);
+
+        try {
+            console.log(email, password)
+            setTimeout(() => {
+                setLoading(false);
+                console.log("Time out...")
+            }, 1000);
+        } catch (error) {
+            setTimeout(() => {
+                setLoading(false);
+                console.log("Time out...")
+            }, 1000);;
+            console.log(error);
+        }
+    }
 
     const emailTranslation = intl.formatMessage({
         id: 'views.unauthenticated.welcome-screen.sign-in.email',
@@ -51,9 +70,14 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         defaultMessage: 'Sign In',
     });
 
+    const loadingTranslation = intl.formatMessage({
+        id: 'views.unauthenticated.button.loading',
+        defaultMessage: 'Loading...'
+    });
+
 
     const translateYValue = useRef(new Animated.Value(0)).current;
-    const [textContainerHeight, setTextContainerHeight] = useState(new Animated.Value(120));
+    const [textContainerHeight] = useState(new Animated.Value(120));
 
 
     const animationDuration = 400;
@@ -117,20 +141,54 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                 <View
                     style={styles.textFieldsContainer}
                 >
-                    <CustomTextField
-                        name={emailTranslation}
-                        placeholder='johndoe@listsync.com'
-                        icon={<EmailIcon />}
-                        inputMode='email'
+                    <Controller
+                        name='email'
+                        rules={{
+                            required: true,
+                        }}
+                        defaultValue=''
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => {
+                            const placeholder = "johndoe@listsync.com";
+                            return (
+                                <CustomTextField
+                                    name={emailTranslation}
+                                    placeholder={placeholder}
+                                    icon={<EmailIcon />}
+                                    inputMode='email'
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    error={errors.email}
+                                    value={value}
+
+                                />)
+                        }
+                        }
                     />
 
-                    <CustomTextField
-                        name={passwordTranslation}
-                        placeholder='**********'
-                        icon={<PasswordIcon />}
-                        inputMode='text'
-                        secureTextEntry={true}
-                        isPasswordField={true}
+                    <Controller
+                        name='password'
+                        rules={{
+                            required: true,
+                        }}
+                        defaultValue=''
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => {
+                            return (
+                                <CustomTextField
+                                    name={passwordTranslation}
+                                    placeholder='**********'
+                                    icon={<PasswordIcon />}
+                                    inputMode='text'
+                                    secureTextEntry={true}
+                                    isPasswordField={true}
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    error={errors.password}
+                                    value={value}
+                                />)
+                        }
+                        }
                     />
                 </View>
                 <Animated.View style={[
@@ -156,8 +214,8 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                     }}
                 >
                     <Button
-                        text={signInTranslation}
-                        onPress={() => console.log('signing in...')}
+                        text={loading ? loadingTranslation : signInTranslation}
+                        onPress={handleSubmit(onSubmit)}
                         type={buttonTypes.BUTTON_TYPES.SUBMIT}
                     />
                     <TouchableOpacity
@@ -220,4 +278,4 @@ const styles = StyleSheet.create({
     textContainer: {
         overflow: 'hidden',
     },
-})
+});
