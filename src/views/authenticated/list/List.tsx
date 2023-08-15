@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import ListTopBar from 'components/list-top-bar';
 import { RouteProp } from '@react-navigation/native';
 import TaskList from 'components/task-list';
@@ -25,7 +25,7 @@ type ListProps = {
 };
 
 export default function List({ navigation, route }: ListProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const { data }: any = route.params;
     const { listData } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));

@@ -8,18 +8,19 @@ import React, {
     Dispatch,
     SetStateAction,
     cloneElement,
-    useContext,
 } from 'react'
 import { constants, spacing, typography } from 'styles';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';;
 import { FormattedMessage } from 'react-intl';
+import { getFormattedDate } from 'utils/dateFormat';
 
+
+//icons:
 import TodayLater from 'assets/button-icons/later_today.svg';
 import Tomorrow from 'assets/button-icons/tomorrow.svg';
 import NextWeek from 'assets/button-icons/next_week.svg';
 import PickTime from 'assets/button-icons/pick_time.svg';
 import RemoveNotification from 'assets/button-icons/remove_notification.svg';
-import { getFormattedDate } from 'utils/dateFormat';
 
 
 export const notificationTimeNames = {
@@ -50,7 +51,7 @@ export default function NotificationSelector({
     notificationTodayHour,
     notificationTomorrowHour
 }: NotificationSelectorProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
 
     const dates = [
         {

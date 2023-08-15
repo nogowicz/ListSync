@@ -1,9 +1,8 @@
-import { ThemeContext } from "navigation/utils/ThemeProvider";
-import React, { useContext, } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { useTheme } from 'navigation/utils/ThemeProvider';
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
 import RNModal from "react-native-modal";
 import { constants, spacing, typography } from "styles";
-import { theme } from "styles/colors";
 type ModalProps = {
     isVisible: boolean;
     children: React.ReactNode;
@@ -29,14 +28,14 @@ export const Modal = ({
 };
 
 const ModalContainer = ({ children }: { children: React.ReactNode }) => {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     return (
         <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>{children}</View>
     );
 };
 
 const ModalHeader = ({ title }: { title: string | React.ReactNode }) => {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     return (
         <View style={styles.header}>
             <Text style={[styles.text, { color: theme.TEXT }]}>{title}</Text>

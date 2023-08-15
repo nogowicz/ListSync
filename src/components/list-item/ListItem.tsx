@@ -1,6 +1,6 @@
-import React, { ReactNode, useContext, cloneElement } from 'react';
+import React, { cloneElement } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage } from 'react-intl';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
@@ -36,7 +36,7 @@ export default function ListItem({
     colorVariant,
     onPress,
 }: ListItemProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const tasks = taskAmount !== 1 ?
         (taskAmount > 4 || taskAmount === 0 ?
             (<FormattedMessage

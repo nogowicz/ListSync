@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Animated, Keyboard, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { buttonTypes } from 'components/button';
@@ -21,10 +21,6 @@ import Button from 'components/button/Button';
 import Logo from 'components/logo';
 import { UserType, useUser } from 'context/UserProvider';
 
-//TODO:
-// - fields validation
-
-
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 
 type SignInScreenProps = {
@@ -32,11 +28,12 @@ type SignInScreenProps = {
 };
 
 export default function SignInScreen({ navigation }: SignInScreenProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const intl = useIntl();
     const [loading, setLoading] = useState(false);
     const { user, setUserDetails } = useUser();
 
+    //form handlers:
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         resolver: yupResolver(schema(intl))
     });
@@ -53,6 +50,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         }
     }
 
+    //translations:
     const emailTranslation = intl.formatMessage({
         id: 'views.unauthenticated.welcome-screen.sign-in.email',
         defaultMessage: 'Email',
@@ -65,13 +63,13 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         id: 'views.unauthenticated.welcome-screen.sign-in.sign-in',
         defaultMessage: 'Sign In',
     });
-
     const loadingTranslation = intl.formatMessage({
         id: 'views.unauthenticated.button.loading',
         defaultMessage: 'Loading...'
     });
 
 
+    //animations:
     const translateYValue = useRef(new Animated.Value(0)).current;
     const [textContainerHeight] = useState(new Animated.Value(120));
 

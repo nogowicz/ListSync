@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { cloneElement, useContext, Dispatch, SetStateAction, } from 'react'
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';;
 import { FormattedMessage } from 'react-intl';
 import { spacing, constants, typography } from 'styles';
 
@@ -25,7 +25,7 @@ type ImportanceSelectorProps = {
 }
 
 export default function ImportanceSelector({ importance, setImportance, setIsImportanceVisible }: ImportanceSelectorProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
 
     const importanceArray = [
         {

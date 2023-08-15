@@ -4,9 +4,9 @@ import Button, { buttonTypes } from 'components/button';
 import { FormattedMessage } from 'react-intl';
 import { typography, spacing, constants } from 'styles';
 import { Modal } from 'components/modal/Modal';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useListContext } from 'context/DataProvider';
-import { List } from 'data/types';
+import { ListType } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 
 type ChangeListModalProps = {
@@ -32,14 +32,14 @@ export default function ChangeListModal({
     setSelectedColor,
     handleModal,
 }: ChangeListModalProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const { updateListData } = useListContext();
     const [newListName, setNewListName] = useState<string>(listName);
 
 
     const handleUpdateList = (listId: number, listName: string, selectedIcon: number, selectedColor: number) => {
-        updateListData((prevListData: List[]) => {
-            const updatedLists = prevListData.map((list: List) => {
+        updateListData((prevListData: ListType[]) => {
+            const updatedLists = prevListData.map((list: ListType) => {
                 if (list.IdList === listId) {
                     handleModal();
                     return {

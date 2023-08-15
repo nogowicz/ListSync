@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 interface ThemeContextType {
   PRIMARY: string;
@@ -17,3 +17,11 @@ interface ThemeContextType {
 export const ThemeContext = createContext<ThemeContextType>(
   {} as ThemeContextType,
 );
+
+export const useTheme = (): ThemeContextType => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};

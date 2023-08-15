@@ -3,22 +3,22 @@ import React, { useContext, useState, Dispatch, SetStateAction } from 'react'
 import Button, { buttonTypes } from 'components/button'
 import { FormattedMessage } from 'react-intl'
 import { spacing } from 'styles'
-import { ThemeContext } from 'navigation/utils/ThemeProvider'
-import { List } from 'data/types'
+import { useTheme } from 'navigation/utils/ThemeProvider';
+import { ListType } from 'data/types'
 import { useListContext } from 'context/DataProvider'
 
 type FilterPanelProps = {
-    setList: Dispatch<SetStateAction<List[]>>;
+    setList: Dispatch<SetStateAction<ListType[]>>;
 };
 
 export default function FilterPanel({ setList }: FilterPanelProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const { listData } = useListContext();
     const [activeListName, setActiveListName] = useState('all');
-    const allList = listData.filter((item: List) => item.isArchived === false);
-    const favoriteList = listData.filter((item: List) => item.isFavorite === true && item.isArchived === false);
-    const sharedList = listData.filter((item: List) => item.isShared === true && item.isArchived === false);
-    const archivedList = listData.filter((item: List) => item.isArchived === true);
+    const allList = listData.filter((item: ListType) => item.isArchived === false);
+    const favoriteList = listData.filter((item: ListType) => item.isFavorite === true && item.isArchived === false);
+    const sharedList = listData.filter((item: ListType) => item.isShared === true && item.isArchived === false);
+    const archivedList = listData.filter((item: ListType) => item.isArchived === true);
 
 
     const handleAllList = () => {

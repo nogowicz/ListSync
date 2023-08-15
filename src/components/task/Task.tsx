@@ -1,6 +1,6 @@
 import { Platform, StyleSheet, Text, TouchableOpacity, View, LayoutAnimation } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import React, { useEffect, useState } from 'react'
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import Button, { buttonTypes } from 'components/button';
 import { ListType, SubtaskType, TaskType } from 'data/types';
@@ -27,7 +27,7 @@ type TaskProps = {
 };
 
 export default function Task({ task, onTaskComplete, listId }: TaskProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const intl = useIntl();
     const isCompleted = task.isCompleted;
     const subTasks: SubtaskType[] = task.subtasks;

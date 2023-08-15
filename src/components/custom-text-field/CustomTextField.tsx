@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput, InputModeOptions, } from 'react-native'
-import React, { cloneElement, useContext, useState } from 'react'
+import React, { cloneElement, useState } from 'react'
 import { constants, spacing, typography } from 'styles'
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import Button from 'components/button/Button';
 import { buttonTypes } from 'components/button';
 import { FieldError, Merge, FieldErrorsImpl } from 'react-hook-form';
@@ -31,7 +31,7 @@ export default function CustomTextField({
     error,
     ...props
 }: CustomTextFieldProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const [passwordVisibility, setPasswordVisibility] = useState(secureTextEntry);
     return (
         <View style={styles.root}>
