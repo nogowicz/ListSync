@@ -13,6 +13,8 @@ type CustomTextFieldProps = {
     inputMode: InputModeOptions;
     secureTextEntry?: boolean;
     isPasswordField?: boolean;
+    isError?: boolean;
+    errorMessage?: string;
 };
 
 export default function CustomTextField({
@@ -22,6 +24,8 @@ export default function CustomTextField({
     inputMode,
     secureTextEntry = false,
     isPasswordField = false,
+    isError = false,
+    errorMessage = '',
 }: CustomTextFieldProps) {
     const theme = useContext(ThemeContext);
     const [passwordVisibility, setPasswordVisibility] = useState(secureTextEntry);
@@ -31,7 +35,7 @@ export default function CustomTextField({
                 style={[
                     styles.labelText,
                     {
-                        color: theme.TEXT
+                        color: isError ? theme.RED : theme.TEXT
                     }
                 ]}
             >
@@ -40,8 +44,9 @@ export default function CustomTextField({
             <View
                 style={[
                     styles.textFieldContainer,
+                    isError && styles.textFieldWithError,
                     {
-                        backgroundColor: theme.TERTIARY,
+                        backgroundColor: isError ? theme.ERROR : theme.TERTIARY,
                     }
                 ]}
             >
@@ -52,10 +57,15 @@ export default function CustomTextField({
                     height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
                 })}
                 <TextInput
-                    style={[styles.textInput, { color: theme.TEXT }]}
+                    style={[
+                        styles.textInput,
+                        {
+                            color: theme.TEXT,
+                        }
+                    ]}
                     placeholder={placeholder}
                     inputMode={inputMode}
-                    placeholderTextColor={theme.HINT}
+                    placeholderTextColor={isError ? theme.LIGHT_HINT : theme.HINT}
                     secureTextEntry={passwordVisibility}
                 />
                 {isPasswordField ?
@@ -66,8 +76,15 @@ export default function CustomTextField({
                     /> :
                     <View />
                 }
-
             </View>
+            {isError && <Text
+                style={[
+                    {
+                        color: theme.RED,
+                        marginLeft: spacing.SCALE_6,
+                    }
+                ]}
+            >{errorMessage}</Text>}
         </View>
     )
 }
@@ -94,4 +111,7 @@ const styles = StyleSheet.create({
         marginLeft: spacing.SCALE_8,
         fontSize: typography.FONT_SIZE_16,
     },
+    textFieldWithError: {
+
+    }
 })
