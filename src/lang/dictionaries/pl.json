@@ -85,6 +85,7 @@
   "views.unauthenticated.welcome-screen.sign-in.email": "Email",
   "views.unauthenticated.welcome-screen.sign-in.password": "Hasło",
   "views.unauthenticated.welcome-screen.sign-in.sign-in": "Zaloguj Się",
+  "views.unauthenticated.welcome-screen.sign-in.forgot-password": "Zapomiałeś hasła?",
   "views.unauthenticated.welcome-screen.sign-in.text": "Witaj ponownie w ListSync! Wprowadź swoje dane logowania, aby bezproblemowo wrócić do swoich list zadań i utrzymać porządek. Dajmy razem poprawić twoje doświadczenie w zarządzaniu zadaniami!",
   "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partI": "Klikając „Zaloguj się”, zgadzasz się na nasze ",
   "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII": " warunki i regulacje",

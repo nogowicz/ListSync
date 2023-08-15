@@ -6,12 +6,17 @@ import { useTheme } from 'navigation/utils/ThemeProvider';
 //icons:
 import LogoIcon from 'assets/logo/logo.svg';
 
-export default function Logo() {
+type LogoProps = {
+    animationDuration: number;
+};
+
+export default function Logo({
+    animationDuration
+}: LogoProps) {
     const theme = useTheme();
 
     const scaleValue = useRef(new Animated.Value(1)).current;
 
-    const animationDuration = 400;
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -46,7 +51,7 @@ export default function Logo() {
     const handleKeyboardOut = () => {
         Animated.parallel([
             Animated.timing(scaleValue, {
-                toValue: 0.8,
+                toValue: 0.7,
                 duration: animationDuration,
                 useNativeDriver: true,
             }),

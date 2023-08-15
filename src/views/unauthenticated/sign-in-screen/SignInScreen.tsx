@@ -9,6 +9,7 @@ import { buttonTypes } from 'components/button';
 import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from './signInVallidationSchema';
+import { UserType, useUser } from 'context/UserProvider';
 
 //components:
 import CustomTextField from 'components/custom-text-field';
@@ -19,7 +20,6 @@ import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import Button from 'components/button/Button';
 import Logo from 'components/logo';
-import { UserType, useUser } from 'context/UserProvider';
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 
@@ -67,6 +67,10 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         id: 'views.unauthenticated.button.loading',
         defaultMessage: 'Loading...'
     });
+    const forgotPasswordTranslation = intl.formatMessage({
+        id: 'views.unauthenticated.welcome-screen.sign-in.forgot-password',
+        defaultMessage: 'Forgot Password?',
+    });
 
 
     //animations:
@@ -74,7 +78,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const [textContainerHeight] = useState(new Animated.Value(120));
 
 
-    const animationDuration = 400;
+    const animationDuration = 200;
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -113,7 +117,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const handleKeyboardOut = () => {
         Animated.parallel([
             Animated.timing(translateYValue, {
-                toValue: -20,
+                toValue: -30,
                 duration: animationDuration,
                 useNativeDriver: true,
             }),
@@ -131,7 +135,9 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                 styles.container,
                 { transform: [{ translateY: translateYValue }] }
             ]}>
-                <Logo />
+                <Logo
+                    animationDuration={animationDuration}
+                />
                 <View
                     style={styles.textFieldsContainer}
                 >
@@ -180,6 +186,11 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                                     onBlur={onBlur}
                                     error={errors.password}
                                     value={value}
+                                    actionLabel={forgotPasswordTranslation}
+                                    action={() => {
+                                        console.log("Navigating to forgot password screen")
+                                        // navigation.navigate(SCREENS.AUTH.FORGOT_PASSWORD.ID)
+                                    }}
                                 />)
                         }
                         }
@@ -204,7 +215,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                 </Animated.View>
                 <View
                     style={{
-                        marginTop: spacing.SCALE_20,
+                        marginTop: spacing.SCALE_8,
                     }}
                 >
                     <Button
