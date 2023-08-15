@@ -19,6 +19,7 @@ import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import Button from 'components/button/Button';
 import Logo from 'components/logo';
+import { UserType, useUser } from 'context/UserProvider';
 
 //TODO:
 // - fields validation
@@ -34,6 +35,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
     const [loading, setLoading] = useState(false);
+    const { user, setUserDetails } = useUser();
 
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         resolver: yupResolver(schema(intl))
@@ -44,15 +46,9 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
         try {
             console.log(email, password)
-            setTimeout(() => {
-                setLoading(false);
-                console.log("Time out...")
-            }, 1000);
+            const userData: UserType = { id: 1, firstName: 'John', email: email };
+            setUserDetails(userData);
         } catch (error) {
-            setTimeout(() => {
-                setLoading(false);
-                console.log("Time out...")
-            }, 1000);;
             console.log(error);
         }
     }
