@@ -6,6 +6,9 @@ import { ThemeContext } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { buttonTypes } from 'components/button';
+import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schema } from './signInVallidationSchema';
 
 //components:
 import CustomTextField from 'components/custom-text-field';
@@ -30,6 +33,10 @@ type SignInScreenProps = {
 export default function SignInScreen({ navigation }: SignInScreenProps) {
     const theme = useContext(ThemeContext);
     const intl = useIntl();
+
+    const { control, handleSubmit, setError, formState: { errors } } = useForm({
+        resolver: yupResolver(schema(intl))
+    });
 
     const emailTranslation = intl.formatMessage({
         id: 'views.unauthenticated.welcome-screen.sign-in.email',
