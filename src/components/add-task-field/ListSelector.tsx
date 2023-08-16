@@ -1,20 +1,18 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { Dispatch, SetStateAction, cloneElement, useContext } from 'react'
-import { List } from 'data/types';
+import React, { Dispatch, SetStateAction, cloneElement } from 'react'
+import { ListType } from 'data/types';
 import { spacing, constants, typography } from 'styles';
-import { theme } from 'styles/colors';
 import { listIconTheme, listColorTheme } from 'styles/list-styles';
-import list from 'views/authenticated/list';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 
 type ListSelectorProps = {
-    list: List[];
+    list: ListType[];
     setIsListVisible: Dispatch<SetStateAction<boolean>>;
-    setActiveList: Dispatch<SetStateAction<List | undefined>>;
+    setActiveList: Dispatch<SetStateAction<ListType | undefined>>;
 }
 
 export default function ListSelector({ list, setIsListVisible, setActiveList }: ListSelectorProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     return (
         <ScrollView
             showsHorizontalScrollIndicator={false}
@@ -26,7 +24,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                 gap: spacing.SCALE_12,
                 marginVertical: spacing.SCALE_12,
             }}>
-                {list.map((item: List) => (
+                {list.map((item: ListType) => (
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                         key={item.IdList}

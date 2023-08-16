@@ -9,4 +9,5 @@ export enum BUTTON_TYPES {
   SIGN_IN = 'signIn',
   PASSWORD_VISIBILITY = 'passwordVisibility',
   SUBMIT = 'submit',
+  BACK = 'back',
 }

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, Dispatch, SetStateAction, } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { constants, spacing } from 'styles'
-import { ThemeContext } from 'navigation/utils/ThemeProvider'
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { ListType } from 'data/types'
 import { deadlineNames } from './DeadlineSelector'
 import { formatDateToShortDate, formatDateToShortDateWithTime, isToday, isTomorrow } from 'utils/dateFormat'
@@ -58,7 +58,7 @@ export default function FunctionPanelButtons({
     notificationTime,
     importance,
 }: FunctionPanelButtonsProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const intl = useIntl();
     const deadlineTranslation: { [key: string]: React.JSX.Element } = {
         'Deadline': (

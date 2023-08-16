@@ -1,17 +1,22 @@
-import { Animated, Keyboard, StyleSheet, Text, View } from 'react-native'
-import React, { useContext, useEffect, useRef } from 'react'
+import { Animated, Keyboard, StyleSheet, Text } from 'react-native'
+import React, { useEffect, useRef } from 'react'
 import { spacing, typography } from 'styles'
-import { ThemeContext } from 'navigation/utils/ThemeProvider'
+import { useTheme } from 'navigation/utils/ThemeProvider';
 
 //icons:
 import LogoIcon from 'assets/logo/logo.svg';
 
-export default function Logo() {
-    const theme = useContext(ThemeContext);
+type LogoProps = {
+    animationDuration: number;
+};
+
+export default function Logo({
+    animationDuration
+}: LogoProps) {
+    const theme = useTheme();
 
     const scaleValue = useRef(new Animated.Value(1)).current;
 
-    const animationDuration = 400;
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -46,7 +51,7 @@ export default function Logo() {
     const handleKeyboardOut = () => {
         Animated.parallel([
             Animated.timing(scaleValue, {
-                toValue: 0.8,
+                toValue: 0.7,
                 duration: animationDuration,
                 useNativeDriver: true,
             }),

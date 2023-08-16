@@ -85,7 +85,13 @@
   "views.unauthenticated.welcome-screen.sign-in.email": "Email",
   "views.unauthenticated.welcome-screen.sign-in.password": "Password",
   "views.unauthenticated.welcome-screen.sign-in.sign-in": "Sign In",
+  "views.unauthenticated.welcome-screen.sign-in.forgot-password": "Forgot password?",
   "views.unauthenticated.welcome-screen.sign-in.text": "Welcome back to ListSync! Enter your credentials to seamlessly dive back into your task lists and stay organized. Let's make your task management experience even better!",
   "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partI": "By clicking 'Sign In,' you agree to our",
-  "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII": " terms and conditions"
+  "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII": " terms and conditions",
+  "views.unauthenticated.error.email-invalid": "Email is not valid",
+  "views.unauthenticated.error.email-required": "Please provide your email",
+  "views.unauthenticated.error.password.too-short": "Password must be at least 6 characters",
+  "views.unauthenticated.error.password-required": "Please provide your password",
+  "views.unauthenticated.button.loading": "Loading..."
 }

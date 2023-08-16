@@ -1,11 +1,15 @@
 import { StyleSheet, Text, View, Animated, Keyboard, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { buttonTypes } from 'components/button';
+import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schema } from './signInVallidationSchema';
+import { UserType, useUser } from 'context/UserProvider';
 
 //components:
 import CustomTextField from 'components/custom-text-field';
@@ -14,12 +18,8 @@ import CustomTextField from 'components/custom-text-field';
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
-import Button from 'components/button/Button';
+import Button, { backButtonWidth } from 'components/button/Button';
 import Logo from 'components/logo';
-
-//TODO:
-// - fields validation
-
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 
@@ -28,9 +28,30 @@ type SignInScreenProps = {
 };
 
 export default function SignInScreen({ navigation }: SignInScreenProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const intl = useIntl();
+    const [loading, setLoading] = useState(false);
+    const { user, setUserDetails } = useUser();
 
+
+    //form handlers:
+    const { control, handleSubmit, setError, formState: { errors } } = useForm({
+        resolver: yupResolver(schema(intl))
+    });
+
+    const onSubmit: SubmitHandler<FieldValues> = async ({ email, password }) => {
+        setLoading(true);
+
+        try {
+            console.log(email, password)
+            const userData: UserType = { id: 1, firstName: 'Bartek', email: email };
+            setUserDetails(userData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    //translations:
     const emailTranslation = intl.formatMessage({
         id: 'views.unauthenticated.welcome-screen.sign-in.email',
         defaultMessage: 'Email',
@@ -43,13 +64,22 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         id: 'views.unauthenticated.welcome-screen.sign-in.sign-in',
         defaultMessage: 'Sign In',
     });
+    const loadingTranslation = intl.formatMessage({
+        id: 'views.unauthenticated.button.loading',
+        defaultMessage: 'Loading...'
+    });
+    const forgotPasswordTranslation = intl.formatMessage({
+        id: 'views.unauthenticated.welcome-screen.sign-in.forgot-password',
+        defaultMessage: 'Forgot Password?',
+    });
 
 
+    //animations:
     const translateYValue = useRef(new Animated.Value(0)).current;
-    const [textContainerHeight, setTextContainerHeight] = useState(new Animated.Value(120));
+    const animationDuration = 200;
+    const [textContainerHeight] = useState(new Animated.Value(120));
 
 
-    const animationDuration = 400;
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -88,7 +118,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const handleKeyboardOut = () => {
         Animated.parallel([
             Animated.timing(translateYValue, {
-                toValue: -20,
+                toValue: -30,
                 duration: animationDuration,
                 useNativeDriver: true,
             }),
@@ -106,24 +136,79 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                 styles.container,
                 { transform: [{ translateY: translateYValue }] }
             ]}>
-                <Logo />
+                <View style={styles.topContainer}>
+                    <Button
+                        onPress={() => navigation.goBack()}
+                        type={buttonTypes.BUTTON_TYPES.BACK}
+
+
+                    />
+                    <Logo
+                        animationDuration={animationDuration}
+                    />
+                    <View
+                        style={{
+                            width: backButtonWidth
+                        }}
+                    />
+                </View>
+
                 <View
                     style={styles.textFieldsContainer}
                 >
-                    <CustomTextField
-                        name={emailTranslation}
-                        placeholder='johndoe@listsync.com'
-                        icon={<EmailIcon />}
-                        inputMode='email'
+                    <Controller
+                        name='email'
+                        rules={{
+                            required: true,
+                        }}
+                        defaultValue=''
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => {
+                            const placeholder = "johndoe@listsync.com";
+                            return (
+                                <CustomTextField
+                                    name={emailTranslation}
+                                    placeholder={placeholder}
+                                    icon={<EmailIcon />}
+                                    inputMode='email'
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    error={errors.email}
+                                    value={value}
+
+                                />)
+                        }
+                        }
                     />
 
-                    <CustomTextField
-                        name={passwordTranslation}
-                        placeholder='**********'
-                        icon={<PasswordIcon />}
-                        inputMode='text'
-                        secureTextEntry={true}
-                        isPasswordField={true}
+                    <Controller
+                        name='password'
+                        rules={{
+                            required: true,
+                        }}
+                        defaultValue=''
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => {
+                            return (
+                                <CustomTextField
+                                    name={passwordTranslation}
+                                    placeholder='**********'
+                                    icon={<PasswordIcon />}
+                                    inputMode='text'
+                                    secureTextEntry={true}
+                                    isPasswordField={true}
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    error={errors.password}
+                                    value={value}
+                                    actionLabel={forgotPasswordTranslation}
+                                    action={() => {
+                                        console.log("Navigating to forgot password screen")
+                                        // navigation.navigate(SCREENS.AUTH.FORGOT_PASSWORD.ID)
+                                    }}
+                                />)
+                        }
+                        }
                     />
                 </View>
                 <Animated.View style={[
@@ -145,12 +230,12 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                 </Animated.View>
                 <View
                     style={{
-                        marginTop: spacing.SCALE_20,
+                        marginTop: spacing.SCALE_8,
                     }}
                 >
                     <Button
-                        text={signInTranslation}
-                        onPress={() => console.log('signing in...')}
+                        text={loading ? loadingTranslation : signInTranslation}
+                        onPress={handleSubmit(onSubmit)}
                         type={buttonTypes.BUTTON_TYPES.SUBMIT}
                     />
                     <TouchableOpacity
@@ -213,4 +298,9 @@ const styles = StyleSheet.create({
     textContainer: {
         overflow: 'hidden',
     },
-})
+    topContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+    }
+});

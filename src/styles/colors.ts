@@ -11,6 +11,7 @@ export const theme = {
     GREEN: '#58CB7B',
     RED: '#DC6A5E',
     YELLOW: '#FCBA77',
+    ERROR: '#ef9a9a',
   },
   dark: {
     theme: 'dark',
@@ -24,5 +25,6 @@ export const theme = {
     GREEN: '#58CB7B',
     RED: '#DC6A5E',
     YELLOW: '#FCBA77',
+    ERROR: '#ef9a9a',
   },
 };

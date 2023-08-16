@@ -1,15 +1,17 @@
-import { Keyboard, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { ReactNode, cloneElement, useContext, useState } from 'react'
-import { ThemeContext } from 'navigation/utils/ThemeProvider'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { ReactNode, cloneElement } from 'react'
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
-import { FormattedMessage } from 'react-intl';
 
-import GoBack from 'assets/button-icons/Back.svg';
-import Details from 'assets/button-icons/details.svg';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
+
+//icons: 
+import GoBack from 'assets/button-icons/Back.svg';
+import Details from 'assets/button-icons/details.svg';
+import Button, { buttonTypes } from 'components/button';
 
 type ListTopBar = {
     name: string;
@@ -19,7 +21,7 @@ type ListTopBar = {
 };
 
 export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopBar) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const getFontSize = (textLength: number) => {
@@ -35,18 +37,12 @@ export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopB
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
-                style={[styles.backButton, { borderColor: theme.LIGHT_HINT, }]}
+            <Button
                 onPress={() => {
                     navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
                 }}
-            >
-                <GoBack
-                    fill={theme.TEXT}
-                />
-            </TouchableOpacity>
-
+                type={buttonTypes.BUTTON_TYPES.BACK}
+            />
             <TouchableOpacity
                 activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                 style={styles.iconAndNameContainer}
@@ -79,11 +75,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: spacing.SCALE_30,
-    },
-    backButton: {
-        borderWidth: constants.BORDER_WIDTH.BACK,
-        borderRadius: constants.BORDER_RADIUS.BUTTON,
-        padding: spacing.SCALE_12,
     },
     iconAndNameContainer: {
         flexDirection: 'row',

@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, TextInput, InputModeOptions, } from 'react-native'
-import React, { cloneElement, useContext, useState } from 'react'
+import { StyleSheet, Text, View, TextInput, InputModeOptions, TouchableOpacity, } from 'react-native'
+import React, { cloneElement, useState } from 'react'
 import { constants, spacing, typography } from 'styles'
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import Button from 'components/button/Button';
 import { buttonTypes } from 'components/button';
+import { FieldError, Merge, FieldErrorsImpl } from 'react-hook-form';
 
 
 type CustomTextFieldProps = {
@@ -13,6 +14,13 @@ type CustomTextFieldProps = {
     inputMode: InputModeOptions;
     secureTextEntry?: boolean;
     isPasswordField?: boolean;
+    error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+    onBlur?: () => void;
+    onFocus?: () => void;
+    onChangeText: (text: string) => void;
+    value: string;
+    action?: () => void;
+    actionLabel?: string;
 };
 
 export default function CustomTextField({
@@ -22,26 +30,41 @@ export default function CustomTextField({
     inputMode,
     secureTextEntry = false,
     isPasswordField = false,
+    error,
+    action,
+    actionLabel,
+    ...props
 }: CustomTextFieldProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const [passwordVisibility, setPasswordVisibility] = useState(secureTextEntry);
     return (
         <View style={styles.root}>
-            <Text
-                style={[
-                    styles.labelText,
-                    {
-                        color: theme.TEXT
-                    }
-                ]}
-            >
-                {name}
-            </Text>
+            <View style={styles.labelContainer}>
+                <Text
+                    style={[
+                        styles.labelText,
+                        {
+                            color: error ? theme.RED : theme.TEXT
+                        }
+                    ]}
+                >
+                    {name}
+                </Text>
+                {actionLabel &&
+                    <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={action}
+                    >
+                        <Text style={[styles.labelText, { color: theme.PRIMARY }]}>{actionLabel}</Text>
+                    </TouchableOpacity>
+                }
+            </View>
             <View
                 style={[
                     styles.textFieldContainer,
+                    error && styles.textFieldWithError,
                     {
-                        backgroundColor: theme.TERTIARY,
+                        backgroundColor: error ? theme.ERROR : theme.TERTIARY,
                     }
                 ]}
             >
@@ -52,11 +75,18 @@ export default function CustomTextField({
                     height: constants.ICON_SIZE.TEXT_FIELD_LIST_ICON,
                 })}
                 <TextInput
-                    style={[styles.textInput, { color: theme.TEXT }]}
+                    {...props}
+                    style={[
+                        styles.textInput,
+                        {
+                            color: theme.TEXT,
+                        }
+                    ]}
                     placeholder={placeholder}
                     inputMode={inputMode}
-                    placeholderTextColor={theme.HINT}
+                    placeholderTextColor={error ? theme.LIGHT_HINT : theme.HINT}
                     secureTextEntry={passwordVisibility}
+
                 />
                 {isPasswordField ?
                     <Button
@@ -66,8 +96,15 @@ export default function CustomTextField({
                     /> :
                     <View />
                 }
-
             </View>
+            {error && <Text
+                style={[
+                    {
+                        color: theme.RED,
+                        marginLeft: spacing.SCALE_6,
+                    }
+                ]}
+            >{error.message?.toString()}</Text>}
         </View>
     )
 }
@@ -91,7 +128,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     labelText: {
-        marginLeft: spacing.SCALE_8,
+        marginHorizontal: spacing.SCALE_8,
         fontSize: typography.FONT_SIZE_16,
+    },
+    textFieldWithError: {
+
+    },
+    labelContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
 })

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, ReactNode } from 'react'
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import React, { ReactNode } from 'react'
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { buttonTypes } from '.';
 import { FormattedMessage } from 'react-intl';
@@ -13,7 +13,9 @@ import GoogleSignInIcon from 'assets/button-icons/google-icon.svg';
 import SignInIcon from 'assets/button-icons/login-in-icon.svg';
 import PasswordVisibleIcon from 'assets/button-icons/visible-password.svg';
 import PasswordInvisibleIcon from 'assets/button-icons/invisible-password.svg';
-import { theme } from 'styles/colors';
+import GoBack from 'assets/button-icons/Back.svg';
+
+export const backButtonWidth = 46.90909194946289;
 
 type ButtonProps = {
     text?: string | ReactNode;
@@ -36,7 +38,8 @@ export default function Button({
     activeOpacity = constants.ACTIVE_OPACITY.HIGH,
     secureTextEntry = false,
 }: ButtonProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
+
     if (type === buttonTypes.BUTTON_TYPES.ADD) {
         return (
             <TouchableOpacity
@@ -224,6 +227,18 @@ export default function Button({
                 </Text>
             </TouchableOpacity>
         );
+    } else if (type === buttonTypes.BUTTON_TYPES.BACK) {
+        return (
+            <TouchableOpacity
+                activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
+                style={[styles.backButton, { borderColor: theme.LIGHT_HINT, }]}
+                onPress={onPress}
+            >
+                <GoBack
+                    fill={theme.TEXT}
+                />
+            </TouchableOpacity>
+        );
     }
     else {
         return (
@@ -335,5 +350,10 @@ const styles = StyleSheet.create({
     submitButtonText: {
         fontWeight: typography.FONT_WEIGHT_BOLD,
         fontSize: typography.FONT_SIZE_20,
-    }
+    },
+    backButton: {
+        borderWidth: constants.BORDER_WIDTH.BACK,
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+        padding: spacing.SCALE_12,
+    },
 })

@@ -11,15 +11,16 @@ import React, {
     useContext,
 } from 'react'
 import { constants, spacing, typography } from 'styles';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage } from 'react-intl';
+import { getFormattedDate } from 'utils/dateFormat';
 
+//icons:
 import TodayCalendar from 'assets/button-icons/calendar-today.svg';
 import PickDateCalendar from 'assets/button-icons/calendar-pick-date.svg';
 import TomorrowCalendar from 'assets/button-icons/calendar-tomorrow.svg';
 import NextWeekCalendar from 'assets/button-icons/calendar-next-week.svg';
 import CalendarRemove from 'assets/button-icons/calendar-none.svg';
-import { getFormattedDate } from 'utils/dateFormat';
 
 
 export const deadlineNames = {
@@ -46,7 +47,7 @@ export default function DeadLineSelector({
     setDeadlineDate,
     onPickDatePress
 }: DeadLineSelectorProps) {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
 
     const dates = [
         {

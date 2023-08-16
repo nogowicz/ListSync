@@ -10,6 +10,7 @@ import { theme } from './src/styles/colors';
 import LangContext, { LangModeProvider } from './src/lang/LangProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DataProvider } from 'context/DataProvider';
+import { UserProvider } from 'context/UserProvider';
 
 export default function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,11 +23,13 @@ export default function App(): JSX.Element {
       />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <LangModeProvider>
-          <DataProvider>
-            <LangContext>
-              <Routes />
-            </LangContext>
-          </DataProvider>
+          <UserProvider>
+            <DataProvider>
+              <LangContext>
+                <Routes />
+              </LangContext>
+            </DataProvider>
+          </UserProvider>
         </LangModeProvider>
       </GestureHandlerRootView>
     </ThemeContext.Provider >

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, } from 'react-native'
-import React, { useContext, } from 'react'
-import { ThemeContext } from 'navigation/utils/ThemeProvider'
+import React from 'react'
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage } from 'react-intl';
 
@@ -18,7 +18,7 @@ type WelcomeScreenProps = {
 };
 
 export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   return (
     <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
       <View style={styles.container}>
@@ -63,7 +63,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
           style={{
             alignItems: 'center',
           }}
-          onPress={() => console.log('Sign up')}
+          onPress={() => navigation.navigate(SCREENS.UNAUTHENTICATED.SING_UP_SCREEN.ID)}
           activeOpacity={constants.ACTIVE_OPACITY.HIGH}
         >
           <Text

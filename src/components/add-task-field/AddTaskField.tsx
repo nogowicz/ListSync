@@ -6,13 +6,12 @@ import {
     BackHandler,
 } from 'react-native'
 import React, {
-    useContext,
     useEffect,
     useRef,
     useState,
 } from 'react'
-import { ThemeContext } from 'navigation/utils/ThemeProvider'
 import { constants, spacing } from 'styles';
+
 import { useIntl } from 'react-intl';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
@@ -23,6 +22,7 @@ import Button, { buttonTypes } from 'components/button';
 import { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePickers from './DateTimePickers';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 
 //icons:
 import AddTaskIcon from 'assets/button-icons/add-task.svg';
@@ -36,7 +36,7 @@ type AddTaskFieldProps = {
 
 export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const navigation = useNavigation();
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     const intl = useIntl();
     const { listData, updateListData } = useListContext();
     const [isInputVisible, setIsInputVisible] = useState(false);

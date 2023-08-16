@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useContext } from 'react'
+import React from 'react'
 import { formatDateToLongDate } from 'utils/dateFormat';
 import Button, { buttonTypes } from 'components/button';
 import { typography } from 'styles';
-import { ThemeContext } from 'navigation/utils/ThemeProvider';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 type TopPanelProps = {
@@ -13,7 +13,7 @@ type TopPanelProps = {
 export default function TopPanel({ name }: TopPanelProps) {
     const intl = useIntl();
     const date = formatDateToLongDate(new Date(), intl);
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
     return (
         <View style={styles.container}>
             <View>
