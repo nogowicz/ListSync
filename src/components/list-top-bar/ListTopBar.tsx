@@ -11,6 +11,7 @@ import { RootStackParamList } from 'navigation/navigation';
 //icons: 
 import GoBack from 'assets/button-icons/Back.svg';
 import Details from 'assets/button-icons/details.svg';
+import Button, { buttonTypes } from 'components/button';
 
 type ListTopBar = {
     name: string;
@@ -36,18 +37,12 @@ export default function ListTopBar({ name, icon, onTitlePress, color }: ListTopB
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
-                style={[styles.backButton, { borderColor: theme.LIGHT_HINT, }]}
+            <Button
                 onPress={() => {
                     navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
                 }}
-            >
-                <GoBack
-                    fill={theme.TEXT}
-                />
-            </TouchableOpacity>
-
+                type={buttonTypes.BUTTON_TYPES.BACK}
+            />
             <TouchableOpacity
                 activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                 style={styles.iconAndNameContainer}
@@ -80,11 +75,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: spacing.SCALE_30,
-    },
-    backButton: {
-        borderWidth: constants.BORDER_WIDTH.BACK,
-        borderRadius: constants.BORDER_RADIUS.BUTTON,
-        padding: spacing.SCALE_12,
     },
     iconAndNameContainer: {
         flexDirection: 'row',
