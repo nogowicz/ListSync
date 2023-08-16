@@ -15,6 +15,7 @@ import PasswordVisibleIcon from 'assets/button-icons/visible-password.svg';
 import PasswordInvisibleIcon from 'assets/button-icons/invisible-password.svg';
 import GoBack from 'assets/button-icons/Back.svg';
 
+export const backButtonWidth = 46.90909194946289;
 
 type ButtonProps = {
     text?: string | ReactNode;

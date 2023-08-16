@@ -63,7 +63,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
           style={{
             alignItems: 'center',
           }}
-          onPress={() => console.log('Sign up')}
+          onPress={() => navigation.navigate(SCREENS.UNAUTHENTICATED.SING_UP_SCREEN.ID)}
           activeOpacity={constants.ACTIVE_OPACITY.HIGH}
         >
           <Text

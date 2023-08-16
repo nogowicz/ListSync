@@ -18,7 +18,7 @@ import CustomTextField from 'components/custom-text-field';
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
-import Button from 'components/button/Button';
+import Button, { backButtonWidth } from 'components/button/Button';
 import Logo from 'components/logo';
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
@@ -33,6 +33,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const [loading, setLoading] = useState(false);
     const { user, setUserDetails } = useUser();
 
+
     //form handlers:
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         resolver: yupResolver(schema(intl))
@@ -43,7 +44,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
         try {
             console.log(email, password)
-            const userData: UserType = { id: 1, firstName: 'John', email: email };
+            const userData: UserType = { id: 1, firstName: 'Bartek', email: email };
             setUserDetails(userData);
         } catch (error) {
             console.log(error);
@@ -75,10 +76,10 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
     //animations:
     const translateYValue = useRef(new Animated.Value(0)).current;
+    const animationDuration = 200;
     const [textContainerHeight] = useState(new Animated.Value(120));
 
 
-    const animationDuration = 200;
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -147,7 +148,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                     />
                     <View
                         style={{
-                            width: 46.90909194946289
+                            width: backButtonWidth
                         }}
                     />
                 </View>
