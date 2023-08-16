@@ -135,9 +135,23 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                 styles.container,
                 { transform: [{ translateY: translateYValue }] }
             ]}>
-                <Logo
-                    animationDuration={animationDuration}
-                />
+                <View style={styles.topContainer}>
+                    <Button
+                        onPress={() => navigation.goBack()}
+                        type={buttonTypes.BUTTON_TYPES.BACK}
+
+
+                    />
+                    <Logo
+                        animationDuration={animationDuration}
+                    />
+                    <View
+                        style={{
+                            width: 46.90909194946289
+                        }}
+                    />
+                </View>
+
                 <View
                     style={styles.textFieldsContainer}
                 >
@@ -283,4 +297,9 @@ const styles = StyleSheet.create({
     textContainer: {
         overflow: 'hidden',
     },
+    topContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+    }
 });
