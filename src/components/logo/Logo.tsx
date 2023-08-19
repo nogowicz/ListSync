@@ -12,6 +12,7 @@ type LogoProps = {
 
 export default function Logo({
     animationDuration
+
 }: LogoProps) {
     const theme = useTheme();
 

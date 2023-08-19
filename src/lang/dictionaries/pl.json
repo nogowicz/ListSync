@@ -93,5 +93,11 @@
   "views.unauthenticated.error.email-required": "Proszę podaj swój email email",
   "views.unauthenticated.error.password.too-short": "Hasło musi mieć co najmniej 6 znaków",
   "views.unauthenticated.error.password-required": "Proszę podaj swoje hasło",
-  "views.unauthenticated.button.loading": "Ładowanie..."
+  "views.unauthenticated.button.loading": "Ładowanie...",
+  "views.unauthenticated.welcome-screen.sign-up.email": "Email",
+  "views.unauthenticated.welcome-screen.sign-up.password": "Hasło",
+  "views.unauthenticated.welcome-screen.sign-up.confirm-password": "Powtwierdź hasło",
+  "views.unauthenticated.welcome-screen.sign-up.first-name": "Imię",
+  "views.unauthenticated.welcome-screen.sign-up.last-name": "Nazwisko",
+  "views.unauthenticated.welcome-screen.sign-up.sign-up": "Zarejestruj się"
 }

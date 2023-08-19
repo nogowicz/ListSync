@@ -13,12 +13,12 @@ import { UserType, useUser } from 'context/UserProvider';
 
 //components:
 import CustomTextField from 'components/custom-text-field';
+import Button, { backButtonWidth } from 'components/button/Button';
 
 
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
-import Button, { backButtonWidth } from 'components/button/Button';
 import Logo from 'components/logo';
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
@@ -132,20 +132,19 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
-            <Animated.View style={[
-                styles.container,
-                { transform: [{ translateY: translateYValue }] }
+            <View style={[
+                styles.container
             ]}>
                 <View style={styles.topContainer}>
                     <Button
                         onPress={() => navigation.goBack()}
                         type={buttonTypes.BUTTON_TYPES.BACK}
-
-
                     />
-                    <Logo
-                        animationDuration={animationDuration}
-                    />
+                    <Animated.View style={{ transform: [{ translateY: translateYValue }] }}>
+                        <Logo
+                            animationDuration={animationDuration}
+                        />
+                    </Animated.View>
                     <View
                         style={{
                             width: backButtonWidth
@@ -153,8 +152,10 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                     />
                 </View>
 
-                <View
-                    style={styles.textFieldsContainer}
+                <Animated.View
+                    style={[styles.textFieldsContainer,
+                    { transform: [{ translateY: translateYValue }] }
+                    ]}
                 >
                     <Controller
                         name='email'
@@ -210,7 +211,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                         }
                         }
                     />
-                </View>
+                </Animated.View>
                 <Animated.View style={[
                     styles.textContainer,
                     { height: textContainerHeight }
@@ -272,7 +273,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </Animated.View>
+            </View>
         </View>
     )
 }

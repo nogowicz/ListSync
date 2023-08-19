@@ -93,5 +93,11 @@
   "views.unauthenticated.error.email-required": "Please provide your email",
   "views.unauthenticated.error.password.too-short": "Password must be at least 6 characters",
   "views.unauthenticated.error.password-required": "Please provide your password",
-  "views.unauthenticated.button.loading": "Loading..."
+  "views.unauthenticated.button.loading": "Loading...",
+  "views.unauthenticated.welcome-screen.sign-up.email": "Email",
+  "views.unauthenticated.welcome-screen.sign-up.password": "Password",
+  "views.unauthenticated.welcome-screen.sign-up.confirm-password": "Confirm password",
+  "views.unauthenticated.welcome-screen.sign-up.first-name": "First name",
+  "views.unauthenticated.welcome-screen.sign-up.last-name": "Last name",
+  "views.unauthenticated.welcome-screen.sign-up.sign-up": "Sign Up"
 }
