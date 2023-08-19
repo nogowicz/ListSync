@@ -3,6 +3,8 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 're
 import { useTheme } from 'navigation/utils/ThemeProvider'
 import { typography, spacing } from 'styles';
 import { SignUpPagesArrayType } from '../SignUpScreen';
+
+//components:
 import Button, { buttonTypes } from 'components/button';
 import Pagination from 'components/pagination';
 

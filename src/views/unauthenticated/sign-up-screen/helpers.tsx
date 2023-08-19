@@ -1,24 +1,24 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
-
+import { useEffect, useRef, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl";
 import { Controller, FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Animated, Keyboard, View } from "react-native";
-import { spacing } from "styles";
 import { SignUpScreenNavigationProp } from "./SignUpScreen";
-import { useNavigation } from "@react-navigation/native";
 import { schema } from "./signUpValidation";
+import { backButtonWidth } from "components/button/Button";
+import { useTheme } from "navigation/utils/ThemeProvider";
+import { UserType, useUser } from "context/UserProvider";
+
+//components:
 import Button, { buttonTypes } from "components/button";
 import Logo from "components/logo";
-import { backButtonWidth } from "components/button/Button";
 import CustomTextField from "components/custom-text-field";
 
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import PersonIcon from 'assets/button-icons/person-icon.svg';
-import { useTheme } from "navigation/utils/ThemeProvider";
-import { UserType, useUser } from "context/UserProvider";
+
 
 type PrepareSignUpPagesType = {
     navigation: SignUpScreenNavigationProp['navigation'];

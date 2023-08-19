@@ -14,12 +14,12 @@ import { UserType, useUser } from 'context/UserProvider';
 //components:
 import CustomTextField from 'components/custom-text-field';
 import Button, { backButtonWidth } from 'components/button/Button';
+import Logo from 'components/logo';
 
 
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
-import Logo from 'components/logo';
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 

@@ -1,10 +1,9 @@
-import { Animated, StyleSheet, Text, View } from 'react-native'
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { spacing, typography } from 'styles';
-import { buttonTypes } from 'components/button';
 import { prepareSignUpPages } from './helpers';
 
 
@@ -33,8 +32,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenProps) {
     const theme = useTheme();
     const [page, setPage] = useState<number>(0);
 
-    //animations:
-    const translateYValue = useRef(new Animated.Value(0)).current;
+    //animations
     const animationDuration = 200;
 
 
