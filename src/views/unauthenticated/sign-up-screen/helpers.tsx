@@ -18,6 +18,7 @@ import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import PersonIcon from 'assets/button-icons/person-icon.svg';
 import { useTheme } from "navigation/utils/ThemeProvider";
+import { UserType, useUser } from "context/UserProvider";
 
 type PrepareSignUpPagesType = {
     navigation: SignUpScreenNavigationProp['navigation'];
@@ -37,6 +38,7 @@ export function prepareSignUpPages({
     const [loading, setLoading] = useState(false);
     const intl = useIntl();
     const theme = useTheme();
+    const { user, setUserDetails } = useUser();
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
@@ -45,13 +47,13 @@ export function prepareSignUpPages({
     const onSubmit: SubmitHandler<FieldValues> = async ({ firstName, lastName, email, password, confirmPassword }) => {
         setLoading(true);
         try {
+            console.log(email, password)
+            const userData: UserType = { id: 1, firstName: firstName, email: email };
+            setUserDetails(userData);
+        } catch (error) {
+            console.log(error);
+        } finally {
             setLoading(false);
-        } catch (error: any) {
-            console.log(error)
-
-            handlePageWithError(0);
-
-            setLoading(false)
         }
     };
 
@@ -91,9 +93,9 @@ export function prepareSignUpPages({
         id: 'views.unauthenticated.welcome-screen.sign-up.last-name',
         defaultMessage: 'Last name',
     });
-    const signInTranslation = intl.formatMessage({
+    const signUpTranslation = intl.formatMessage({
         id: 'views.unauthenticated.welcome-screen.sign-up.sign-up',
-        defaultMessage: 'Sign Un',
+        defaultMessage: 'Sign Up',
     });
     const loadingTranslation = intl.formatMessage({
         id: 'views.unauthenticated.button.loading',
@@ -335,43 +337,8 @@ export function prepareSignUpPages({
                     />
                 </View>
             ),
-            buttonLabel: continueTranslation,
-            buttonAction: handleNextPage
-        },
-        {
-            id: 'photo',
-            topContainer: (
-                <>
-                    <Button
-                        onPress={() => handleBack()}
-                        type={buttonTypes.BUTTON_TYPES.BACK}
-                    />
-                    <View>
-                        <Logo
-                            animationDuration={animationDuration}
-                        />
-                    </View>
-                    <View
-                        style={{
-                            width: backButtonWidth
-                        }}
-                    >
-                    </View>
-                </>
-            ),
-            subTitle: (
-                <FormattedMessage
-                    id="views.auth.signUp.subtitle.photo"
-                    defaultMessage="Add profile picture (optional): You can add a profile picture to personalize your account."
-                />
-            ),
-            mainContent: (
-                <View>
-
-                </View>
-            ),
-            buttonLabel: continueTranslation,
-            buttonAction: handleNextPage
+            buttonLabel: (loading ? loadingTranslation : signUpTranslation),
+            buttonAction: handleSubmit(onSubmit)
         },
     ];
 }
