@@ -99,5 +99,9 @@
   "views.unauthenticated.welcome-screen.sign-up.confirm-password": "Powtwierdź hasło",
   "views.unauthenticated.welcome-screen.sign-up.first-name": "Imię",
   "views.unauthenticated.welcome-screen.sign-up.last-name": "Nazwisko",
-  "views.unauthenticated.welcome-screen.sign-up.sign-up": "Zarejestruj się"
+  "views.unauthenticated.welcome-screen.sign-up.sign-up": "Zarejestruj się",
+  "views.unauthenticated.welcome-screen.sign-up.continue": "Kontynuuj",
+  "views.auth.signUp.subtitle.names": "Podaj nam swoje dane, abyśmy mogli spersonalizować Twoją aplikację.",
+  "views.auth.signUp.subtitle.credentials": "Podaj swój email i hasło, a dostaniesz dostęp do zadań zawsze i wszędzie.",
+  "views.auth.signUp.subtitle.photo": "Dodaj zdjęcie profilowe (opcjonalnie): Możesz dodać zdjęcie profilowe, aby spersonalizować swoje konto."
 }

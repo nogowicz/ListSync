@@ -31,7 +31,7 @@ export default function SignUpPanel({
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const translateYValue = useRef(new Animated.Value(0)).current;
     const animationDuration = 200;
-
+    const [textContainerHeight] = useState(new Animated.Value(120));
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
@@ -55,20 +55,34 @@ export default function SignUpPanel({
 
     const handleKeyboardIn = () => {
         setIsKeyboardVisible(false);
-        Animated.timing(translateYValue, {
-            toValue: 0,
-            duration: animationDuration,
-            useNativeDriver: true,
-        }).start();
+        Animated.parallel([
+            Animated.timing(translateYValue, {
+                toValue: 0,
+                duration: animationDuration,
+                useNativeDriver: true,
+            }),
+            Animated.timing(textContainerHeight, {
+                toValue: 120,
+                duration: animationDuration,
+                useNativeDriver: false,
+            })
+        ]).start();
     };
 
     const handleKeyboardOut = () => {
         setIsKeyboardVisible(true);
-        Animated.timing(translateYValue, {
-            toValue: -80,
-            duration: animationDuration,
-            useNativeDriver: true,
-        }).start();
+        Animated.parallel([
+            Animated.timing(translateYValue, {
+                toValue: -40,
+                duration: animationDuration,
+                useNativeDriver: true,
+            }),
+            Animated.timing(textContainerHeight, {
+                toValue: 0,
+                duration: animationDuration,
+                useNativeDriver: false,
+            })
+        ]).start();
     };
 
     return (
@@ -77,17 +91,15 @@ export default function SignUpPanel({
                 <View style={[styles.actionContainer]}>
                     {topContainer}
                 </View>
-                <View style={[styles.textContainer]}>
-                    <View style={styles.textContainer}>
-                        <Text style={[styles.subTitle, { color: theme.TERTIARY }]}>
-                            {subTitle}
-                        </Text>
-                    </View>
-                    <Animated.View style={[styles.mainContent, { transform: [{ translateY: translateYValue }] }]}>
-                        {mainContent}
-                    </Animated.View>
-                </View>
-                {isKeyboardVisible ? null :
+                <Animated.View style={[styles.textContainer, { height: textContainerHeight }]}>
+                    <Text style={[styles.subTitle, { color: theme.TEXT }]}>
+                        {subTitle}
+                    </Text>
+                </Animated.View>
+                <Animated.View style={[styles.mainContent, { transform: [{ translateY: translateYValue }] }]}>
+                    {mainContent}
+                </Animated.View>
+                {!isKeyboardVisible &&
                     <Pagination activePage={page} pages={pages} />}
                 <Animated.View style={[{ marginTop: spacing.SCALE_10 }, { transform: [{ translateY: translateYValue }] }]}>
                     <Button
@@ -117,12 +129,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start'
     },
     textContainer: {
+        marginTop: -spacing.SCALE_20,
         justifyContent: 'center',
     },
     subTitle: {
         ...typography.FONT_REGULAR,
         fontWeight: typography.FONT_WEIGHT_REGULAR,
-        fontSize: typography.FONT_SIZE_12,
+        fontSize: typography.FONT_SIZE_15,
         textAlign: 'center',
     },
     mainContent: {
