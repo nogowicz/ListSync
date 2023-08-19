@@ -1,9 +1,10 @@
 import { Animated, Keyboard, StyleSheet, Text, View } from 'react-native'
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTheme } from 'navigation/utils/ThemeProvider'
 import { typography, spacing } from 'styles';
 import { SignUpPagesArrayType } from '../SignUpScreen';
 import Button, { buttonTypes } from 'components/button';
+import Pagination from 'components/pagination';
 
 type SignUpPanelProps = {
     id: string;
@@ -27,7 +28,7 @@ export default function SignUpPanel({
     pages
 }: SignUpPanelProps) {
     const theme = useTheme();
-
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const translateYValue = useRef(new Animated.Value(0)).current;
     const animationDuration = 200;
 
@@ -53,6 +54,7 @@ export default function SignUpPanel({
     }, []);
 
     const handleKeyboardIn = () => {
+        setIsKeyboardVisible(false);
         Animated.timing(translateYValue, {
             toValue: 0,
             duration: animationDuration,
@@ -61,6 +63,7 @@ export default function SignUpPanel({
     };
 
     const handleKeyboardOut = () => {
+        setIsKeyboardVisible(true);
         Animated.timing(translateYValue, {
             toValue: -80,
             duration: animationDuration,
@@ -84,8 +87,8 @@ export default function SignUpPanel({
                         {mainContent}
                     </Animated.View>
                 </View>
-                {/* {isKeyboardVisible ? null :
-        <Pagination activePage={page} pages={pages} />} */}
+                {isKeyboardVisible ? null :
+                    <Pagination activePage={page} pages={pages} />}
                 <Animated.View style={[{ marginTop: spacing.SCALE_10 }, { transform: [{ translateY: translateYValue }] }]}>
                     <Button
                         text={buttonLabel}
