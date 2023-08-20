@@ -240,14 +240,6 @@ export default function Button({
             </TouchableOpacity>
         );
     }
-    else {
-        return (
-            <View style={[styles.filterContainer, { backgroundColor: theme.TERTIARY }]}>
-                <Text>{text}</Text>
-            </View>
-        );
-
-    }
 
 
 }
