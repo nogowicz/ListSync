@@ -104,5 +104,6 @@
   "views.unauthenticated.signUp.subtitle.names": "Please provide us with your information so we can personalize your experience.",
   "views.unauthenticated.signUp.subtitle.credentials": "Give us your email and password, and you'll have access to your tasks anytime, anywhere.",
   "views.unauthenticated.signUp.subtitle.photo": "Add profile picture (optional): You can add a profile picture to personalize your account.",
-  "views.authenticated.settings.edit-profile": "Edit Profile"
+  "views.authenticated.profile.edit-profile": "Edit Profile",
+  "views.authenticated.profile.profile": "Profile"
 }

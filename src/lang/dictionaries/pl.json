@@ -104,5 +104,6 @@
   "views.unauthenticated.signUp.subtitle.names": "Podaj nam swoje dane, abyśmy mogli spersonalizować Twoją aplikację.",
   "views.unauthenticated.signUp.subtitle.credentials": "Podaj swój email i hasło, a dostaniesz dostęp do zadań zawsze i wszędzie.",
   "views.unauthenticated.signUp.subtitle.photo": "Dodaj zdjęcie profilowe (opcjonalnie): Możesz dodać zdjęcie profilowe, aby spersonalizować swoje konto.",
-  "views.authenticated.settings.edit-profile": "Edytuj profil"
+  "views.authenticated.settings.profile-profile": "Edytuj profil",
+  "views.authenticated.profile.profile": "Profil"
 }

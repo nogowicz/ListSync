@@ -77,7 +77,7 @@ export default function TopPanel({ type }: TopPanelProps) {
                     >
                         <Text style={[styles.editText, { color: theme.PRIMARY }]}>
                             <FormattedMessage
-                                id='views.authenticated.settings.edit-profile'
+                                id='views.authenticated.profile.edit-profile'
                                 defaultMessage='Edit profile'
                             />
                         </Text>
