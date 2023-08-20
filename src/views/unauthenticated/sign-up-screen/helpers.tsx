@@ -44,11 +44,11 @@ export function prepareSignUpPages({
     });
 
 
-    const onSubmit: SubmitHandler<FieldValues> = async ({ firstName, lastName, email, password, confirmPassword }) => {
+    const onSubmit: SubmitHandler<FieldValues> = async ({ firstName, lastName, email, photoURL = null, password, confirmPassword }) => {
         setLoading(true);
         try {
             console.log(email, password)
-            const userData: UserType = { id: 1, firstName: firstName, email: email };
+            const userData: UserType = { id: 1, firstName: firstName, lastName: lastName, email: email, photoURL: photoURL };
             setUserDetails(userData);
         } catch (error) {
             console.log(error);

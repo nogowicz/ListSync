@@ -1,10 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { formatDateToLongDate } from 'utils/dateFormat';
-import Button, { buttonTypes } from 'components/button';
-import { typography } from 'styles';
+import { constants, typography } from 'styles';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+//components:
+import Button, { buttonTypes } from 'components/button';
+import { SCREENS } from 'navigation/utils/screens';
 
 type TopPanelProps = {
     name: string;
@@ -14,9 +19,14 @@ export default function TopPanel({ name }: TopPanelProps) {
     const intl = useIntl();
     const date = formatDateToLongDate(new Date(), intl);
     const theme = useTheme();
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
-            <View>
+            <TouchableOpacity
+                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.PROFILE.ID as never)}
+            >
                 <Text style={[styles.greetingText, { color: theme.TEXT }]}>
                     <FormattedMessage
                         id='views.authenticated.home.greetings-text'
@@ -25,7 +35,7 @@ export default function TopPanel({ name }: TopPanelProps) {
                     {name}!
                 </Text>
                 <Text style={[styles.dateText, { color: theme.HINT }]}>{date}</Text>
-            </View>
+            </TouchableOpacity>
             <Button
                 onPress={() => console.log("New list button")}
                 text={

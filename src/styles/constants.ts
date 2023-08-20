@@ -27,3 +27,7 @@ export const BORDER_WIDTH = {
   CHECK: 2,
   BACK: 1,
 };
+
+export const PHOTO_SIZE = {
+  BIG: 80,
+};

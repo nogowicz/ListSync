@@ -44,7 +44,13 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
         try {
             console.log(email, password)
-            const userData: UserType = { id: 1, firstName: 'Bartek', email: email };
+            const userData: UserType = {
+                id: 1,
+                firstName: 'Bartek',
+                lastName: 'Noga',
+                email: email,
+                photoURL: null,
+            };
             setUserDetails(userData);
         } catch (error) {
             console.log(error);

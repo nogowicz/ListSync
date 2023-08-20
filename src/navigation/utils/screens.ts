@@ -6,6 +6,9 @@ export const SCREENS = {
     LIST: {
       ID: 'LIST',
     },
+    PROFILE: {
+      ID: 'PROFILE',
+    },
   },
   UNAUTHENTICATED: {
     WELCOME_SCREEN: {
