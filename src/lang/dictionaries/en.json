@@ -101,7 +101,8 @@
   "views.unauthenticated.welcome-screen.sign-up.last-name": "Last name",
   "views.unauthenticated.welcome-screen.sign-up.sign-up": "Sign Up",
   "views.unauthenticated.welcome-screen.sign-up.continue": "Continue",
-  "views.auth.signUp.subtitle.names": "Please provide us with your information so we can personalize your experience.",
-  "views.auth.signUp.subtitle.credentials": "Give us your email and password, and you'll have access to your tasks anytime, anywhere.",
-  "views.auth.signUp.subtitle.photo": "Add profile picture (optional): You can add a profile picture to personalize your account."
+  "views.unauthenticated.signUp.subtitle.names": "Please provide us with your information so we can personalize your experience.",
+  "views.unauthenticated.signUp.subtitle.credentials": "Give us your email and password, and you'll have access to your tasks anytime, anywhere.",
+  "views.unauthenticated.signUp.subtitle.photo": "Add profile picture (optional): You can add a profile picture to personalize your account.",
+  "views.authenticated.settings.edit-profile": "Edit Profile"
 }

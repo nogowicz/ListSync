@@ -1,10 +1,11 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { useTheme } from 'navigation/utils/ThemeProvider';
-import { constants, spacing } from 'styles';
+import { constants, spacing, typography } from 'styles';
 import { useUser } from 'context/UserProvider';
+import { FormattedMessage } from 'react-intl';
 
 
 type ProfilePropsNavigationProp = NativeStackScreenProps<RootStackParamList, 'PROFILE'>;
@@ -20,7 +21,7 @@ export default function Profile({ navigation }: ProfileProps) {
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
-                <View>
+                <View style={styles.userDataContainer}>
                     {user?.photoURL ?
                         <Image
                             source={{ uri: user?.photoURL }}
@@ -33,13 +34,24 @@ export default function Profile({ navigation }: ProfileProps) {
                         />
                     }
 
-                    <View>
-                        <Text>
+                    <View style={styles.profileDataTextContainer}>
+                        <Text style={[styles.namesText, { color: theme.TEXT, }]}>
                             {user?.firstName} {user?.lastName}
                         </Text>
-                        <Text>
+                        <Text style={[styles.emailText, { color: theme.TEXT }]}>
                             {user?.email}
                         </Text>
+                        <TouchableOpacity
+                            activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                            onPress={() => console.log("Navigating to edit profile screen")}
+                        >
+                            <Text style={[styles.editText, { color: theme.PRIMARY }]}>
+                                <FormattedMessage
+                                    id='views.authenticated.settings.edit-profile'
+                                    defaultMessage='Edit profile'
+                                />
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -61,4 +73,20 @@ const styles = StyleSheet.create({
         height: constants.PHOTO_SIZE.BIG,
         borderRadius: constants.BORDER_RADIUS.BUTTON,
     },
+    userDataContainer: {
+        flexDirection: 'row',
+        gap: spacing.SCALE_20,
+    },
+    namesText: {
+        fontSize: typography.FONT_SIZE_20,
+    },
+    emailText: {
+        fontSize: typography.FONT_SIZE_16,
+    },
+    editText: {
+        fontSize: typography.FONT_SIZE_18,
+    },
+    profileDataTextContainer: {
+        justifyContent: 'space-between',
+    }
 })

@@ -211,7 +211,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                                     actionLabel={forgotPasswordTranslation}
                                     action={() => {
                                         console.log("Navigating to forgot password screen")
-                                        // navigation.navigate(SCREENS.AUTH.FORGOT_PASSWORD.ID)
+                                        // navigation.navigate(SCREENS.AUTHENTICATED.FORGOT_PASSWORD.ID)
                                     }}
                                 />)
                         }

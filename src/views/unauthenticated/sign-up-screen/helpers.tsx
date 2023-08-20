@@ -171,7 +171,7 @@ export function prepareSignUpPages({
 
             subTitle: (
                 <FormattedMessage
-                    id="views.auth.signUp.subtitle.credentials"
+                    id="views.unauthenticated.signUp.subtitle.credentials"
                     defaultMessage="Give us your email and password, and you'll have access to your tasks anytime, anywhere."
                 />
             ),
@@ -281,7 +281,7 @@ export function prepareSignUpPages({
             ),
             subTitle: (
                 <FormattedMessage
-                    id="views.auth.signUp.subtitle.names"
+                    id="views.unauthenticated.signUp.subtitle.names"
                     defaultMessage="Please provide us with your information so we can personalize your experience."
                 />
             ),
