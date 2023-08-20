@@ -10,4 +10,5 @@ export enum BUTTON_TYPES {
   PASSWORD_VISIBILITY = 'passwordVisibility',
   SUBMIT = 'submit',
   BACK = 'back',
+  SETTING = 'setting',
 }

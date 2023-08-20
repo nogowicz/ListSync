@@ -83,7 +83,7 @@ export default function NavigationTopBar({ name, icon, onTitlePress, color, type
                     style={styles.iconAndNameContainer}
                 >
                     <Text style={{
-                        fontSize: spacing.SCALE_22,
+                        fontSize: spacing.SCALE_30,
                         color: theme.TEXT,
                         textAlign: 'center',
                     }}>
@@ -96,7 +96,7 @@ export default function NavigationTopBar({ name, icon, onTitlePress, color, type
                         padding: spacing.SCALE_12,
                     }}>
                     <View
-                        style={{ width: backButtonWidth }}
+                        style={{ width: backButtonWidth - spacing.SCALE_20 }}
                     />
                 </TouchableOpacity>
 

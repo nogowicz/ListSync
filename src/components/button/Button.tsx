@@ -239,6 +239,26 @@ export default function Button({
                 />
             </TouchableOpacity>
         );
+    } else if (type === buttonTypes.BUTTON_TYPES.SETTING) {
+        return (
+            <TouchableOpacity
+                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                style={[styles.settingButton, { borderColor: theme.LIGHT_HINT, }]}
+                onPress={onPress}
+            >
+                <Text
+                    style={[
+                        {
+                            color: theme.TEXT
+                        },
+                        styles.submitButtonText
+                    ]}
+                >
+                    {text}
+                </Text>
+            </TouchableOpacity>
+        );
+
     }
 
 
@@ -347,5 +367,11 @@ const styles = StyleSheet.create({
         borderWidth: constants.BORDER_WIDTH.BACK,
         borderRadius: constants.BORDER_RADIUS.BUTTON,
         padding: spacing.SCALE_12,
+    },
+    settingButton: {
+        borderBottomWidth: constants.BORDER_WIDTH.BACK,
+        borderTopWidth: constants.BORDER_WIDTH.BACK,
+        paddingVertical: spacing.SCALE_10,
+        paddingHorizontal: spacing.SCALE_10,
     },
 })

@@ -3,13 +3,15 @@ import React from 'react'
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage } from 'react-intl';
-
-//icons:
-import WelcomeScreenIcon from 'assets/images/welcome-screen.svg';
 import Button, { buttonTypes } from 'components/button';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { SCREENS } from 'navigation/utils/screens';
+import { UserType, useUser } from 'context/UserProvider';
+
+//icons:
+import WelcomeScreenIcon from 'assets/images/welcome-screen.svg';
+
 
 type WelcomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'WELCOME_SCREEN'>;
 
@@ -19,6 +21,7 @@ type WelcomeScreenProps = {
 
 export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
   const theme = useTheme();
+  const { user, setUserDetails } = useUser();
   return (
     <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
       <View style={styles.container}>
@@ -52,7 +55,17 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
         >
           <Button
             type={buttonTypes.BUTTON_TYPES.GOOGLE_SIGN_IN}
-            onPress={() => console.log('Sign in with google')}
+            onPress={() => {
+              const userData: UserType = {
+                id: 1,
+                firstName: 'Bartek',
+                lastName: 'Noga',
+                email: 'nogovitz00@gmail.com',
+                photoURL: null,
+              };
+              setUserDetails(userData);
+
+            }}
           />
           <Button
             type={buttonTypes.BUTTON_TYPES.SIGN_IN}

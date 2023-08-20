@@ -11,6 +11,7 @@ import { navigationTypes } from 'components/navigation-top-bar';
 //components:
 import NavigationTopBar from 'components/navigation-top-bar';
 import TopPanel from 'components/top-panel';
+import SettingsList from 'components/settings-list';
 
 type ProfilePropsNavigationProp = NativeStackScreenProps<RootStackParamList, 'PROFILE'>;
 
@@ -39,6 +40,7 @@ export default function Profile({ navigation }: ProfileProps) {
                 <TopPanel
                     type={topPanelTypes.TOP_PANEL_TYPES.PROFILE_SCREEN}
                 />
+                <SettingsList />
             </View>
         </View>
     )
