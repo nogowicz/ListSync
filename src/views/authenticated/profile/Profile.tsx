@@ -1,13 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { useTheme } from 'navigation/utils/ThemeProvider';
-import { constants, spacing, typography } from 'styles';
-import { useUser } from 'context/UserProvider';
-import { FormattedMessage } from 'react-intl';
 import TopPanel from 'components/top-panel';
 import { TOP_PANEL_TYPES } from 'components/top-panel/topPanelTypes';
+import { spacing } from 'styles';
 
 
 type ProfilePropsNavigationProp = NativeStackScreenProps<RootStackParamList, 'PROFILE'>;
@@ -19,7 +17,6 @@ type ProfileProps = {
 
 export default function Profile({ navigation }: ProfileProps) {
     const theme = useTheme();
-    const { user, setUserDetails } = useUser();
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
