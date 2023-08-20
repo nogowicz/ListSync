@@ -15,7 +15,7 @@ import ChangeListModal from 'components/change-list-modal';
 import { useListContext } from 'context/DataProvider';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 import NavigationTopBar from 'components/navigation-top-bar';
-import { NAVIGATION_TOP_BAR_TYPES } from 'components/navigation-top-bar/navigationTopBarTypes';
+import { navigationTypes } from 'components/navigation-top-bar';
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -89,7 +89,7 @@ export default function List({ navigation, route }: ListProps) {
                     icon={listIconTheme[currentList.iconId]}
                     color={listColorTheme[currentList.colorVariant]}
                     onTitlePress={handleModal}
-                    type={NAVIGATION_TOP_BAR_TYPES.LIST}
+                    type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.LIST}
                 />
                 {unCompletedTasks.length > 0 &&
                     <Text style={[

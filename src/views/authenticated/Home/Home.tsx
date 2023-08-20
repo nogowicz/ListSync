@@ -13,7 +13,7 @@ import FilterPanel from 'components/filter-panel';
 import ListList from 'components/list-list';
 import AddTaskField from 'components/add-task-field';
 import { useUser } from 'context/UserProvider';
-import { TOP_PANEL_TYPES } from 'components/top-panel/topPanelTypes';
+import { topPanelTypes } from 'components/top-panel';
 
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
@@ -40,7 +40,7 @@ export default function Home({ navigation }: HomeProps) {
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
                 <TopPanel
-                    type={TOP_PANEL_TYPES.HOME_SCREEN}
+                    type={topPanelTypes.TOP_PANEL_TYPES.HOME_SCREEN}
                 />
                 <FilterPanel setList={setList} />
                 <ListList list={list} />

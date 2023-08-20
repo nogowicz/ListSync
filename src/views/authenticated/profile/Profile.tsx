@@ -3,10 +3,10 @@ import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { useTheme } from 'navigation/utils/ThemeProvider';
-import { TOP_PANEL_TYPES } from 'components/top-panel/topPanelTypes';
+import { topPanelTypes } from 'components/top-panel';
 import { spacing } from 'styles';
-import { NAVIGATION_TOP_BAR_TYPES } from 'components/navigation-top-bar/navigationTopBarTypes';
 import { useIntl } from 'react-intl';
+import { navigationTypes } from 'components/navigation-top-bar';
 
 //components:
 import NavigationTopBar from 'components/navigation-top-bar';
@@ -33,11 +33,11 @@ export default function Profile({ navigation }: ProfileProps) {
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
                 <NavigationTopBar
-                    type={NAVIGATION_TOP_BAR_TYPES.BASIC}
+                    type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.BASIC}
                     name={screenNameTranslation}
                 />
                 <TopPanel
-                    type={TOP_PANEL_TYPES.PROFILE_SCREEN}
+                    type={topPanelTypes.TOP_PANEL_TYPES.PROFILE_SCREEN}
                 />
             </View>
         </View>
