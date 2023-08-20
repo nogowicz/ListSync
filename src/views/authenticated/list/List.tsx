@@ -4,7 +4,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
 import { useTheme } from 'navigation/utils/ThemeProvider';
-import ListTopBar from 'components/list-top-bar';
 import { RouteProp } from '@react-navigation/native';
 import TaskList from 'components/task-list';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -15,6 +14,8 @@ import AddTaskField from 'components/add-task-field';
 import ChangeListModal from 'components/change-list-modal';
 import { useListContext } from 'context/DataProvider';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
+import NavigationTopBar from 'components/navigation-top-bar';
+import { navigationTypes } from 'components/navigation-top-bar';
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -83,11 +84,12 @@ export default function List({ navigation, route }: ListProps) {
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
             <View style={styles.container}>
-                <ListTopBar
+                <NavigationTopBar
                     name={listName}
                     icon={listIconTheme[currentList.iconId]}
                     color={listColorTheme[currentList.colorVariant]}
                     onTitlePress={handleModal}
+                    type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.LIST}
                 />
                 {unCompletedTasks.length > 0 &&
                     <Text style={[

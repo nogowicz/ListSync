@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 export interface UserType {
     id: number;
     firstName: string;
+    lastName: string;
+    photoURL: string | null;
     email: string;
 }
 

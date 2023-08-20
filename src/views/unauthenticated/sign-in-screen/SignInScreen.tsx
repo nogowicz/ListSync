@@ -13,13 +13,13 @@ import { UserType, useUser } from 'context/UserProvider';
 
 //components:
 import CustomTextField from 'components/custom-text-field';
+import Button, { backButtonWidth } from 'components/button/Button';
+import Logo from 'components/logo';
 
 
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
-import Button, { backButtonWidth } from 'components/button/Button';
-import Logo from 'components/logo';
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 
@@ -44,7 +44,13 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
         try {
             console.log(email, password)
-            const userData: UserType = { id: 1, firstName: 'Bartek', email: email };
+            const userData: UserType = {
+                id: 1,
+                firstName: 'Bartek',
+                lastName: 'Noga',
+                email: email,
+                photoURL: null,
+            };
             setUserDetails(userData);
         } catch (error) {
             console.log(error);
@@ -132,20 +138,19 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
-            <Animated.View style={[
-                styles.container,
-                { transform: [{ translateY: translateYValue }] }
+            <View style={[
+                styles.container
             ]}>
                 <View style={styles.topContainer}>
                     <Button
                         onPress={() => navigation.goBack()}
                         type={buttonTypes.BUTTON_TYPES.BACK}
-
-
                     />
-                    <Logo
-                        animationDuration={animationDuration}
-                    />
+                    <Animated.View style={{ transform: [{ translateY: translateYValue }] }}>
+                        <Logo
+                            animationDuration={animationDuration}
+                        />
+                    </Animated.View>
                     <View
                         style={{
                             width: backButtonWidth
@@ -153,8 +158,10 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                     />
                 </View>
 
-                <View
-                    style={styles.textFieldsContainer}
+                <Animated.View
+                    style={[styles.textFieldsContainer,
+                    { transform: [{ translateY: translateYValue }] }
+                    ]}
                 >
                     <Controller
                         name='email'
@@ -204,13 +211,13 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                                     actionLabel={forgotPasswordTranslation}
                                     action={() => {
                                         console.log("Navigating to forgot password screen")
-                                        // navigation.navigate(SCREENS.AUTH.FORGOT_PASSWORD.ID)
+                                        // navigation.navigate(SCREENS.AUTHENTICATED.FORGOT_PASSWORD.ID)
                                     }}
                                 />)
                         }
                         }
                     />
-                </View>
+                </Animated.View>
                 <Animated.View style={[
                     styles.textContainer,
                     { height: textContainerHeight }
@@ -272,7 +279,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </Animated.View>
+            </View>
         </View>
     )
 }

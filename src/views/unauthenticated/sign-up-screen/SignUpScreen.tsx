@@ -1,17 +1,27 @@
-import { Animated, StyleSheet, Text, View } from 'react-native'
-import React, { useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { spacing, typography } from 'styles';
-import { buttonTypes } from 'components/button';
-
-//components:
-import Logo from 'components/logo';
-import Button, { backButtonWidth } from 'components/button/Button'
+import { prepareSignUpPages } from './helpers';
 
 
-type SignUpScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_UP_SCREEN'>;
+//icons:
+import SignUpPanel from './sign-up-panel';
+
+type SignUpPageType = {
+    id: string;
+    topContainer: JSX.Element;
+    subTitle: JSX.Element;
+    mainContent: JSX.Element;
+    buttonLabel: string;
+    buttonAction: Dispatch<SetStateAction<number>> | any;
+};
+
+export type SignUpPagesArrayType = SignUpPageType[];
+
+export type SignUpScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_UP_SCREEN'>;
 
 type SignUpScreenProps = {
     navigation: SignUpScreenNavigationProp['navigation'];
@@ -20,39 +30,38 @@ type SignUpScreenProps = {
 
 export default function SignUpScreen({ navigation }: SignUpScreenProps) {
     const theme = useTheme();
+    const [page, setPage] = useState<number>(0);
 
-    //animations:
-    const translateYValue = useRef(new Animated.Value(0)).current;
+    //animations
     const animationDuration = 200;
+
+
+    function handleNextPage() {
+        setPage(prevPage => prevPage + 1);
+    }
+    function handleBack() {
+        setPage(prevPage => prevPage - 1);
+    }
+
+    function handlePageWithError(page: number) {
+        setPage(page);
+    }
+
+    const pages: SignUpPagesArrayType = prepareSignUpPages({
+        navigation,
+        handleBack,
+        handleNextPage,
+        handlePageWithError,
+        animationDuration,
+    });
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
-            <Animated.View style={[
-                styles.container,
-                { transform: [{ translateY: translateYValue }] }
-            ]}>
-                <View style={styles.topContainer}>
-                    <Button
-                        onPress={() => navigation.goBack()}
-                        type={buttonTypes.BUTTON_TYPES.BACK}
-
-
-                    />
-                    <Logo
-                        animationDuration={animationDuration}
-                    />
-                    <View
-                        style={{
-                            width: backButtonWidth
-                        }}
-                    />
-                </View>
-
-                <View
-                    style={styles.textFieldsContainer}
-                >
-                </View>
-            </Animated.View>
+            <SignUpPanel
+                {...pages[page]}
+                page={page}
+                pages={pages}
+            />
         </View>
 
     )
