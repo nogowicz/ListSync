@@ -15,6 +15,7 @@ export const ICON_SIZE = {
   COLOR: 40,
   COLOR_CIRCLE: 10,
   TEXT_FIELD_LIST_ICON: 25,
+  SETTING_BUTTON: 30,
 };
 
 export const ACTIVE_OPACITY = {

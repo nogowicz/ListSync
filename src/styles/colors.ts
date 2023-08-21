@@ -12,6 +12,7 @@ export const theme = {
     RED: '#DC6A5E',
     YELLOW: '#FCBA77',
     ERROR: '#ef9a9a',
+    DARK_RED: 'red',
   },
   dark: {
     theme: 'dark',
@@ -26,5 +27,6 @@ export const theme = {
     RED: '#DC6A5E',
     YELLOW: '#FCBA77',
     ERROR: '#ef9a9a',
+    DARK_RED: 'red',
   },
 };

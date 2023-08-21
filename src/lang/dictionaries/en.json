@@ -105,5 +105,16 @@
   "views.unauthenticated.signUp.subtitle.credentials": "Give us your email and password, and you'll have access to your tasks anytime, anywhere.",
   "views.unauthenticated.signUp.subtitle.photo": "Add profile picture (optional): You can add a profile picture to personalize your account.",
   "views.authenticated.profile.edit-profile": "Edit Profile",
-  "views.authenticated.profile.profile": "Profile"
+  "views.authenticated.profile.profile": "Profile",
+  "views.authenticated.profile.language": "Language",
+  "views.authenticated.profile.theme": "Theme",
+  "views.authenticated.profile.favorite-list": "Favorite list",
+  "views.authenticated.profile.notification-sound": "Notification sound",
+  "views.authenticated.profile.tags": "Tags",
+  "views.authenticated.profile.completed-tasks": "Completed tasks",
+  "views.authenticated.profile.logout": "Logout",
+  "views.authenticated.profile.about-app": "About app",
+  "views.authenticated.profile.preferences": "Preferences",
+  "views.authenticated.profile.tasks": "Tasks",
+  "views.authenticated.profile.list-sync": "ListSync"
 }

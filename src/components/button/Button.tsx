@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, cloneElement } from 'react'
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { buttonTypes } from '.';
@@ -24,8 +24,10 @@ type ButtonProps = {
     isActive?: boolean;
     onPress: () => void;
     isChecked?: boolean;
+    color?: string;
     activeOpacity?: number;
     secureTextEntry?: boolean;
+    icon?: JSX.Element;
 };
 
 export default function Button({
@@ -34,9 +36,11 @@ export default function Button({
     amount,
     onPress,
     isChecked,
+    color,
     isActive = false,
     activeOpacity = constants.ACTIVE_OPACITY.HIGH,
     secureTextEntry = false,
+    icon,
 }: ButtonProps) {
     const theme = useTheme();
 
@@ -246,12 +250,19 @@ export default function Button({
                 style={[styles.settingButton, { borderColor: theme.LIGHT_HINT, }]}
                 onPress={onPress}
             >
+
+                {icon && cloneElement(icon as JSX.Element,
+                    {
+                        strokeWidth: constants.STROKE_WIDTH.ICON,
+                        width: constants.ICON_SIZE.SETTING_BUTTON,
+                        stroke: color ? color : theme.TEXT
+                    })}
                 <Text
                     style={[
                         {
-                            color: theme.TEXT
+                            color: color ? color : theme.TEXT
                         },
-                        styles.submitButtonText
+                        styles.settingsButtonText
                     ]}
                 >
                     {text}
@@ -369,9 +380,15 @@ const styles = StyleSheet.create({
         padding: spacing.SCALE_12,
     },
     settingButton: {
-        borderBottomWidth: constants.BORDER_WIDTH.BACK,
         borderTopWidth: constants.BORDER_WIDTH.BACK,
         paddingVertical: spacing.SCALE_10,
         paddingHorizontal: spacing.SCALE_10,
+        flexDirection: 'row',
+        gap: spacing.SCALE_10,
+        alignItems: 'center',
     },
-})
+    settingsButtonText: {
+        fontSize: spacing.SCALE_20,
+    },
+
+});

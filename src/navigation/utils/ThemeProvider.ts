@@ -12,6 +12,7 @@ interface ThemeContextType {
   YELLOW: string;
   RED: string;
   ERROR: string;
+  DARK_RED: string;
 }
 
 export const ThemeContext = createContext<ThemeContextType>(
