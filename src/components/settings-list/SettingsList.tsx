@@ -10,6 +10,17 @@ import { useIntl } from 'react-intl';
 //components:
 import Button, { buttonTypes } from 'components/button'
 
+//icons:
+import LanguageIcon from 'assets/button-icons/language.svg';
+import ThemeIcon from 'assets/button-icons/theme.svg';
+import FavoriteListIcon from 'assets/button-icons/favorite.svg';
+import NotificationSoundIcon from 'assets/button-icons/notification-bell.svg';
+import LogoutIcon from 'assets/button-icons/logout.svg';
+import AboutIcon from 'assets/button-icons/about.svg';
+import TagIcon from 'assets/button-icons/tag.svg';
+import CompletedTasksIcon from 'assets/button-icons/completed_tasks.svg';
+
+
 export default function SettingsList() {
     const theme = useTheme();
     const { setUserDetails } = useUser();
@@ -23,28 +34,32 @@ export default function SettingsList() {
                 <View>
                     <Text
                         style={[styles.sectionText, { color: theme.TEXT }]}>
-                        {settingsTranslations.languageTranslation(intl)}
+                        {settingsTranslations.preferencesTranslation(intl)}
                     </Text>
                 </View>
                 <Button
                     text={settingsTranslations.languageTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
+                    icon={<LanguageIcon />}
                     onPress={() => console.log("Language button pressed")}
                 />
                 <Button
                     text={settingsTranslations.themeTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
-                    onPress={() => console.log("Language button pressed")}
+                    icon={<ThemeIcon />}
+                    onPress={() => console.log("Theme button pressed")}
                 />
                 <Button
                     text={settingsTranslations.favoriteListTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
-                    onPress={() => console.log("Language button pressed")}
+                    icon={<FavoriteListIcon />}
+                    onPress={() => console.log("Favorite button pressed")}
                 />
                 <Button
                     text={settingsTranslations.notificationSoundTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
-                    onPress={() => console.log("Language button pressed")}
+                    icon={<NotificationSoundIcon />}
+                    onPress={() => console.log("Notification button pressed")}
                 />
 
             </View>
@@ -58,12 +73,14 @@ export default function SettingsList() {
                 <Button
                     text={settingsTranslations.tagsTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
-                    onPress={() => console.log("Language button pressed")}
+                    icon={<TagIcon />}
+                    onPress={() => console.log("Tags button pressed")}
                 />
                 <Button
                     text={settingsTranslations.completedTasksTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
-                    onPress={() => console.log("Language button pressed")}
+                    icon={<CompletedTasksIcon />}
+                    onPress={() => console.log("Completed tasks button pressed")}
                 />
             </View>
             <View style={styles.settingsSection}>
@@ -75,14 +92,16 @@ export default function SettingsList() {
                 </View>
                 <Button
                     text={settingsTranslations.logoutTranslation(intl)}
-                    color={'red'}
+                    color={theme.DARK_RED}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
+                    icon={<LogoutIcon />}
                     onPress={() => setUserDetails(null)}
                 />
                 <Button
                     text={settingsTranslations.aboutAppTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
-                    onPress={() => console.log("Language button pressed")}
+                    icon={<AboutIcon />}
+                    onPress={() => console.log("About button pressed")}
                 />
 
             </View>
