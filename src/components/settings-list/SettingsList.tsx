@@ -1,5 +1,5 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useUser } from 'context/UserProvider';
 import { settingsTranslations } from '.';
