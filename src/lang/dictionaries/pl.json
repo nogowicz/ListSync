@@ -105,5 +105,16 @@
   "views.unauthenticated.signUp.subtitle.credentials": "Podaj swój email i hasło, a dostaniesz dostęp do zadań zawsze i wszędzie.",
   "views.unauthenticated.signUp.subtitle.photo": "Dodaj zdjęcie profilowe (opcjonalnie): Możesz dodać zdjęcie profilowe, aby spersonalizować swoje konto.",
   "views.authenticated.profile.edit-profile": "Edytuj profil",
-  "views.authenticated.profile.profile": "Profil"
+  "views.authenticated.profile.profile": "Profil",
+  "views.authenticated.profile.language": "Język",
+  "views.authenticated.profile.theme": "Motyw",
+  "views.authenticated.profile.favorite-list": "Ulubiona lista",
+  "views.authenticated.profile.notification-sound": "Dzwięk powiadomienia",
+  "views.authenticated.profile.tags": "Tagi",
+  "views.authenticated.profile.completed-tasks": "Ukończone zadania",
+  "views.authenticated.profile.logout": "Wyloguj",
+  "views.authenticated.profile.about-app": "O aplikacji",
+  "views.authenticated.profile.preferences": "Preferencje",
+  "views.authenticated.profile.tasks": "Zadania",
+  "views.authenticated.profile.list-sync": "ListSync"
 }

@@ -24,6 +24,7 @@ type ButtonProps = {
     isActive?: boolean;
     onPress: () => void;
     isChecked?: boolean;
+    color?: string;
     activeOpacity?: number;
     secureTextEntry?: boolean;
 };
@@ -34,6 +35,7 @@ export default function Button({
     amount,
     onPress,
     isChecked,
+    color,
     isActive = false,
     activeOpacity = constants.ACTIVE_OPACITY.HIGH,
     secureTextEntry = false,
@@ -249,9 +251,9 @@ export default function Button({
                 <Text
                     style={[
                         {
-                            color: theme.TEXT
+                            color: color ? color : theme.TEXT
                         },
-                        styles.submitButtonText
+                        styles.settingsButtonText
                     ]}
                 >
                     {text}
@@ -369,9 +371,12 @@ const styles = StyleSheet.create({
         padding: spacing.SCALE_12,
     },
     settingButton: {
-        borderBottomWidth: constants.BORDER_WIDTH.BACK,
         borderTopWidth: constants.BORDER_WIDTH.BACK,
         paddingVertical: spacing.SCALE_10,
         paddingHorizontal: spacing.SCALE_10,
     },
-})
+    settingsButtonText: {
+        fontSize: spacing.SCALE_20,
+    },
+
+});
