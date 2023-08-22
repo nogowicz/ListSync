@@ -116,5 +116,8 @@
   "views.authenticated.profile.about-app": "About app",
   "views.authenticated.profile.preferences": "Preferences",
   "views.authenticated.profile.tasks": "Tasks",
-  "views.authenticated.profile.list-sync": "ListSync"
+  "views.authenticated.profile.list-sync": "ListSync",
+  "views.authenticated.profile.app-settings.choose-language": "Choose Language",
+  "views.authenticated.profile.app-settings.language.pl": "Polish",
+  "views.authenticated.profile.app-settings.language.eng": "English"
 }

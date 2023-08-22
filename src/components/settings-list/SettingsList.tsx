@@ -20,8 +20,11 @@ import AboutIcon from 'assets/button-icons/about.svg';
 import TagIcon from 'assets/button-icons/tag.svg';
 import CompletedTasksIcon from 'assets/button-icons/completed_tasks.svg';
 
+type SettingListProps = {
+    handleShowLangBottomSheet: Function;
+};
 
-export default function SettingsList() {
+export default function SettingsList({ handleShowLangBottomSheet }: SettingListProps) {
     const theme = useTheme();
     const { setUserDetails } = useUser();
     const intl = useIntl();
@@ -41,7 +44,7 @@ export default function SettingsList() {
                     text={settingsTranslations.languageTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<LanguageIcon />}
-                    onPress={() => console.log("Language button pressed")}
+                    onPress={() => handleShowLangBottomSheet()}
                 />
                 <Button
                     text={settingsTranslations.themeTranslation(intl)}

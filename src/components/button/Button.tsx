@@ -255,6 +255,7 @@ export default function Button({
                     {
                         strokeWidth: constants.STROKE_WIDTH.ICON,
                         width: constants.ICON_SIZE.SETTING_BUTTON,
+                        height: constants.ICON_SIZE.SETTING_BUTTON,
                         stroke: color ? color : theme.TEXT
                     })}
                 <Text

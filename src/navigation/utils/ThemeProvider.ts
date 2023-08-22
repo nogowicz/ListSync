@@ -8,6 +8,7 @@ interface ThemeContextType {
   BACKGROUND: string;
   HINT: string;
   LIGHT_HINT: string;
+  DARK_HINT: string;
   GREEN: string;
   YELLOW: string;
   RED: string;
