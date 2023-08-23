@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View, Linking, } from 'react-native'
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useUser } from 'context/UserProvider';
 import { settingsTranslations } from '.';
@@ -63,7 +63,9 @@ export default function SettingsList({ handleShowLangBottomSheet, handleShowThem
                     text={settingsTranslations.notificationSoundTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<NotificationSoundIcon />}
-                    onPress={() => console.log("Notification button pressed")}
+                    onPress={() => {
+                        Linking.openSettings();
+                    }}
                 />
 
             </View>
