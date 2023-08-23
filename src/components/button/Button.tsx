@@ -48,11 +48,11 @@ export default function Button({
         return (
             <TouchableOpacity
                 onPress={onPress}
-                style={[styles.addContainer, { backgroundColor: theme.TERTIARY }]}
+                style={[styles.addContainer, { backgroundColor: theme.ADD_BUTTON_BACKGROUND }]}
                 activeOpacity={activeOpacity}
             >
-                <Plus stroke={theme.PRIMARY} width={spacing.SCALE_30} height={spacing.SCALE_30} />
-                <Text style={[styles.addText, { color: theme.PRIMARY }]}>{text}</Text>
+                <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_30} height={spacing.SCALE_30} />
+                <Text style={[styles.addText, { color: theme.ADD_BUTTON_TEXT }]}>{text}</Text>
             </TouchableOpacity>
         );
 
@@ -86,9 +86,9 @@ export default function Button({
         return (
             <TouchableOpacity
                 activeOpacity={activeOpacity}
-                style={[styles.fabContainer, { backgroundColor: theme.TERTIARY }]}
+                style={[styles.fabContainer, { backgroundColor: theme.ADD_BUTTON_BACKGROUND }]}
                 onPress={onPress}>
-                <Plus stroke={theme.PRIMARY} width={spacing.SCALE_40} height={spacing.SCALE_40} />
+                <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_40} height={spacing.SCALE_40} />
             </TouchableOpacity>
         );
     } else if (type === buttonTypes.BUTTON_TYPES.CHECK) {
@@ -105,19 +105,26 @@ export default function Button({
                         borderColor: theme.PRIMARY,
                     }]}
                 onPress={onPress}>
-                <Check
-                    stroke={theme.BACKGROUND}
-                    strokeWidth={constants.STROKE_WIDTH.ICON}
-                    width={constants.ICON_SIZE.CHECK}
-                    height={constants.ICON_SIZE.CHECK}
-                />
+                {isChecked ?
+                    <Check
+                        stroke={theme.WHITE}
+                        strokeWidth={constants.STROKE_WIDTH.ICON}
+                        width={constants.ICON_SIZE.CHECK}
+                        height={constants.ICON_SIZE.CHECK}
+                    /> :
+                    <View
+                        style={{
+                            width: constants.ICON_SIZE.CHECK,
+                            height: constants.ICON_SIZE.CHECK
+                        }} />
+                }
             </TouchableOpacity>
         );
     } else if (type === buttonTypes.BUTTON_TYPES.FUNCTIONAL) {
         return (
             <TouchableOpacity
                 onPress={onPress}
-                style={[styles.functionalContainer, { backgroundColor: theme.TERTIARY }]}
+                style={[styles.functionalContainer, { backgroundColor: theme.SECONDARY }]}
                 activeOpacity={activeOpacity}
             >
                 <Text style={[styles.addText, { color: theme.PRIMARY }]}>{text}</Text>
@@ -145,7 +152,7 @@ export default function Button({
                 style={[
                     styles.googleButton,
                     {
-                        backgroundColor: theme.PRIMARY
+                        backgroundColor: theme.FIXED_PRIMARY_BLUE
                     }
                 ]}
             >
@@ -169,7 +176,7 @@ export default function Button({
                 style={[
                     styles.signInButton,
                     {
-                        backgroundColor: theme.TERTIARY
+                        backgroundColor: theme.SECONDARY
                     }
                 ]}
                 onPress={onPress}
@@ -180,6 +187,7 @@ export default function Button({
                 <Text
                     style={[
                         styles.signInButtonText,
+                        { color: theme.TEXT }
                     ]}
                 >
                     <FormattedMessage
@@ -247,7 +255,7 @@ export default function Button({
         return (
             <TouchableOpacity
                 activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                style={[styles.settingButton, { borderColor: theme.LIGHT_HINT, }]}
+                style={[styles.settingButton, { borderColor: theme.HINT }]}
                 onPress={onPress}
             >
 
@@ -362,7 +370,6 @@ const styles = StyleSheet.create({
         borderRadius: constants.BORDER_RADIUS.BUTTON,
     },
     signInButtonText: {
-        color: 'black',
         fontSize: typography.FONT_SIZE_16,
     },
     submitButton: {

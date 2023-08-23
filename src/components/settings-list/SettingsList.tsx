@@ -22,9 +22,10 @@ import CompletedTasksIcon from 'assets/button-icons/completed_tasks.svg';
 
 type SettingListProps = {
     handleShowLangBottomSheet: Function;
+    handleShowThemeBottomSheet: Function;
 };
 
-export default function SettingsList({ handleShowLangBottomSheet }: SettingListProps) {
+export default function SettingsList({ handleShowLangBottomSheet, handleShowThemeBottomSheet }: SettingListProps) {
     const theme = useTheme();
     const { setUserDetails } = useUser();
     const intl = useIntl();
@@ -50,7 +51,7 @@ export default function SettingsList({ handleShowLangBottomSheet }: SettingListP
                     text={settingsTranslations.themeTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<ThemeIcon />}
-                    onPress={() => console.log("Theme button pressed")}
+                    onPress={() => handleShowThemeBottomSheet()}
                 />
                 <Button
                     text={settingsTranslations.favoriteListTranslation(intl)}

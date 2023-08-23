@@ -71,7 +71,7 @@ export default function ListItem({
             style={[
                 styles.container,
                 {
-                    backgroundColor: theme.SECONDARY,
+                    backgroundColor: theme.FIXED_COMPONENT_COLOR,
                 },
             ]}
             activeOpacity={activeOpacity}

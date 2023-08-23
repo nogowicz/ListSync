@@ -48,7 +48,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
 
     const deadlineColor = () => {
         if (deadline < now) {
-            return theme.RED;
+            return theme.DARK_RED;
         } else if (deadline.toDateString() === now.toDateString()) {
             return theme.YELLOW;
         } else {
@@ -108,7 +108,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.BACKGROUND }]}>
+        <View style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}>
             <View style={styles.upperContainer}>
                 <View style={styles.leftContainer}>
                     <Button
@@ -137,6 +137,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
                             <Arrow
                                 width={constants.ICON_SIZE.SUBTASK_ARROW}
                                 height={constants.ICON_SIZE.SUBTASK_ARROW}
+                                fill={theme.TEXT}
                             />
                         </Animated.View>
                     </TouchableOpacity>}

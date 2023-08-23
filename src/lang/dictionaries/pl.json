@@ -90,7 +90,7 @@
   "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partI": "Klikając „Zaloguj się”, zgadzasz się na nasze ",
   "views.unauthenticated.welcome-screen.sign-in.term_and_conditions.partII": " warunki i regulacje",
   "views.unauthenticated.error.email-invalid": "Email jest niepoprawny",
-  "views.unauthenticated.error.email-required": "Proszę podaj swój email email",
+  "views.unauthenticated.error.email-required": "Proszę podaj swój adres email",
   "views.unauthenticated.error.password.too-short": "Hasło musi mieć co najmniej 6 znaków",
   "views.unauthenticated.error.password-required": "Proszę podaj swoje hasło",
   "views.unauthenticated.button.loading": "Ładowanie...",
@@ -117,7 +117,10 @@
   "views.authenticated.profile.preferences": "Preferencje",
   "views.authenticated.profile.tasks": "Zadania",
   "views.authenticated.profile.list-sync": "ListSync",
-  "views.authenticated.profile.app-settings.choose-language": "Wybierz język",
+  "views.authenticated.profile.app-settings.choose-language": "Wybierz Język",
   "views.authenticated.profile.app-settings.language.pl": "Polski",
-  "views.authenticated.profile.app-settings.language.eng": "Angielski"
+  "views.authenticated.profile.app-settings.language.eng": "Angielski",
+  "views.authenticated.profile.app-settings.theme.light": "Jasny",
+  "views.authenticated.profile.app-settings.theme.dark": "Ciemny",
+  "views.authenticated.profile.app-settings.theme.choose-theme": "Wybierz Motyw"
 }

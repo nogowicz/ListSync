@@ -119,5 +119,8 @@
   "views.authenticated.profile.list-sync": "ListSync",
   "views.authenticated.profile.app-settings.choose-language": "Choose Language",
   "views.authenticated.profile.app-settings.language.pl": "Polish",
-  "views.authenticated.profile.app-settings.language.eng": "English"
+  "views.authenticated.profile.app-settings.language.eng": "English",
+  "views.authenticated.profile.app-settings.theme.light": "Light",
+  "views.authenticated.profile.app-settings.theme.dark": "Dark",
+  "views.authenticated.profile.app-settings.theme.choose-theme": "Choose Theme"
 }

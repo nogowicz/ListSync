@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { topPanelTypes } from 'components/top-panel';
-import { spacing, typography } from 'styles';
+import { constants, spacing, typography } from 'styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { navigationTypes } from 'components/navigation-top-bar';
 import { LANGUAGES } from 'lang/constants';
@@ -14,7 +14,7 @@ import BottomSheet, { BottomSheetRefProps } from 'components/bottom-sheet/Bottom
 import NavigationTopBar from 'components/navigation-top-bar';
 import TopPanel from 'components/top-panel';
 import SettingsList from 'components/settings-list';
-import CustomRadioButtons from 'components/custom-radio-buttons';
+import CustomRadioButtons, { radioButtonsType } from 'components/custom-radio-buttons';
 
 type ProfilePropsNavigationProp = NativeStackScreenProps<RootStackParamList, 'PROFILE'>;
 
@@ -22,11 +22,16 @@ type ProfileProps = {
     navigation: ProfilePropsNavigationProp['navigation'];
 };
 
-export type Entry = {
+export type LANGUAGES_ENTRY = {
     key: string;
     value: string;
 };
 
+
+export type THEMES_ENTRY = {
+    key: string;
+    value: boolean;
+}
 
 export default function Profile({ navigation }: ProfileProps) {
     const theme = useTheme();
@@ -38,9 +43,11 @@ export default function Profile({ navigation }: ProfileProps) {
         defaultMessage: 'Profile'
     });
 
-    const refLang = useRef<BottomSheetRefProps>(null);
-
     const langSheetOpen = useRef(false);
+    const refLang = useRef<BottomSheetRefProps>(null);
+    const themeSheetOpen = useRef(false);
+    const refTheme = useRef<BottomSheetRefProps>(null);
+
 
     const handleShowLangBottomSheet = useCallback(() => {
         // if (themeSheetOpen.current) {
@@ -54,7 +61,26 @@ export default function Profile({ navigation }: ProfileProps) {
         }
     }, []);
 
-    const langArray: Entry[] = Object.entries(LANGUAGES).map(([key, value]) => ({ key, value }));
+    const langArray: LANGUAGES_ENTRY[] = Object.entries(LANGUAGES).map(([key, value]) => ({ key, value }));
+
+    const handleShowThemeBottomSheet = useCallback(() => {
+        if (langSheetOpen.current) {
+            refLang.current?.scrollTo(0);
+        }
+        themeSheetOpen.current = !themeSheetOpen.current;
+        if (!themeSheetOpen.current) {
+            refTheme.current?.scrollTo(0);
+        } else {
+            refTheme.current?.scrollTo(-200);
+        }
+    }, []);
+
+    const themesEntry = {
+        Dark: true,
+        Light: false,
+    }
+
+    const themesArray = Object.entries(themesEntry).map(([key, value]) => ({ key, value }));
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -68,16 +94,27 @@ export default function Profile({ navigation }: ProfileProps) {
                 />
                 <SettingsList
                     handleShowLangBottomSheet={handleShowLangBottomSheet}
+                    handleShowThemeBottomSheet={handleShowThemeBottomSheet}
                 />
             </View>
-            <BottomSheet ref={refLang} height={500}>
-                <Text style={[styles.bottomSheetTitleText, { color: theme.TEXT }]}>
+            <BottomSheet ref={refLang} height={constants.BOTTOM_SHEET_HEIGHT.LANGUAGES}>
+                <Text style={[styles.bottomSheetTitleText, { color: theme.FIXED_DARK_TEXT }]}>
                     <FormattedMessage
                         id='views.authenticated.profile.app-settings.choose-language'
                         defaultMessage='Choose Language'
                     />
                 </Text>
-                <CustomRadioButtons values={langArray} />
+                <CustomRadioButtons values={langArray} type={radioButtonsType.RADIO_BUTTONS_TYPE.LANGUAGE} />
+            </BottomSheet>
+
+            <BottomSheet ref={refTheme} height={constants.BOTTOM_SHEET_HEIGHT.THEMES}>
+                <Text style={[styles.bottomSheetTitleText, { color: theme.FIXED_DARK_TEXT }]}>
+                    <FormattedMessage
+                        defaultMessage='Choose Theme'
+                        id='views.authenticated.profile.app-settings.theme.choose-theme'
+                    />
+                </Text>
+                <CustomRadioButtons values={themesArray} type={radioButtonsType.RADIO_BUTTONS_TYPE.THEME} />
             </BottomSheet>
         </View>
     )
