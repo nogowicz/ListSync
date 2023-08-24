@@ -1,21 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { ReactNode, cloneElement } from 'react'
+import { StyleSheet, } from 'react-native'
+import React, { ReactNode } from 'react'
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { buttonTypes } from '.';
-import { FormattedMessage } from 'react-intl';
-
-//icons:
-import Plus from 'assets/button-icons/plus.svg';
-import Check from 'assets/button-icons/Check.svg';
-import HideArrow from 'assets/button-icons/Back.svg';
-import GoogleSignInIcon from 'assets/button-icons/google-icon.svg';
-import SignInIcon from 'assets/button-icons/login-in-icon.svg';
-import PasswordVisibleIcon from 'assets/button-icons/visible-password.svg';
-import PasswordInvisibleIcon from 'assets/button-icons/invisible-password.svg';
-import GoBack from 'assets/button-icons/Back.svg';
+import { prepareButtons } from './helpers';
 
 export const backButtonWidth = 46.90909194946289;
+
+type ButtonElement = {
+    type: buttonTypes.BUTTON_TYPES;
+    button?: JSX.Element;
+    buttonTypes?: JSX.Element;
+};
+
 
 type ButtonProps = {
     text?: string | ReactNode;
@@ -44,244 +41,32 @@ export default function Button({
 }: ButtonProps) {
     const theme = useTheme();
 
-    if (type === buttonTypes.BUTTON_TYPES.ADD) {
-        return (
-            <TouchableOpacity
-                onPress={onPress}
-                style={[styles.addContainer, { backgroundColor: theme.ADD_BUTTON_BACKGROUND }]}
-                activeOpacity={activeOpacity}
-            >
-                <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_30} height={spacing.SCALE_30} />
-                <Text style={[styles.addText, { color: theme.ADD_BUTTON_TEXT }]}>{text}</Text>
-            </TouchableOpacity>
-        );
+    const buttonElement = prepareButtons({
+        onPress: onPress,
+        text: text,
+        activeOpacity: activeOpacity,
+        amount: amount,
+        isActive: isActive,
+        color: color,
+        isChecked: isChecked,
+        secureTextEntry: secureTextEntry,
+        icon: icon,
+    });
 
-    } else if (type === buttonTypes.BUTTON_TYPES.FILTER) {
-        return (
-            <TouchableOpacity
-                onPress={onPress}
-                activeOpacity={activeOpacity}
-                style={[styles.filterContainer]}
-            >
-                <Text
-                    style={[
-                        styles.filterText,
-                        isActive ? { color: theme.PRIMARY, fontWeight: typography.FONT_WEIGHT_BOLD } :
-                            { color: theme.HINT }]}
-                >
-                    {text}
-                </Text>
-                <View
-                    style={[styles.amountFilterContainer,
-                    isActive ? { backgroundColor: theme.PRIMARY } : { backgroundColor: theme.HINT }]}
-                >
-                    <Text style={[
-                        styles.amountFilterText,
-                        { color: theme.BACKGROUND }]}
-                    >{amount}</Text>
-                </View>
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.FAB) {
-        return (
-            <TouchableOpacity
-                activeOpacity={activeOpacity}
-                style={[styles.fabContainer, { backgroundColor: theme.ADD_BUTTON_BACKGROUND }]}
-                onPress={onPress}>
-                <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_40} height={spacing.SCALE_40} />
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.CHECK) {
-        return (
-            <TouchableOpacity
-                activeOpacity={activeOpacity}
-                style={[
-                    styles.checkButton,
-                    isChecked && {
-                        backgroundColor: theme.PRIMARY,
-                    },
-                    {
-                        borderWidth: constants.BORDER_WIDTH.CHECK,
-                        borderColor: theme.PRIMARY,
-                    }]}
-                onPress={onPress}>
-                {isChecked ?
-                    <Check
-                        stroke={theme.WHITE}
-                        strokeWidth={constants.STROKE_WIDTH.ICON}
-                        width={constants.ICON_SIZE.CHECK}
-                        height={constants.ICON_SIZE.CHECK}
-                    /> :
-                    <View
-                        style={{
-                            width: constants.ICON_SIZE.CHECK,
-                            height: constants.ICON_SIZE.CHECK
-                        }} />
-                }
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.FUNCTIONAL) {
-        return (
-            <TouchableOpacity
-                onPress={onPress}
-                style={[styles.functionalContainer, { backgroundColor: theme.SECONDARY }]}
-                activeOpacity={activeOpacity}
-            >
-                <Text style={[styles.addText, { color: theme.PRIMARY }]}>{text}</Text>
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.HIDE_INPUT) {
-        return (
-            <TouchableOpacity
-                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                style={styles.hideArrow}
-                onPress={onPress}
-            >
-                <HideArrow
-                    fill={theme.HINT}
-                    strokeWidth={constants.STROKE_WIDTH.ICON}
-                    width={15}
-                />
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.GOOGLE_SIGN_IN) {
-        return (
-            <TouchableOpacity
-                activeOpacity={activeOpacity}
-                onPress={onPress}
-                style={[
-                    styles.googleButton,
-                    {
-                        backgroundColor: theme.FIXED_PRIMARY_BLUE
-                    }
-                ]}
-            >
-                <GoogleSignInIcon />
-                <Text
-                    style={[
-                        styles.googleButtonText,
-                    ]}
-                >
-                    <FormattedMessage
-                        id='views.unauthenticated.welcome-screen.google-sign-in'
-                        defaultMessage='Sign in with Google account'
-                    />
-                </Text>
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.SIGN_IN) {
-        return (
-            <TouchableOpacity
-                activeOpacity={activeOpacity}
-                style={[
-                    styles.signInButton,
-                    {
-                        backgroundColor: theme.SECONDARY
-                    }
-                ]}
-                onPress={onPress}
-            >
-                <SignInIcon
-                    fill={theme.TEXT}
-                />
-                <Text
-                    style={[
-                        styles.signInButtonText,
-                        { color: theme.TEXT }
-                    ]}
-                >
-                    <FormattedMessage
-                        id='views.unauthenticated.welcome-screen.sign-in'
-                        defaultMessage='Sign in with email'
-                    />
-                </Text>
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.PASSWORD_VISIBILITY) {
-        return (
-            <TouchableOpacity
-                activeOpacity={activeOpacity}
-                onPress={onPress}
-            >
-                {secureTextEntry ?
-                    <PasswordInvisibleIcon
-                        stroke={theme.TEXT}
-                        strokeWidth={constants.STROKE_WIDTH.ICON}
-                    /> :
-                    <PasswordVisibleIcon
-                        stroke={theme.TEXT}
-                        strokeWidth={constants.STROKE_WIDTH.ICON}
-                    />
-                }
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.SUBMIT) {
-        return (
-            <TouchableOpacity
-                activeOpacity={activeOpacity}
-                onPress={onPress}
-                style={[
-                    {
-                        backgroundColor: theme.PRIMARY,
-                    },
-                    styles.submitButton,
-                ]}
-            >
-                <Text
-                    style={[
-                        {
-                            color: 'white'
-                        },
-                        styles.submitButtonText
-                    ]}
-                >
-                    {text}
-                </Text>
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.BACK) {
-        return (
-            <TouchableOpacity
-                activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
-                style={[styles.backButton, { borderColor: theme.LIGHT_HINT, }]}
-                onPress={onPress}
-            >
-                <GoBack
-                    fill={theme.TEXT}
-                />
-            </TouchableOpacity>
-        );
-    } else if (type === buttonTypes.BUTTON_TYPES.SETTING) {
-        return (
-            <TouchableOpacity
-                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                style={[styles.settingButton, { borderColor: theme.HINT }]}
-                onPress={onPress}
-            >
-
-                {icon && cloneElement(icon as JSX.Element,
-                    {
-                        strokeWidth: constants.STROKE_WIDTH.ICON,
-                        width: constants.ICON_SIZE.SETTING_BUTTON,
-                        height: constants.ICON_SIZE.SETTING_BUTTON,
-                        stroke: color ? color : theme.TEXT
-                    })}
-                <Text
-                    style={[
-                        {
-                            color: color ? color : theme.TEXT
-                        },
-                        styles.settingsButtonText
-                    ]}
-                >
-                    {text}
-                </Text>
-            </TouchableOpacity>
-        );
-
+    function getButtonById(buttonElements: ButtonElement[], type: buttonTypes.BUTTON_TYPES) {
+        return buttonElements.find(button => button.type === type);
     }
 
 
+
+    const button: ButtonElement = getButtonById(buttonElement, type) as ButtonElement;
+
+
+    return (
+        <>
+            {button && button.button}
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
