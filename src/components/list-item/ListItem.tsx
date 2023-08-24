@@ -82,8 +82,16 @@ export default function ListItem({
                     {cloneElement(listIconTheme[listIcon] as any, { fill: listColorTheme[colorVariant] })}
                 </View>
                 <View style={styles.favoriteAndSharedContainer}>
-                    {isShared && <SharedList />}
-                    {isFavorite && <FavoriteList />}
+                    {isShared &&
+                        <SharedList
+                            stroke={theme.YELLOW}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />}
+                    {isFavorite &&
+                        <FavoriteList
+                            stroke={theme.FIXED_PRIMARY_BLUE}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />}
                 </View>
             </View>
             <Text style={[{ color: theme.TEXT, fontSize }]}>
