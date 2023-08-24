@@ -3,7 +3,6 @@ import { createContext, useContext } from 'react';
 interface ThemeContextType {
   PRIMARY: string;
   SECONDARY: string;
-  TERTIARY: string;
   TEXT: string;
   BACKGROUND: string;
   HINT: string;
@@ -12,6 +11,13 @@ interface ThemeContextType {
   YELLOW: string;
   RED: string;
   ERROR: string;
+  FIXED_DARK_TEXT: string;
+  FIXED_PRIMARY_BLUE: string;
+  FIXED_COMPONENT_COLOR: string;
+  ADD_BUTTON_BACKGROUND: string;
+  ADD_BUTTON_TEXT: string;
+  WHITE: string;
+  BOTTOM_SHEET_BACKGROUND: string;
   DARK_RED: string;
 }
 

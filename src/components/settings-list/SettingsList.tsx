@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View, Linking, } from 'react-native'
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useUser } from 'context/UserProvider';
 import { settingsTranslations } from '.';
@@ -20,8 +20,12 @@ import AboutIcon from 'assets/button-icons/about.svg';
 import TagIcon from 'assets/button-icons/tag.svg';
 import CompletedTasksIcon from 'assets/button-icons/completed_tasks.svg';
 
+type SettingListProps = {
+    handleShowLangBottomSheet: Function;
+    handleShowThemeBottomSheet: Function;
+};
 
-export default function SettingsList() {
+export default function SettingsList({ handleShowLangBottomSheet, handleShowThemeBottomSheet }: SettingListProps) {
     const theme = useTheme();
     const { setUserDetails } = useUser();
     const intl = useIntl();
@@ -41,13 +45,13 @@ export default function SettingsList() {
                     text={settingsTranslations.languageTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<LanguageIcon />}
-                    onPress={() => console.log("Language button pressed")}
+                    onPress={() => handleShowLangBottomSheet()}
                 />
                 <Button
                     text={settingsTranslations.themeTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<ThemeIcon />}
-                    onPress={() => console.log("Theme button pressed")}
+                    onPress={() => handleShowThemeBottomSheet()}
                 />
                 <Button
                     text={settingsTranslations.favoriteListTranslation(intl)}
@@ -59,7 +63,9 @@ export default function SettingsList() {
                     text={settingsTranslations.notificationSoundTranslation(intl)}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<NotificationSoundIcon />}
-                    onPress={() => console.log("Notification button pressed")}
+                    onPress={() => {
+                        Linking.openSettings();
+                    }}
                 />
 
             </View>

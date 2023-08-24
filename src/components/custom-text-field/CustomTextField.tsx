@@ -64,7 +64,7 @@ export default function CustomTextField({
                     styles.textFieldContainer,
                     error && styles.textFieldWithError,
                     {
-                        backgroundColor: error ? theme.ERROR : theme.TERTIARY,
+                        backgroundColor: error ? theme.ERROR : theme.SECONDARY,
                     }
                 ]}
             >

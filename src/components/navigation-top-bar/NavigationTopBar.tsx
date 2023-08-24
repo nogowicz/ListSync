@@ -65,7 +65,7 @@ export default function NavigationTopBar({ name, icon, onTitlePress, color, type
                     style={{
                         padding: spacing.SCALE_12,
                     }}>
-                    <Details />
+                    <Details fill={theme.TEXT} />
                 </TouchableOpacity>
 
             </View>

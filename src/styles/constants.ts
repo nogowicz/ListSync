@@ -32,3 +32,8 @@ export const BORDER_WIDTH = {
 export const PHOTO_SIZE = {
   BIG: 80,
 };
+
+export const BOTTOM_SHEET_HEIGHT = {
+  LANGUAGES: 500,
+  THEMES: 500,
+};

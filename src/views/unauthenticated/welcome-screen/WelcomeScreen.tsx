@@ -81,7 +81,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
         >
           <Text
             style={
-              styles.signUpButtonText
+              [styles.signUpButtonText, { color: theme.TEXT }]
             }
           >
             <FormattedMessage
@@ -99,7 +99,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
               style={[
                 styles.signUpButtonText,
                 {
-                  color: theme.PRIMARY,
+                  color: theme.FIXED_PRIMARY_BLUE,
                   fontWeight: 'bold',
                 }]}
             >
@@ -110,7 +110,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
             </Text>
             <Text
               style={
-                styles.signUpButtonText
+                [styles.signUpButtonText, { color: theme.TEXT }]
               }
             >
               <FormattedMessage
@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
     gap: spacing.SCALE_20,
   },
   signUpButtonText: {
-    color: 'black',
     fontSize: typography.FONT_SIZE_16,
     textAlign: 'center',
   }
