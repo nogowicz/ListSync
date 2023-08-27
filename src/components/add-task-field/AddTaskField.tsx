@@ -132,6 +132,10 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
 
+    useEffect(() => {
+        const updatedLists = listData.filter((item: ListType) => item.isArchived === false);
+        setList(updatedLists);
+    }, [listData]);
 
     BackHandler.addEventListener('hardwareBackPress', () => {
         if (isInputVisible) {
