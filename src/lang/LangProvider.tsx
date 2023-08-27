@@ -12,7 +12,7 @@ import { getMessages } from './utils';
 import { LANGUAGES, LangContextName } from './constants';
 import { getItem, setItem } from '../utils/asyncStorage';
 
-type LangContextType = [string, (newLang: string) => void];
+export type LangContextType = [string, (newLang: string) => void];
 
 export const LangContext = createContext<LangContextType>([
   LANGUAGES.ENG,
