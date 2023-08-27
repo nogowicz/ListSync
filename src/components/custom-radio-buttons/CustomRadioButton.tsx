@@ -1,7 +1,7 @@
 import React from 'react'
 import { LANGUAGES_ENTRY, THEMES_ENTRY } from 'views/authenticated/profile/Profile';
 import { radioButtonsType } from '.';
-import { prepareRadioButtons } from 'components/navigation-top-bar/helpers';
+import { prepareRadioButtons } from 'components/custom-radio-buttons/helpers';
 
 type CustomRadioButtonsProps = {
     values: LANGUAGES_ENTRY[] | THEMES_ENTRY[];
