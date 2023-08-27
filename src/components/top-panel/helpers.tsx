@@ -46,6 +46,7 @@ export function prepareTopPanel() {
         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
             data: newList,
             isModalVisibleOnStart: true,
+            isNewList: true,
         });
 
 

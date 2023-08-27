@@ -25,7 +25,7 @@ export function useListContext() {
   return context;
 }
 
-export function DataProvider({ children }: DataProviderProps) { // Use DataProviderProps as the type for the function parameter
+export function DataProvider({ children }: DataProviderProps) {
   const [listData, setListData] = useState<ListType[]>(data);
 
   const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {

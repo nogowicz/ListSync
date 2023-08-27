@@ -34,7 +34,11 @@ export default function List({
     route,
 }: ListProps) {
     const theme = useTheme();
-    const { data, isModalVisibleOnStart = false }: any = route.params;
+    const {
+        data,
+        isModalVisibleOnStart = false,
+        isNewList = false,
+    }: any = route.params;
     const { listData } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
     const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
@@ -208,6 +212,7 @@ export default function List({
                 selectedIcon={selectedIcon}
                 setSelectedColor={setSelectedColor}
                 setSelectedIcon={setSelectedIcon}
+                isNewList={isNewList}
             />
             <BottomSheet ref={refDetails} height={constants.BOTTOM_SHEET_HEIGHT.THEMES}>
 
