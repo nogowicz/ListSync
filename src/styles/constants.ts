@@ -36,5 +36,5 @@ export const PHOTO_SIZE = {
 export const BOTTOM_SHEET_HEIGHT = {
   LANGUAGES: 500,
   THEMES: 500,
-  DETAILS: 1000,
+  DETAILS: 370,
 };
