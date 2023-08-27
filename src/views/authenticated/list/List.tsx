@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -11,6 +11,7 @@ import Arrow from 'assets/button-icons/Back.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 import { useListContext } from 'context/DataProvider';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
+import { BottomSheetRefProps } from 'components/bottom-sheet/BottomSheet';
 import { navigationTypes } from 'components/navigation-top-bar';
 
 //components:
@@ -18,6 +19,7 @@ import TaskList from 'components/task-list';
 import ChangeListModal from 'components/change-list-modal';
 import NavigationTopBar from 'components/navigation-top-bar';
 import AddTaskField from 'components/add-task-field';
+import BottomSheet from 'components/bottom-sheet';
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -44,6 +46,19 @@ export default function List({
     const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);
     const intl = useIntl();
+
+    const detailsSheetOpen = useRef(false);
+    const refDetails = useRef<BottomSheetRefProps>(null);
+
+
+    const handleShowDetailsBottomSheet = useCallback(() => {
+        detailsSheetOpen.current = !detailsSheetOpen.current;
+        if (!detailsSheetOpen.current) {
+            refDetails.current?.scrollTo(0);
+        } else {
+            refDetails.current?.scrollTo(-200);
+        }
+    }, []);
 
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
@@ -95,6 +110,7 @@ export default function List({
                     color={listColorTheme[currentList.colorVariant]}
                     onTitlePress={handleModal}
                     type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.LIST}
+                    handleShowDetailsBottomSheet={handleShowDetailsBottomSheet}
                 />
                 {unCompletedTasks.length > 0 &&
                     <Text style={[
@@ -193,6 +209,9 @@ export default function List({
                 setSelectedColor={setSelectedColor}
                 setSelectedIcon={setSelectedIcon}
             />
+            <BottomSheet ref={refDetails} height={constants.BOTTOM_SHEET_HEIGHT.THEMES}>
+
+            </BottomSheet>
         </View>
     );
 }

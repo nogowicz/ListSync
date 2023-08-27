@@ -31,6 +31,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',
+                            width: spacing.SCALE_60,
                         }}
                         onPress={() => {
                             setActiveList(item);
@@ -46,6 +47,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                         <Text style={{
                             color: theme.TEXT,
                             fontSize: typography.FONT_SIZE_12,
+                            textAlign: 'center',
                         }}>
                             {item.listName}
                         </Text>
