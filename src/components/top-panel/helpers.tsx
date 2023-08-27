@@ -2,20 +2,54 @@ import { useTheme } from "navigation/utils/ThemeProvider";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { typography, constants, spacing } from "styles";
 import { topPanelTypes } from ".";
-import Button, { buttonTypes } from "components/button";
 import { SCREENS } from "navigation/utils/screens";
 import { FormattedMessage, useIntl } from "react-intl";
 import { formatDateToLongDate } from "utils/dateFormat";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "context/UserProvider";
+import { useListContext } from "context/DataProvider";
+
+
+//components:
+import Button, { buttonTypes } from "components/button";
+import { ListType } from "data/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "navigation/navigation";
 
 export function prepareTopPanel() {
     const intl = useIntl();
     const date = formatDateToLongDate(new Date(), intl);
     const theme = useTheme();
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const { user } = useUser();
+    const { listData, updateListData } = useListContext();
 
+    const handleCreateNewList = () => {
+        const newIdList = Math.max(...listData.map(item => item.IdList)) + 1;
+
+        const newList: ListType = {
+            IdList: newIdList,
+            listName: 'Unnamed list',
+            iconId: 1,
+            canBeDeleted: true,
+            isShared: false,
+            createdAt: new Date().toISOString(),
+            isFavorite: false,
+            isArchived: false,
+            createdBy: 1,
+            colorVariant: 1,
+            tasks: [],
+        };
+
+        updateListData(prevListData => [...prevListData, newList]);
+
+        navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
+            data: newList,
+            isModalVisibleOnStart: true,
+        });
+
+
+    };
 
 
     return [
@@ -25,7 +59,7 @@ export function prepareTopPanel() {
                 <View style={styles.container}>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.PROFILE.ID as never)}
+                        onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.PROFILE.ID)}
                     >
                         <Text style={[styles.greetingText, { color: theme.TEXT }]}>
                             <FormattedMessage
@@ -37,7 +71,10 @@ export function prepareTopPanel() {
                         <Text style={[styles.dateText, { color: theme.HINT }]}>{date}</Text>
                     </TouchableOpacity>
                     <Button
-                        onPress={() => console.log("New list button")}
+                        onPress={() => {
+                            handleCreateNewList();
+                        }
+                        }
                         text={
                             <FormattedMessage
                                 id='views.authenticated.home.add-button-text'

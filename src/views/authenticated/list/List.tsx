@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { RouteProp } from '@react-navigation/native';
-import TaskList from 'components/task-list';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TaskType, ListType } from 'data/types';
 import Arrow from 'assets/button-icons/Back.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
-import AddTaskField from 'components/add-task-field';
-import ChangeListModal from 'components/change-list-modal';
 import { useListContext } from 'context/DataProvider';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
-import NavigationTopBar from 'components/navigation-top-bar';
 import { navigationTypes } from 'components/navigation-top-bar';
+
+//components:
+import TaskList from 'components/task-list';
+import ChangeListModal from 'components/change-list-modal';
+import NavigationTopBar from 'components/navigation-top-bar';
+import AddTaskField from 'components/add-task-field';
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -25,12 +27,15 @@ type ListProps = {
     route: ListScreenRouteProp;
 };
 
-export default function List({ navigation, route }: ListProps) {
+export default function List({
+    navigation,
+    route,
+}: ListProps) {
     const theme = useTheme();
-    const { data }: any = route.params;
+    const { data, isModalVisibleOnStart = false }: any = route.params;
     const { listData } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
     const [listName, setListName] = useState(currentList?.listName || '');

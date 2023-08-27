@@ -4,6 +4,7 @@ import {
     TouchableOpacity,
     View,
     BackHandler,
+    ScrollView
 } from 'react-native'
 import React, {
     useEffect,
@@ -11,17 +12,13 @@ import React, {
     useState,
 } from 'react'
 import { constants, spacing } from 'styles';
-
 import { useIntl } from 'react-intl';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useListContext } from 'context/DataProvider';
 import { ListType, TaskType } from 'data/types';
 import { deadlineNames } from './DeadlineSelector';
 import { getFormattedDate } from 'utils/dateFormat';
-import Button, { buttonTypes } from 'components/button';
 import { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
-import DateTimePickers from './DateTimePickers';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 
 //icons:
@@ -29,6 +26,9 @@ import AddTaskIcon from 'assets/button-icons/add-task.svg';
 import Selectors from './Selectors';
 import FunctionalPanel from './FunctionalPanel';
 
+//components:
+import DateTimePickers from './DateTimePickers';
+import Button, { buttonTypes } from 'components/button';
 
 type AddTaskFieldProps = {
     currentListId: number;
