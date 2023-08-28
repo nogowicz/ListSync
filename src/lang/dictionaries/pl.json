@@ -122,5 +122,11 @@
   "views.authenticated.profile.app-settings.language.eng": "Angielski",
   "views.authenticated.profile.app-settings.theme.light": "Jasny",
   "views.authenticated.profile.app-settings.theme.dark": "Ciemny",
-  "views.authenticated.profile.app-settings.theme.choose-theme": "Wybierz Motyw"
+  "views.authenticated.profile.app-settings.theme.choose-theme": "Wybierz Motyw",
+  "views.authenticated.list.details.remove-completed-tasks": "Usuń ukończone zadania",
+  "views.authenticated.list.details.sort-by": "Sortuj",
+  "views.authenticated.list.details.edit-list": "Edytuj listę",
+  "views.authenticated.list.details.share": "Udostępnij",
+  "views.authenticated.list.details.invite-friends": "Zaproś znajomych",
+  "views.authenticated.list.details.delete-list": "Usuń listę"
 }

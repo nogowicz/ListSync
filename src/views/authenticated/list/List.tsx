@@ -19,16 +19,8 @@ import TaskList from 'components/task-list';
 import ChangeListModal from 'components/change-list-modal';
 import NavigationTopBar from 'components/navigation-top-bar';
 import AddTaskField from 'components/add-task-field';
-import BottomSheet from 'components/bottom-sheet';
-import Button, { buttonTypes } from 'components/button';
+import BottomSheetWithSettings from './BottomSheetWithSettings';
 
-//icons:
-import RemoveCompletedTasksIcon from 'assets/button-icons/remove-completed-tasks.svg';
-import SortByIcon from 'assets/button-icons/sort-by.svg';
-import ChangeThemeIcon from 'assets/button-icons/theme.svg';
-import ShareIcon from 'assets/button-icons/share.svg';
-import PeopleIcon from 'assets/button-icons/people.svg';
-import DeleteIcon from 'assets/button-icons/trash.svg';
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -223,88 +215,14 @@ export default function List({
                 setSelectedIcon={setSelectedIcon}
                 isNewList={isNewList}
             />
-            <BottomSheet
-                ref={refDetails}
-                height={constants.BOTTOM_SHEET_HEIGHT.DETAILS}
-            >
-                <View style={{
-                    marginHorizontal: spacing.SCALE_20,
-                    gap: spacing.SCALE_30,
-                }}>
-                    <Button
-                        text='Remove completed tasks'
-                        icon={<RemoveCompletedTasksIcon
-                            stroke={theme.FIXED_DARK_TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                            height={constants.ICON_SIZE.SETTING_BUTTON}
-                            width={constants.ICON_SIZE.SETTING_BUTTON}
-                        />}
-                        type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
-                        color={theme.FIXED_DARK_TEXT}
-                        onPress={() => console.log("remove completed tasks")}
-                    />
-                    <Button
-                        text='Sort by'
-                        icon={<SortByIcon
-                            stroke={theme.FIXED_DARK_TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                            height={constants.ICON_SIZE.SETTING_BUTTON}
-                            width={constants.ICON_SIZE.SETTING_BUTTON}
-                        />}
-                        type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
-                        color={theme.FIXED_DARK_TEXT}
-                        onPress={() => console.log("sort by tasks")}
-                    />
-                    <Button
-                        text='Change theme'
-                        icon={<ChangeThemeIcon
-                            stroke={theme.FIXED_DARK_TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                            height={constants.ICON_SIZE.SETTING_BUTTON}
-                            width={constants.ICON_SIZE.SETTING_BUTTON}
-                        />}
-                        type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
-                        color={theme.FIXED_DARK_TEXT}
-                        onPress={() => console.log("Change theme")}
-                    />
-                    <Button
-                        text='Share'
-                        icon={<ShareIcon
-                            stroke={theme.FIXED_DARK_TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                            height={constants.ICON_SIZE.SETTING_BUTTON}
-                            width={constants.ICON_SIZE.SETTING_BUTTON}
-                        />}
-                        type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
-                        color={theme.FIXED_DARK_TEXT}
-                        onPress={() => console.log("share list")}
-                    />
-                    <Button
-                        text='Invite friends'
-                        icon={<PeopleIcon
-                            stroke={theme.FIXED_DARK_TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                            height={constants.ICON_SIZE.SETTING_BUTTON}
-                            width={constants.ICON_SIZE.SETTING_BUTTON}
-                        />}
-                        type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
-                        color={theme.FIXED_DARK_TEXT}
-                        onPress={() => console.log("Invite friends")}
-                    />
-                    <Button
-                        text='Delete list'
-                        icon={<DeleteIcon
-                            stroke={theme.DARK_RED}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                            height={constants.ICON_SIZE.SETTING_BUTTON}
-                            width={constants.ICON_SIZE.SETTING_BUTTON}
-                        />}
-                        type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
-                        color={theme.DARK_RED}
-                        onPress={() => console.log("Delete list")}
-                    />
-                </View>
-            </BottomSheet>
+
+            <BottomSheetWithSettings
+                refDetails={refDetails}
+                IdList={IdList}
+                handleModal={handleModal}
+                handleShowDetailsBottomSheet={handleShowDetailsBottomSheet}
+            />
+
         </View>
     );
 }

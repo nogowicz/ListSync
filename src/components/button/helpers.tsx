@@ -25,6 +25,7 @@ type PrepareButtonsProps = {
     secureTextEntry?: boolean;
     icon?: ReactNode;
     color?: string;
+    isAvailable?: boolean;
 };
 
 export function prepareButtons({
@@ -36,7 +37,8 @@ export function prepareButtons({
     isChecked,
     secureTextEntry,
     icon,
-    color
+    color,
+    isAvailable
 }: PrepareButtonsProps) {
     const theme = useTheme();
 
@@ -303,7 +305,7 @@ export function prepareButtons({
             button: (
                 <TouchableOpacity
                     activeOpacity={activeOpacity}
-                    onPress={onPress}
+                    onPress={() => isAvailable && onPress()}
                     style={styles.bottomSheetButton}
                 >
                     {icon && cloneElement(icon as JSX.Element,
@@ -311,12 +313,14 @@ export function prepareButtons({
                             strokeWidth: constants.STROKE_WIDTH.ICON,
                             width: constants.ICON_SIZE.SETTING_BUTTON,
                             height: constants.ICON_SIZE.SETTING_BUTTON,
-                            stroke: color ? color : theme.TEXT
+                            stroke: color ? color : theme.TEXT,
+                            opacity: isAvailable ? 1 : constants.ACTIVE_OPACITY.LOW
                         })}
                     <Text
                         style={[
                             {
-                                color: color ? color : theme.TEXT
+                                color: color ? color : theme.TEXT,
+                                opacity: isAvailable ? 1 : constants.ACTIVE_OPACITY.LOW
                             },
                             styles.settingsButtonText
                         ]}

@@ -23,6 +23,7 @@ type ButtonProps = {
     activeOpacity?: number;
     secureTextEntry?: boolean;
     icon?: JSX.Element;
+    isAvailable?: boolean;
 };
 
 export default function Button({
@@ -36,6 +37,7 @@ export default function Button({
     activeOpacity = constants.ACTIVE_OPACITY.HIGH,
     secureTextEntry = false,
     icon,
+    isAvailable = true
 }: ButtonProps) {
     const buttonElement = prepareButtons({
         onPress: onPress,
@@ -47,6 +49,7 @@ export default function Button({
         isChecked: isChecked,
         secureTextEntry: secureTextEntry,
         icon: icon,
+        isAvailable: isAvailable
     });
 
     function getButtonById(buttonElements: ButtonElement[], type: buttonTypes.BUTTON_TYPES) {

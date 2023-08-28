@@ -122,5 +122,11 @@
   "views.authenticated.profile.app-settings.language.eng": "English",
   "views.authenticated.profile.app-settings.theme.light": "Light",
   "views.authenticated.profile.app-settings.theme.dark": "Dark",
-  "views.authenticated.profile.app-settings.theme.choose-theme": "Choose Theme"
+  "views.authenticated.profile.app-settings.theme.choose-theme": "Choose Theme",
+  "views.authenticated.list.details.remove-completed-tasks": "Remove completed tasks",
+  "views.authenticated.list.details.sort-by": "Sort by",
+  "views.authenticated.list.details.edit-list": "Edit list",
+  "views.authenticated.list.details.share": "Share",
+  "views.authenticated.list.details.invite-friends": "Invite friends",
+  "views.authenticated.list.details.delete-list": "Delete list"
 }
