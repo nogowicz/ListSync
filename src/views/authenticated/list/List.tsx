@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { RouteProp } from '@react-navigation/native';
-import TaskList from 'components/task-list';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TaskType, ListType } from 'data/types';
 import Arrow from 'assets/button-icons/Back.svg';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
-import AddTaskField from 'components/add-task-field';
-import ChangeListModal from 'components/change-list-modal';
 import { useListContext } from 'context/DataProvider';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
-import NavigationTopBar from 'components/navigation-top-bar';
+import { BottomSheetRefProps } from 'components/bottom-sheet/BottomSheet';
 import { navigationTypes } from 'components/navigation-top-bar';
+
+//components:
+import TaskList from 'components/task-list';
+import ChangeListModal from 'components/change-list-modal';
+import NavigationTopBar from 'components/navigation-top-bar';
+import AddTaskField from 'components/add-task-field';
+import BottomSheetWithSettings from './BottomSheetWithSettings';
+
 
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
@@ -25,12 +30,19 @@ type ListProps = {
     route: ListScreenRouteProp;
 };
 
-export default function List({ navigation, route }: ListProps) {
+export default function List({
+    navigation,
+    route,
+}: ListProps) {
     const theme = useTheme();
-    const { data }: any = route.params;
+    const {
+        data,
+        isModalVisibleOnStart = false,
+        isNewList = false,
+    }: any = route.params;
     const { listData } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
     const [listName, setListName] = useState(currentList?.listName || '');
@@ -39,6 +51,19 @@ export default function List({ navigation, route }: ListProps) {
     const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);
     const intl = useIntl();
+
+    const detailsSheetOpen = useRef(false);
+    const refDetails = useRef<BottomSheetRefProps>(null);
+
+
+    const handleShowDetailsBottomSheet = useCallback(() => {
+        detailsSheetOpen.current = !detailsSheetOpen.current;
+        if (!detailsSheetOpen.current) {
+            refDetails.current?.scrollTo(0);
+        } else {
+            refDetails.current?.scrollTo(-400);
+        }
+    }, []);
 
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
@@ -90,6 +115,7 @@ export default function List({ navigation, route }: ListProps) {
                     color={listColorTheme[currentList.colorVariant]}
                     onTitlePress={handleModal}
                     type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.LIST}
+                    handleShowDetailsBottomSheet={handleShowDetailsBottomSheet}
                 />
                 {unCompletedTasks.length > 0 &&
                     <Text style={[
@@ -187,7 +213,16 @@ export default function List({ navigation, route }: ListProps) {
                 selectedIcon={selectedIcon}
                 setSelectedColor={setSelectedColor}
                 setSelectedIcon={setSelectedIcon}
+                isNewList={isNewList}
             />
+
+            <BottomSheetWithSettings
+                refDetails={refDetails}
+                IdList={IdList}
+                handleModal={handleModal}
+                handleShowDetailsBottomSheet={handleShowDetailsBottomSheet}
+            />
+
         </View>
     );
 }

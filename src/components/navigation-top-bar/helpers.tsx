@@ -20,6 +20,7 @@ type PrepareNavigationTopBarProps = {
     icon?: ReactNode;
     color?: string;
     onTitlePress?: () => void;
+    handleShowDetailsBottomSheet?: () => void;
 };
 
 export function prepareNavigationTopBar({
@@ -27,6 +28,7 @@ export function prepareNavigationTopBar({
     onTitlePress,
     icon,
     color,
+    handleShowDetailsBottomSheet
 }: PrepareNavigationTopBarProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const theme = useTheme();
@@ -105,7 +107,9 @@ export function prepareNavigationTopBar({
                         activeOpacity={constants.ACTIVE_OPACITY.MEDIUM}
                         style={{
                             padding: spacing.SCALE_12,
-                        }}>
+                        }}
+                        onPress={handleShowDetailsBottomSheet}
+                    >
                         <Details fill={theme.TEXT} />
                     </TouchableOpacity>
 

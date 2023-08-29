@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { data } from 'data/data.json';
-import { List } from 'data/types';
+import { ListType } from 'data/types';
 
 type DataContextType = {
-  listData: List[];
-  updateListData: (callback: (prevListData: List[]) => List[]) => void;
+  listData: ListType[];
+  updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
 };
 
 const DataContext = createContext<DataContextType>({
@@ -25,10 +25,10 @@ export function useListContext() {
   return context;
 }
 
-export function DataProvider({ children }: DataProviderProps) { // Use DataProviderProps as the type for the function parameter
-  const [listData, setListData] = useState<List[]>(data);
+export function DataProvider({ children }: DataProviderProps) {
+  const [listData, setListData] = useState<ListType[]>(data);
 
-  const updateListData = (callback: (prevListData: List[]) => List[]) => {
+  const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {
     setListData(callback);
   };
 

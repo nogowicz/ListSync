@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '../../views/authenticated/home';
+import Home from 'views/authenticated/home';
 import { SCREENS } from '../utils/screens';
 import List from 'views/authenticated/list';
 import Profile from 'views/authenticated/profile';

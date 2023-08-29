@@ -11,4 +11,5 @@ export enum BUTTON_TYPES {
   SUBMIT = 'submit',
   BACK = 'back',
   SETTING = 'setting',
+  BOTTOM_SHEET_BUTTON = 'buttonSheetButton',
 }

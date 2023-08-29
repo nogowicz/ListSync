@@ -8,6 +8,7 @@ import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useListContext } from 'context/DataProvider';
 import { ListType } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
+import { useNavigation } from '@react-navigation/native';
 
 type ChangeListModalProps = {
     isModalVisible: boolean;
@@ -19,6 +20,7 @@ type ChangeListModalProps = {
     selectedIcon: number;
     setSelectedColor: Dispatch<SetStateAction<number>>;
     handleModal: () => void;
+    isNewList: boolean;
 };
 
 export default function ChangeListModal({
@@ -31,13 +33,22 @@ export default function ChangeListModal({
     selectedIcon,
     setSelectedColor,
     handleModal,
+    isNewList,
 }: ChangeListModalProps) {
     const theme = useTheme();
-    const { updateListData } = useListContext();
     const [newListName, setNewListName] = useState<string>(listName);
+    const navigation = useNavigation();
+    const { listData, updateListData } = useListContext();
+    const [isNewListState, setIsNewListState] = useState(isNewList);
 
+    const handleDeleteList = () => {
+        const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList);
+        updateListData(() => updatedNewListData);
+        navigation.goBack();
+    };
 
     const handleUpdateList = (listId: number, listName: string, selectedIcon: number, selectedColor: number) => {
+        setIsNewListState(false);
         updateListData((prevListData: ListType[]) => {
             const updatedLists = prevListData.map((list: ListType) => {
                 if (list.IdList === listId) {
@@ -55,6 +66,13 @@ export default function ChangeListModal({
 
             return updatedLists;
         });
+    };
+
+    const handleCancelPress = () => {
+        if (isNewListState) {
+            handleDeleteList();
+        }
+        handleModal();
     };
 
 
@@ -146,7 +164,7 @@ export default function ChangeListModal({
                             id='views.authenticated.home.list.modal.cancel'
                         />
                     }
-                        onPress={handleModal}
+                        onPress={handleCancelPress}
                         type={buttonTypes.BUTTON_TYPES.FUNCTIONAL}
                     />
 
