@@ -6,7 +6,6 @@ import { SCREENS } from "navigation/utils/screens";
 import { FormattedMessage, useIntl } from "react-intl";
 import { formatDateToLongDate } from "utils/dateFormat";
 import { useNavigation } from "@react-navigation/native";
-import { useUser } from "context/UserProvider";
 import { useListContext } from "context/DataProvider";
 
 
@@ -15,13 +14,14 @@ import Button, { buttonTypes } from "components/button";
 import { ListType } from "data/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "navigation/navigation";
+import { useAuth } from "context/AuthContext";
 
 export function prepareTopPanel() {
     const intl = useIntl();
     const date = formatDateToLongDate(new Date(), intl);
     const theme = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const { user } = useUser();
+    const { user } = useAuth();
     const { listData, updateListData } = useListContext();
 
     const handleCreateNewList = () => {
