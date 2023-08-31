@@ -15,6 +15,7 @@ import { ListType } from "data/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "navigation/navigation";
 import { useAuth } from "context/AuthContext";
+import { addListToDatabase } from "utils/database";
 
 export function prepareTopPanel() {
     const intl = useIntl();
@@ -25,10 +26,8 @@ export function prepareTopPanel() {
     const { listData, updateListData } = useListContext();
 
     const handleCreateNewList = () => {
-        const newIdList = Math.max(...listData.map(item => item.IdList)) + 1;
-
         const newList: ListType = {
-            IdList: newIdList,
+            IdList: -1,
             listName: 'Unnamed list',
             iconId: 1,
             canBeDeleted: true,
@@ -36,21 +35,23 @@ export function prepareTopPanel() {
             createdAt: new Date().toISOString(),
             isFavorite: false,
             isArchived: false,
-            createdBy: 1,
+            createdBy: user?.ID || -1,
             colorVariant: 1,
-            tasks: [],
+            tasks: []
         };
 
         updateListData(prevListData => [...prevListData, newList]);
+
+
+        addListToDatabase(newList);
 
         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
             data: newList,
             isModalVisibleOnStart: true,
             isNewList: true,
         });
-
-
     };
+
 
 
     return [
@@ -89,17 +90,17 @@ export function prepareTopPanel() {
             type: topPanelTypes.TOP_PANEL_TYPES.PROFILE_SCREEN,
             topPanel: (
                 <View style={styles.userDataContainer}>
-                    {user?.photoURL ?
+                    {/* {user?.photoURL ?
                         <Image
                             source={{ uri: user?.photoURL }}
                             style={styles.profileImage}
                         />
-                        :
-                        <Image
-                            source={require('assets/images/profile_base_image.png')}
-                            style={styles.profileImage}
-                        />
-                    }
+                        : */}
+                    <Image
+                        source={require('assets/images/profile_base_image.png')}
+                        style={styles.profileImage}
+                    />
+                    {/* } */}
 
                     <View style={styles.profileDataTextContainer}>
                         <Text style={[styles.namesText, { color: theme.TEXT, }]}>

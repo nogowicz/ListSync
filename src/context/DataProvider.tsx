@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { data } from 'data/data.json';
+// import { data } from 'data/data.json';
 import { ListType } from 'data/types';
+import { getUserLists } from 'utils/database';
+import { useAuth } from './AuthContext';
 
 type DataContextType = {
   listData: ListType[];
@@ -19,6 +21,7 @@ type DataProviderProps = {
 
 export function useListContext() {
   const context = useContext(DataContext);
+
   if (!context) {
     throw new Error('useListContext must be used within a ListProvider');
   }
@@ -26,10 +29,23 @@ export function useListContext() {
 }
 
 export function DataProvider({ children }: DataProviderProps) {
-  const [listData, setListData] = useState<ListType[]>(data);
+  const [listData, setListData] = useState<ListType[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.ID) {
+      getUserLists(user.ID)
+        .then(lists => {
+          setListData(lists);
+        })
+        .catch(error => {
+          console.error('Error fetching user lists:', error);
+        });
+    }
+  }, [user?.ID]);
 
   const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {
-    setListData(callback);
+    setListData(prevListData => callback(prevListData));
   };
 
   const value: DataContextType = {

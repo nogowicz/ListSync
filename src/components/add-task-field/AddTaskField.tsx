@@ -29,6 +29,8 @@ import FunctionalPanel from './FunctionalPanel';
 //components:
 import DateTimePickers from './DateTimePickers';
 import Button, { buttonTypes } from 'components/button';
+import { useAuth } from 'context/AuthContext';
+import { addTaskToDatabase } from 'utils/database';
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -38,6 +40,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const navigation = useNavigation();
     const theme = useTheme();
     const intl = useIntl();
+    const { user } = useAuth();
     const { listData, updateListData } = useListContext();
     const [isInputVisible, setIsInputVisible] = useState(false);
     const lists = listData.filter((item: ListType) => item.isArchived === false);
@@ -89,43 +92,51 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     }, []);
 
     // TODO: Temporary code
-    const handleAddTask = () => {
+    const handleAddTask = async () => {
         if (textValue.trim() === '') {
             return;
         }
+        if (user) {
 
-        const newListData = listData.map((list) => {
-            if (list.IdList === activeList?.IdList && activeList) {
-                const newTask: TaskType = {
-                    IdTask: activeList.tasks.length + 10,
-                    title: textValue,
-                    isCompleted: false,
-                    addedBy: 'john',
-                    assignedTo: null,
-                    deadline: deadlineDate,
-                    effort: '',
-                    importance: importance,
-                    note: '',
-                    createdAt: new Date().toISOString(),
-                    List_idList: activeList?.IdList,
-                    subtasks: [],
-                };
-                return {
-                    ...list,
-                    tasks: [...list.tasks, newTask],
-                };
-            } else {
-                return list;
+            const newTask: TaskType = {
+                IdTask: -1,
+                title: textValue,
+                isCompleted: false,
+                addedBy: user.ID,
+                assignedTo: null,
+                deadline: deadlineDate,
+                effort: '',
+                importance: importance,
+                note: '',
+                createdAt: new Date().toISOString(),
+                List_idList: activeList?.IdList || -1,
+                subtasks: [],
+            };
+
+            try {
+                const taskId = await addTaskToDatabase(newTask);
+                if (taskId !== null) {
+                    const newListData = listData.map((list) => {
+                        if (list.IdList === activeList?.IdList && activeList) {
+                            return {
+                                ...list,
+                                tasks: [...list.tasks, newTask],
+                            };
+                        } else {
+                            return list;
+                        }
+                    });
+
+                    updateListData(() => newListData);
+                    setTextValue('');
+                } else {
+                    console.error('Error adding task to database');
+                }
+            } catch (error) {
+                console.error('Error adding task:', error);
             }
-        });
-
-
-        updateListData(() => newListData);
-
-
-        setTextValue('');
+        }
     };
-
 
 
     useEffect(() => {
@@ -291,3 +302,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 })
+

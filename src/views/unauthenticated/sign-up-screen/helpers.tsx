@@ -47,17 +47,26 @@ export function prepareSignUpPages({
     const onSubmit: SubmitHandler<FieldValues> = async ({ firstName, lastName, email, photoURL = null, password, confirmPassword }) => {
         setLoading(true);
         try {
-            await register(
-                email,
-                password,
-                firstName,
-                lastName
-            ).then(() => {
-                login(email, password);
-            }
-            )
+            await register(email, password, firstName, lastName, {
+                onRegistrationSuccess: async () => {
+                    await login(email, password);
+                },
+                onEmailTaken: () => {
+                    setError('email', {
+                        type: 'manual',
+                        message: 'This email is already taken',
+                    });
+                },
+                onOtherError: error => {
+                    setError('email', {
+                        type: 'manual',
+                        message: 'An error occurred',
+                    });
+                },
+            });
+
         } catch (error) {
-            console.log("Registration error:", error);
+            setError('email', { message: error as string || 'An error occurred' });
         } finally {
             setLoading(false);
         }
