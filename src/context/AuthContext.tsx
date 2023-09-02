@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { removeItem, setItem } from "utils/asyncStorage";
 import { createListTable, createSubtaskTable, createTaskTable, createUserTable, loginUser, registerUser } from "utils/database";
 
 
@@ -72,6 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                         password,
                         (userData: UserType) => {
                             console.log(userData);
+                            setItem('user', JSON.stringify(userData));
                             setUser(userData);
                         },
                         error => {
@@ -121,6 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             logout: async () => {
                 try {
                     setUser(null);
+                    removeItem('user');
                 } catch (error) {
                     console.log(error);
                 }
