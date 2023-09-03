@@ -1,4 +1,4 @@
-import React, { cloneElement } from 'react';
+import React, { cloneElement, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
@@ -37,8 +37,12 @@ export default function ListItem({
     onPress,
 }: ListItemProps) {
     const theme = useTheme();
-    const tasks = taskAmount !== 1 ?
-        (taskAmount > 4 || taskAmount === 0 ?
+    const [taskAmountState, setTaskAmountState] = useState(taskAmount);
+    useEffect(() => {
+        setTaskAmountState(taskAmount);
+    }, [taskAmount]);
+    const tasks = taskAmountState !== 1 ?
+        (taskAmountState > 4 || taskAmountState === 0 ?
             (<FormattedMessage
                 defaultMessage="tasks"
                 id='views.authenticated.home.list-item.tasks'
@@ -103,7 +107,7 @@ export default function ListItem({
                     listName
                 }
             </Text>
-            <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmount} {tasks}</Text>
+            <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmountState} {tasks}</Text>
         </TouchableOpacity>
     )
 }

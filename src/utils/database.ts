@@ -137,8 +137,8 @@ export function createListTable() {
   });
 }
 
-export function addListToDatabase(list: ListType): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export function addListToDatabase(list: ListType): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
         'INSERT INTO lists (listName, iconId, canBeDeleted, isShared, createdAt, isFavorite, isArchived, createdBy, colorVariant) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -154,8 +154,7 @@ export function addListToDatabase(list: ListType): Promise<void> {
           list.colorVariant,
         ],
         (_, result) => {
-          console.log('List added to db successfully');
-          resolve();
+          resolve(result.insertId);
         },
         (_, error) => {
           reject(error);
@@ -182,15 +181,15 @@ export function deleteList(listId: number): Promise<void> {
   });
 }
 
-export function updateList(
+export function updateListInDatabase(
   listId: number,
   listName: string,
   iconId: number,
-  canBeDeleted: boolean,
-  isShared: boolean,
-  isFavorite: boolean,
-  isArchived: boolean,
   colorVariant: number,
+  canBeDeleted?: boolean,
+  isShared?: boolean,
+  isFavorite?: boolean,
+  isArchived?: boolean,
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     database.transaction(tx => {
@@ -385,10 +384,11 @@ export function getUserLists(userId: number): Promise<ListType[]> {
             tx.executeSql(
               'SELECT * FROM tasks WHERE List_idList = ?',
               [list.IdList],
-              (_, tasksResultSet) => {
+              async (_, tasksResultSet) => {
                 const tasks: TaskType[] = [];
                 for (let j = 0; j < tasksResultSet.rows.length; j++) {
                   const taskRowData = tasksResultSet.rows.item(j);
+                  console.log('TASKS: ', taskRowData);
                   const task: TaskType = {
                     IdTask: taskRowData.IdTask,
                     title: taskRowData.title,
@@ -403,29 +403,8 @@ export function getUserLists(userId: number): Promise<ListType[]> {
                     List_idList: taskRowData.List_idList,
                     subtasks: [],
                   };
-                  tx.executeSql(
-                    'SELECT * FROM subtasks WHERE Task_idTask = ?',
-                    [task.IdTask],
-                    (_, subtasksResultSet) => {
-                      const subtasks: SubtaskType[] = [];
-                      for (let k = 0; k < subtasksResultSet.rows.length; k++) {
-                        const subtaskRowData = subtasksResultSet.rows.item(k);
-                        const subtask: SubtaskType = {
-                          idSubtask: subtaskRowData.idSubtask,
-                          title: subtaskRowData.title,
-                          isCompleted: subtaskRowData.isCompleted === 1,
-                          addedBy: subtaskRowData.addedBy,
-                          createdAt: subtaskRowData.createdAt,
-                          Task_idTask: subtaskRowData.Task_idTask,
-                        };
-                        subtasks.push(subtask);
-                      }
-                      task.subtasks = subtasks;
-                    },
-                    (_, error) => {
-                      console.error('Subtask error:', error);
-                    },
-                  );
+                  const subtasks = await fetchSubtasksForTask(task.IdTask);
+                  task.subtasks = subtasks;
 
                   tasks.push(task);
                 }
@@ -439,6 +418,36 @@ export function getUserLists(userId: number): Promise<ListType[]> {
             lists.push(list);
           }
           resolve(lists);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}
+
+export function fetchSubtasksForTask(taskID: number): Promise<SubtaskType[]> {
+  return new Promise<SubtaskType[]>((resolve, reject) => {
+    database.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM subtasks WHERE Task_idTask = ?',
+        [taskID],
+        (_, result) => {
+          const subtasks: SubtaskType[] = [];
+          for (let i = 0; i < result.rows.length; i++) {
+            const row = result.rows.item(i);
+            const subtask: SubtaskType = {
+              idSubtask: row.idSubtask,
+              title: row.title,
+              isCompleted: row.isCompleted === 1,
+              addedBy: row.addedBy,
+              createdAt: row.createdAt,
+              Task_idTask: row.Task_idTask,
+            };
+            subtasks.push(subtask);
+          }
+          resolve(subtasks);
         },
         (_, error) => {
           reject(error);

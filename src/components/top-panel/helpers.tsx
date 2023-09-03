@@ -7,15 +7,15 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { formatDateToLongDate } from "utils/dateFormat";
 import { useNavigation } from "@react-navigation/native";
 import { useListContext } from "context/DataProvider";
-
-
-//components:
-import Button, { buttonTypes } from "components/button";
 import { ListType } from "data/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "navigation/navigation";
 import { useAuth } from "context/AuthContext";
 import { addListToDatabase } from "utils/database";
+
+
+//components:
+import Button, { buttonTypes } from "components/button";
 
 export function prepareTopPanel() {
     const intl = useIntl();
@@ -25,31 +25,38 @@ export function prepareTopPanel() {
     const { user } = useAuth();
     const { listData, updateListData } = useListContext();
 
-    const handleCreateNewList = () => {
-        const newList: ListType = {
-            IdList: -1,
-            listName: 'Unnamed list',
-            iconId: 1,
-            canBeDeleted: true,
-            isShared: false,
-            createdAt: new Date().toISOString(),
-            isFavorite: false,
-            isArchived: false,
-            createdBy: user?.ID || -1,
-            colorVariant: 1,
-            tasks: []
-        };
-
-        updateListData(prevListData => [...prevListData, newList]);
+    const handleCreateNewList = async () => {
 
 
-        addListToDatabase(newList);
+        try {
+            const newList: ListType = {
+                IdList: -1,
+                listName: 'Unnamed list',
+                iconId: 1,
+                canBeDeleted: true,
+                isShared: false,
+                createdAt: new Date().toISOString(),
+                isFavorite: false,
+                isArchived: false,
+                createdBy: user?.ID || -1,
+                colorVariant: 1,
+                tasks: []
+            };
 
-        navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-            data: newList,
-            isModalVisibleOnStart: true,
-            isNewList: true,
-        });
+            const newListId = await addListToDatabase(newList);
+            newList.IdList = newListId;
+            updateListData(prevListData => [...prevListData, newList]);
+            navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
+                data: newList,
+                isModalVisibleOnStart: true,
+                isNewList: true,
+            });
+        } catch (error) {
+
+            console.error("Error occurred while adding list to db:", error);
+        }
+
+
     };
 
 

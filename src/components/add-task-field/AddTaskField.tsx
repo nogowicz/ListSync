@@ -113,6 +113,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                 subtasks: [],
             };
 
+
+
+
             try {
                 const taskId = await addTaskToDatabase(newTask);
                 if (taskId !== null) {
@@ -127,10 +130,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                         }
                     });
 
+
                     updateListData(() => newListData);
                     setTextValue('');
-                } else {
-                    console.error('Error adding task to database');
                 }
             } catch (error) {
                 console.error('Error adding task:', error);

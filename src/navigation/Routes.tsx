@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import AuthenticatedStack from './authenticated-stack/AuthenticatedStack';
 import { NavigationContainer } from '@react-navigation/native';
 import UnauthenticatedStack from './unauthenticated-stack';
@@ -14,7 +14,6 @@ export default function Routes() {
             const userFromAsyncStorage = await getItem('user');
 
             if (userFromAsyncStorage) {
-                console.log(JSON.parse(userFromAsyncStorage))
                 setUser(JSON.parse(userFromAsyncStorage));
             }
 
