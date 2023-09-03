@@ -37,12 +37,8 @@ export default function ListItem({
     onPress,
 }: ListItemProps) {
     const theme = useTheme();
-    const [taskAmountState, setTaskAmountState] = useState(taskAmount);
-    useEffect(() => {
-        setTaskAmountState(taskAmount);
-    }, [taskAmount]);
-    const tasks = taskAmountState !== 1 ?
-        (taskAmountState > 4 || taskAmountState === 0 ?
+    const tasks = taskAmount !== 1 ?
+        (taskAmount > 4 || taskAmount === 0 ?
             (<FormattedMessage
                 defaultMessage="tasks"
                 id='views.authenticated.home.list-item.tasks'
@@ -107,7 +103,7 @@ export default function ListItem({
                     listName
                 }
             </Text>
-            <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmountState} {tasks}</Text>
+            <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmount} {tasks}</Text>
         </TouchableOpacity>
     )
 }
