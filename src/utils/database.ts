@@ -569,3 +569,29 @@ export function fetchSubtasksForTask(taskID: number): Promise<SubtaskType[]> {
     });
   });
 }
+
+export function deleteCompletedTasksInDatabase(listId?: number): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    database.transaction(tx => {
+      let deleteQuery = 'DELETE FROM tasks WHERE isCompleted = 1';
+      const queryParams: any[] = [];
+
+      if (listId) {
+        deleteQuery +=
+          ' AND IdTask IN (SELECT taskId FROM task_lists WHERE listId = ?)';
+        queryParams.push(listId);
+      }
+
+      tx.executeSql(
+        deleteQuery,
+        queryParams,
+        () => {
+          resolve();
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}
