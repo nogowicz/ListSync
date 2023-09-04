@@ -39,7 +39,7 @@ export function DataProvider({ children }: DataProviderProps) {
           setListData(lists);
         })
         .catch(error => {
-          console.error('Error fetching user lists:', error);
+          console.error('Error provider fetching user lists:', error);
         });
     }
   }, [user?.ID]);
@@ -47,6 +47,7 @@ export function DataProvider({ children }: DataProviderProps) {
   const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {
     setListData(prevListData => callback(prevListData));
   };
+
 
   const value: DataContextType = {
     listData,

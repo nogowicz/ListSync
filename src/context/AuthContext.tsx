@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { removeItem, setItem } from "utils/asyncStorage";
-import { createListTable, createSubtaskTable, createTaskTable, createUserTable, loginUser, registerUser } from "utils/database";
+import { createListTable, createSubtaskTable, createTaskListTable, createTaskTable, createUserTable, loginUser, registerUser } from "utils/database";
 
 
 type AuthContextType = {
@@ -59,6 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         createSubtaskTable();
         createTaskTable();
         createListTable();
+        createTaskListTable();
     }, []);
 
 

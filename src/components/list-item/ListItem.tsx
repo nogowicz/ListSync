@@ -1,10 +1,11 @@
-import React, { cloneElement, useEffect, useState } from 'react';
+import React, { cloneElement } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
 import { FormattedMessage } from 'react-intl';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 
+//icons:
 import SharedList from 'assets/button-icons/shared-list.svg';
 import FavoriteList from 'assets/button-icons/favorite.svg';
 

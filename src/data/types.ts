@@ -18,7 +18,6 @@ export interface TaskType {
   addedBy: number;
   assignedTo: number | null;
   createdAt: string;
-  List_idList: number;
   subtasks: SubtaskType[];
 }
 

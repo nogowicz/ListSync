@@ -97,7 +97,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             return;
         }
         if (user) {
-
             const newTask: TaskType = {
                 IdTask: -1,
                 title: textValue,
@@ -109,18 +108,19 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                 importance: importance,
                 note: '',
                 createdAt: new Date().toISOString(),
-                List_idList: activeList?.IdList || -1,
                 subtasks: [],
             };
 
-
-
-
             try {
-                const taskId = await addTaskToDatabase(newTask);
+                const taskId = await addTaskToDatabase(newTask, activeList?.IdList || -1);
                 if (taskId !== null) {
                     const newListData = listData.map((list) => {
                         if (list.IdList === activeList?.IdList && activeList) {
+                            return {
+                                ...list,
+                                tasks: [...list.tasks, newTask],
+                            };
+                        } else if (list.IdList === 1 && activeList?.IdList !== 1) {
                             return {
                                 ...list,
                                 tasks: [...list.tasks, newTask],
@@ -129,8 +129,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                             return list;
                         }
                     });
-
-
                     updateListData(() => newListData);
                     setTextValue('');
                 }
@@ -139,7 +137,6 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             }
         }
     };
-
 
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);

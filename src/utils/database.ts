@@ -11,6 +11,7 @@ const database: SQLiteDatabase = SQLite.openDatabase(
     console.log(error);
   },
 );
+
 export function createUserTable() {
   database.transaction(tx => {
     tx.executeSql(
@@ -64,16 +65,13 @@ export function loginUser(
       [email, password],
       (_, resultSet) => {
         if (resultSet.rows.length > 0) {
-          // User found
           const userData = resultSet.rows.item(0);
           onSuccess(userData);
         } else {
-          // User not found
           onError(new Error('Invalid credentials'));
         }
       },
       (_, error) => {
-        // Handle error
         onError(error as never);
       },
     );
@@ -95,8 +93,11 @@ export function createTaskTable() {
     tx.executeSql(
       'CREATE TABLE IF NOT EXISTS ' +
         'tasks ' +
-        '(IdTask INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, isCompleted INTEGER, deadline TEXT, importance TEXT, effort TEXT, note TEXT, addedBy TEXT, assignedTo INTEGER, createdAt TEXT, List_idList INTEGER);',
-    );
+        '(IdTask INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, isCompleted INTEGER, deadline TEXT, importance TEXT, effort TEXT, note TEXT, addedBy TEXT, assignedTo INTEGER, createdAt TEXT);',
+    ),
+      () => {
+        console.log('created tasks_list');
+      };
   });
 }
 
@@ -137,6 +138,24 @@ export function createListTable() {
   });
 }
 
+export function createTaskListTable() {
+  database.transaction(tx => {
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS task_lists (
+        taskId INTEGER,
+        listId INTEGER,
+        PRIMARY KEY(taskId, listId))`,
+      [],
+      () => {
+        console.log('Table task_lists created successfully.');
+      },
+      error => {
+        console.error('Error creating table task_lists:', error);
+      },
+    );
+  });
+}
+
 export function addListToDatabase(list: ListType): Promise<number> {
   return new Promise<number>((resolve, reject) => {
     database.transaction(tx => {
@@ -163,7 +182,6 @@ export function addListToDatabase(list: ListType): Promise<number> {
     });
   });
 }
-
 export function deleteList(listId: number): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     database.transaction(tx => {
@@ -216,11 +234,14 @@ export function updateListInDatabase(
   });
 }
 
-export function addTaskToDatabase(newTask: TaskType): Promise<void> {
+export function addTaskToDatabase(
+  newTask: TaskType,
+  listId: number,
+): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tasks (title, isCompleted, deadline, importance, effort, note, addedBy, assignedTo, createdAt, List_idList) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO tasks (title, isCompleted, deadline, importance, effort, note, addedBy, assignedTo, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           newTask.title,
           newTask.isCompleted ? 1 : 0,
@@ -231,10 +252,32 @@ export function addTaskToDatabase(newTask: TaskType): Promise<void> {
           newTask.addedBy,
           newTask.assignedTo,
           newTask.createdAt,
-          newTask.List_idList,
         ],
         (_, result) => {
-          resolve();
+          const taskId = result.insertId;
+          tx.executeSql(
+            'INSERT INTO task_lists (taskId, listId) VALUES (?, ?)',
+            [taskId, listId],
+            () => {
+              if (listId !== 1) {
+                tx.executeSql(
+                  'INSERT INTO task_lists (taskId, listId) VALUES (?, ?)',
+                  [taskId, 1],
+                  () => {
+                    resolve();
+                  },
+                  error => {
+                    reject(error);
+                  },
+                );
+              } else {
+                resolve();
+              }
+            },
+            error => {
+              reject(error);
+            },
+          );
         },
         (_, error) => {
           reject(error);
@@ -357,8 +400,8 @@ export function updateSubtask(
   });
 }
 
-export function getUserLists(userId: number): Promise<ListType[]> {
-  return new Promise<ListType[]>((resolve, reject) => {
+export async function getUserLists(userId: number): Promise<ListType[]> {
+  return new Promise<ListType[]>(async (resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
         'SELECT * FROM lists WHERE createdBy = ?',
@@ -366,58 +409,128 @@ export function getUserLists(userId: number): Promise<ListType[]> {
         (_, resultSet) => {
           const lists: ListType[] = [];
           for (let i = 0; i < resultSet.rows.length; i++) {
-            const rowData = resultSet.rows.item(i);
+            const row = resultSet.rows.item(i);
             const list: ListType = {
-              IdList: rowData.IdList,
-              listName: rowData.listName,
-              iconId: rowData.iconId,
-              canBeDeleted: rowData.canBeDeleted === 1,
-              isShared: rowData.isShared === 1,
-              createdAt: rowData.createdAt,
-              isFavorite: rowData.isFavorite === 1,
-              isArchived: rowData.isArchived === 1,
-              createdBy: rowData.createdBy,
-              colorVariant: rowData.colorVariant,
+              IdList: row.IdList,
+              listName: row.listName,
+              iconId: row.iconId,
+              canBeDeleted: row.canBeDeleted === 1,
+              isShared: row.isShared === 1,
+              createdAt: row.createdAt,
+              isFavorite: row.isFavorite === 1,
+              isArchived: row.isArchived === 1,
+              createdBy: row.createdBy,
+              colorVariant: row.colorVariant,
               tasks: [],
             };
-
-            tx.executeSql(
-              'SELECT * FROM tasks WHERE List_idList = ?',
-              [list.IdList],
-              async (_, tasksResultSet) => {
-                const tasks: TaskType[] = [];
-                for (let j = 0; j < tasksResultSet.rows.length; j++) {
-                  const taskRowData = tasksResultSet.rows.item(j);
-                  console.log('TASKS: ', taskRowData);
-                  const task: TaskType = {
-                    IdTask: taskRowData.IdTask,
-                    title: taskRowData.title,
-                    isCompleted: taskRowData.isCompleted === 1,
-                    deadline: taskRowData.deadline,
-                    importance: taskRowData.importance,
-                    effort: taskRowData.effort,
-                    note: taskRowData.note,
-                    addedBy: taskRowData.addedBy,
-                    assignedTo: taskRowData.assignedTo,
-                    createdAt: taskRowData.createdAt,
-                    List_idList: taskRowData.List_idList,
-                    subtasks: [],
-                  };
-                  const subtasks = await fetchSubtasksForTask(task.IdTask);
-                  task.subtasks = subtasks;
-
-                  tasks.push(task);
-                }
-                list.tasks = tasks;
-              },
-              (_, error) => {
-                console.error('Task error:', error);
-              },
-            );
-
             lists.push(list);
           }
-          resolve(lists);
+
+          const fetchTasksPromises = lists.map(async list => {
+            const tasks = await getUserTasksForList(list.IdList);
+            list.tasks = tasks;
+          });
+
+          Promise.all(fetchTasksPromises)
+            .then(() => {
+              resolve(lists);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}
+
+export async function getUserTasksForList(listId: number): Promise<TaskType[]> {
+  return new Promise<TaskType[]>((resolve, reject) => {
+    database.transaction(tx => {
+      tx.executeSql(
+        `SELECT tasks.* 
+        FROM tasks 
+        INNER JOIN task_lists ON tasks.IdTask = task_lists.taskId 
+        WHERE task_lists.listId = ?`,
+        [listId],
+        (_, resultSet) => {
+          const tasks: TaskType[] = [];
+          for (let i = 0; i < resultSet.rows.length; i++) {
+            const row = resultSet.rows.item(i);
+            const task: TaskType = {
+              IdTask: row.IdTask,
+              title: row.title,
+              isCompleted: row.isCompleted === 1,
+              deadline: row.deadline,
+              importance: row.importance,
+              effort: row.effort,
+              note: row.note,
+              addedBy: row.addedBy,
+              assignedTo: row.assignedTo,
+              createdAt: row.createdAt,
+              subtasks: [],
+            };
+            tasks.push(task);
+          }
+          const fetchSubtasksPromises = tasks.map(async task => {
+            try {
+              const subtasks = await fetchSubtasksForTask(task.IdTask);
+              task.subtasks = subtasks;
+            } catch (error) {
+              console.error('Error fetching subtasks for task:', error);
+            }
+          });
+
+          Promise.all(fetchSubtasksPromises)
+            .then(() => {
+              resolve(tasks);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        },
+        error => {
+          console.error('Database error:', error);
+          reject(error);
+        },
+      );
+    });
+  });
+}
+
+export function getUserTasks(userId: number): Promise<TaskType[]> {
+  return new Promise<TaskType[]>((resolve, reject) => {
+    database.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tasks WHERE assignedTo = ?',
+        [userId],
+        async (_, resultSet) => {
+          const tasks: TaskType[] = [];
+          for (let i = 0; i < resultSet.rows.length; i++) {
+            const rowData = resultSet.rows.item(i);
+            const task: TaskType = {
+              IdTask: rowData.IdTask,
+              title: rowData.title,
+              isCompleted: rowData.isCompleted === 1,
+              deadline: rowData.deadline,
+              importance: rowData.importance,
+              effort: rowData.effort,
+              note: rowData.note,
+              addedBy: rowData.addedBy,
+              assignedTo: rowData.assignedTo,
+              createdAt: rowData.createdAt,
+              subtasks: [],
+            };
+
+            const subtasks = await fetchSubtasksForTask(task.IdTask);
+            task.subtasks = subtasks;
+
+            tasks.push(task);
+          }
+          resolve(tasks);
         },
         (_, error) => {
           reject(error);
