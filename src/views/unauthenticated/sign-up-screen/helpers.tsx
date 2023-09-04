@@ -7,7 +7,7 @@ import { SignUpScreenNavigationProp } from "./SignUpScreen";
 import { schema } from "./signUpValidation";
 import { backButtonWidth } from "components/button/Button";
 import { useTheme } from "navigation/utils/ThemeProvider";
-import { UserType, useUser } from "context/UserProvider";
+import { useAuth } from "context/AuthContext";
 
 //components:
 import Button, { buttonTypes } from "components/button";
@@ -38,7 +38,7 @@ export function prepareSignUpPages({
     const [loading, setLoading] = useState(false);
     const intl = useIntl();
     const theme = useTheme();
-    const { user, setUserDetails } = useUser();
+    const { register, login } = useAuth();
     const { control, handleSubmit, setError, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
@@ -47,15 +47,31 @@ export function prepareSignUpPages({
     const onSubmit: SubmitHandler<FieldValues> = async ({ firstName, lastName, email, photoURL = null, password, confirmPassword }) => {
         setLoading(true);
         try {
-            console.log(email, password)
-            const userData: UserType = { id: 1, firstName: firstName, lastName: lastName, email: email, photoURL: photoURL };
-            setUserDetails(userData);
+            await register(email, password, firstName, lastName, {
+                onRegistrationSuccess: async () => {
+                    await login(email, password);
+                },
+                onEmailTaken: () => {
+                    setError('email', {
+                        type: 'manual',
+                        message: 'This email is already taken',
+                    });
+                },
+                onOtherError: error => {
+                    setError('email', {
+                        type: 'manual',
+                        message: 'An error occurred',
+                    });
+                },
+            });
+
         } catch (error) {
-            console.log(error);
+            setError('email', { message: error as string || 'An error occurred' });
         } finally {
             setLoading(false);
         }
     };
+
 
     if (errors) {
         useEffect(() => {

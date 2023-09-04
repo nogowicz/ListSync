@@ -6,51 +6,59 @@ import { SCREENS } from "navigation/utils/screens";
 import { FormattedMessage, useIntl } from "react-intl";
 import { formatDateToLongDate } from "utils/dateFormat";
 import { useNavigation } from "@react-navigation/native";
-import { useUser } from "context/UserProvider";
 import { useListContext } from "context/DataProvider";
+import { ListType } from "data/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "navigation/navigation";
+import { useAuth } from "context/AuthContext";
+import { addListToDatabase } from "utils/database";
 
 
 //components:
 import Button, { buttonTypes } from "components/button";
-import { ListType } from "data/types";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "navigation/navigation";
 
 export function prepareTopPanel() {
     const intl = useIntl();
     const date = formatDateToLongDate(new Date(), intl);
     const theme = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const { user } = useUser();
+    const { user } = useAuth();
     const { listData, updateListData } = useListContext();
 
-    const handleCreateNewList = () => {
-        const newIdList = Math.max(...listData.map(item => item.IdList)) + 1;
+    const handleCreateNewList = async () => {
 
-        const newList: ListType = {
-            IdList: newIdList,
-            listName: 'Unnamed list',
-            iconId: 1,
-            canBeDeleted: true,
-            isShared: false,
-            createdAt: new Date().toISOString(),
-            isFavorite: false,
-            isArchived: false,
-            createdBy: 1,
-            colorVariant: 1,
-            tasks: [],
-        };
 
-        updateListData(prevListData => [...prevListData, newList]);
+        try {
+            const newList: ListType = {
+                IdList: -1,
+                listName: 'Unnamed list',
+                iconId: 1,
+                canBeDeleted: true,
+                isShared: false,
+                createdAt: new Date().toISOString(),
+                isFavorite: false,
+                isArchived: false,
+                createdBy: user?.ID || -1,
+                colorVariant: 1,
+                tasks: []
+            };
 
-        navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-            data: newList,
-            isModalVisibleOnStart: true,
-            isNewList: true,
-        });
+            const newListId = await addListToDatabase(newList);
+            newList.IdList = newListId;
+            updateListData(prevListData => [...prevListData, newList]);
+            navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
+                data: newList,
+                isModalVisibleOnStart: true,
+                isNewList: true,
+            });
+        } catch (error) {
+
+            console.error("Error occurred while adding list to db:", error);
+        }
 
 
     };
+
 
 
     return [
@@ -89,17 +97,17 @@ export function prepareTopPanel() {
             type: topPanelTypes.TOP_PANEL_TYPES.PROFILE_SCREEN,
             topPanel: (
                 <View style={styles.userDataContainer}>
-                    {user?.photoURL ?
+                    {/* {user?.photoURL ?
                         <Image
                             source={{ uri: user?.photoURL }}
                             style={styles.profileImage}
                         />
-                        :
-                        <Image
-                            source={require('assets/images/profile_base_image.png')}
-                            style={styles.profileImage}
-                        />
-                    }
+                        : */}
+                    <Image
+                        source={require('assets/images/profile_base_image.png')}
+                        style={styles.profileImage}
+                    />
+                    {/* } */}
 
                     <View style={styles.profileDataTextContainer}>
                         <Text style={[styles.namesText, { color: theme.TEXT, }]}>

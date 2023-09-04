@@ -20,6 +20,7 @@ import Logo from 'components/logo';
 //icons:
 import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
+import { useAuth } from 'context/AuthContext';
 
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 
@@ -32,6 +33,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const intl = useIntl();
     const [loading, setLoading] = useState(false);
     const { user, setUserDetails } = useUser();
+    const { login } = useAuth();
 
 
     //form handlers:
@@ -43,17 +45,18 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         setLoading(true);
 
         try {
-            console.log(email, password)
-            const userData: UserType = {
-                id: 1,
-                firstName: 'Bartek',
-                lastName: 'Noga',
-                email: email,
-                photoURL: null,
-            };
-            setUserDetails(userData);
+            // console.log(email, password)
+            // const userData: UserType = {
+            //     id: 1,
+            //     firstName: 'Bartek',
+            //     lastName: 'Noga',
+            //     email: email,
+            //     photoURL: null,
+            // };
+            // setUserDetails(userData);
+            await login(email, password);
         } catch (error) {
-            console.log(error);
+            setError('email', { message: error as string });
         }
     }
 

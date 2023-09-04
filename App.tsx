@@ -14,6 +14,7 @@ import { DataProvider } from 'context/DataProvider';
 import { UserProvider } from 'context/UserProvider';
 import { getItem } from 'utils/asyncStorage';
 import { EventRegister } from 'react-native-event-listeners';
+import { AuthProvider } from 'context/AuthContext';
 
 
 export default function App(): JSX.Element {
@@ -60,13 +61,15 @@ export default function App(): JSX.Element {
       />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <LangModeProvider>
-          <UserProvider>
-            <DataProvider>
-              <LangContext>
-                <Routes />
-              </LangContext>
-            </DataProvider>
-          </UserProvider>
+          <AuthProvider>
+            <UserProvider>
+              <DataProvider>
+                <LangContext>
+                  <Routes />
+                </LangContext>
+              </DataProvider>
+            </UserProvider>
+          </AuthProvider>
         </LangModeProvider>
       </GestureHandlerRootView>
     </ThemeContext.Provider >

@@ -1,10 +1,10 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, View, Linking, } from 'react-native'
 import { useTheme } from 'navigation/utils/ThemeProvider';
-import { useUser } from 'context/UserProvider';
 import { settingsTranslations } from '.';
 import { spacing, typography } from 'styles'
 import { useIntl } from 'react-intl';
+import { useAuth } from 'context/AuthContext';
 
 
 //components:
@@ -27,7 +27,7 @@ type SettingListProps = {
 
 export default function SettingsList({ handleShowLangBottomSheet, handleShowThemeBottomSheet }: SettingListProps) {
     const theme = useTheme();
-    const { setUserDetails } = useUser();
+    const { logout } = useAuth();
     const intl = useIntl();
 
     return (
@@ -101,7 +101,7 @@ export default function SettingsList({ handleShowLangBottomSheet, handleShowThem
                     color={theme.DARK_RED}
                     type={buttonTypes.BUTTON_TYPES.SETTING}
                     icon={<LogoutIcon />}
-                    onPress={() => setUserDetails(null)}
+                    onPress={() => logout()}
                 />
                 <Button
                     text={settingsTranslations.aboutAppTranslation(intl)}
