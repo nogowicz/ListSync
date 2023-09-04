@@ -4,6 +4,7 @@ import { ListType } from 'data/types';
 import { spacing, constants, typography } from 'styles';
 import { listIconTheme, listColorTheme } from 'styles/list-styles';
 import { useTheme } from 'navigation/utils/ThemeProvider';
+import { useIntl } from 'react-intl';
 
 type ListSelectorProps = {
     list: ListType[];
@@ -13,6 +14,16 @@ type ListSelectorProps = {
 
 export default function ListSelector({ list, setIsListVisible, setActiveList }: ListSelectorProps) {
     const theme = useTheme();
+    const intl = useIntl();
+
+    //translations:
+    const allListNameTranslation = intl.formatMessage({
+        defaultMessage: 'All',
+        id: 'views.authenticated.home.text-input.list-name.all'
+    });
+
+    console.log()
+
     return (
         <ScrollView
             showsHorizontalScrollIndicator={false}
@@ -49,7 +60,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                             fontSize: typography.FONT_SIZE_12,
                             textAlign: 'center',
                         }}>
-                            {item.listName}
+                            {item.listName === "All" ? allListNameTranslation : item.listName}
                         </Text>
                     </TouchableOpacity>
                 ))}

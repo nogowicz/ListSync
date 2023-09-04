@@ -45,7 +45,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [isInputVisible, setIsInputVisible] = useState(false);
     const lists = listData.filter((item: ListType) => item.isArchived === false);
     const [list, setList] = useState<ListType[]>(lists);
-    const [activeList, setActiveList] = useState(list.find((item: ListType) => item.IdList === currentListId));
+    const [activeList, setActiveList] = useState<ListType>();
     const [isListVisible, setIsListVisible] = useState(false);
 
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
@@ -76,6 +76,10 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     });
 
     const inputRef = useRef<TextInput>(null);
+
+    useEffect(() => {
+        setActiveList(list.find((item: ListType) => item.IdList === currentListId));
+    }, [list]);
 
     useEffect(() => {
         inputRef.current?.focus();
