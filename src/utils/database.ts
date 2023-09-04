@@ -304,7 +304,7 @@ export function deleteTask(taskId: number): Promise<void> {
   });
 }
 
-export function updateTask(
+export function updateTaskInDatabase(
   taskId: number,
   title: string,
   isCompleted: boolean,
