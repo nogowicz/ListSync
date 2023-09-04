@@ -9,6 +9,7 @@ import { useListContext } from 'context/DataProvider';
 import { ListType } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 import { useNavigation } from '@react-navigation/native';
+import { updateListInDatabase } from 'utils/database';
 
 type ChangeListModalProps = {
     isModalVisible: boolean;
@@ -47,25 +48,43 @@ export default function ChangeListModal({
         navigation.goBack();
     };
 
-    const handleUpdateList = (listId: number, listName: string, selectedIcon: number, selectedColor: number) => {
+    const handleUpdateList = (
+        listId: number,
+        listName: string,
+        iconId: number,
+        colorVariant: number
+    ) => {
         setIsNewListState(false);
-        updateListData((prevListData: ListType[]) => {
-            const updatedLists = prevListData.map((list: ListType) => {
-                if (list.IdList === listId) {
-                    handleModal();
-                    return {
-                        ...list,
-                        listName: listName,
-                        iconId: selectedIcon,
-                        colorVariant: selectedColor,
-                    };
-                } else {
-                    return list;
-                }
-            });
 
-            return updatedLists;
-        });
+        updateListInDatabase(
+            listId,
+            listName,
+            iconId,
+            colorVariant
+        )
+            .then(() => {
+                updateListData((prevListData: ListType[]) => {
+                    const updatedLists = prevListData.map((list: ListType) => {
+                        if (list.IdList === listId) {
+                            return {
+                                ...list,
+                                listName: listName,
+                                iconId: iconId,
+                                colorVariant: colorVariant,
+                            };
+                        } else {
+                            return list;
+                        }
+                    });
+
+                    return updatedLists;
+                });
+
+                handleModal();
+            })
+            .catch((error) => {
+                console.error('Błąd aktualizacji listy:', error);
+            });
     };
 
     const handleCancelPress = () => {
@@ -174,7 +193,12 @@ export default function ChangeListModal({
                             id='views.authenticated.home.list.modal.save'
                         />
                     }
-                        onPress={() => handleUpdateList(IdList, newListName, selectedIcon, selectedColor)}
+                        onPress={() => handleUpdateList(
+                            IdList,
+                            newListName,
+                            selectedIcon,
+                            selectedColor
+                        )}
                         type={buttonTypes.BUTTON_TYPES.FUNCTIONAL}
                     />
                 </Modal.Footer>

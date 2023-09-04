@@ -192,7 +192,8 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: spacing.SCALE_12,
+        paddingTop: spacing.SCALE_16,
+        paddingBottom: spacing.SCALE_12,
         paddingHorizontal: spacing.SCALE_16,
         overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
         shadowColor: 'black',

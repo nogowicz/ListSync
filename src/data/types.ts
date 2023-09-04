@@ -15,10 +15,9 @@ export interface TaskType {
   importance: string;
   effort: string;
   note: string;
-  addedBy: string;
+  addedBy: number;
   assignedTo: number | null;
   createdAt: string;
-  List_idList: number;
   subtasks: SubtaskType[];
 }
 

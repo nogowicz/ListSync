@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface UserType {
-    id: number;
+    ID: number;
     firstName: string;
     lastName: string;
-    photoURL: string | null;
+    photoURL?: string | null;
     email: string;
 }
 

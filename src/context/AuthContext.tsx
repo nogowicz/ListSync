@@ -1,12 +1,22 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { createTable, loginUser, registerUser } from "utils/database";
+import { removeItem, setItem } from "utils/asyncStorage";
+import { createListTable, createSubtaskTable, createTaskListTable, createTaskTable, createUserTable, loginUser, registerUser } from "utils/database";
 
 
 type AuthContextType = {
-    user: any;
-    setUser: React.Dispatch<React.SetStateAction<any | null>>;
+    user: UserType | null;
+    setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
     login: (email: string, password: string) => Promise<void>;
-    register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
+    register: (
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string,
+        errorHandlers: {
+            onRegistrationSuccess: () => void;
+            onEmailTaken: () => void;
+            onOtherError: (error: Error) => void;
+        },) => Promise<void>;
     logout: () => Promise<void>;
 }    // resetPassword: (email: string) => Promise<void>;
 // updateEmail: (newEmail: string) => Promise<void>;
@@ -33,13 +43,25 @@ type AuthProviderProps = {
     children: ReactNode,
 }
 
+type UserType = {
+    ID: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+}
+
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [user, setUser] = useState<any | null>(null);
+    const [user, setUser] = useState<UserType | null>(null);
 
     useEffect(() => {
-        createTable();
+        createUserTable();
+        createSubtaskTable();
+        createTaskTable();
+        createListTable();
+        createTaskListTable();
     }, []);
+
 
     return <AuthContext.Provider
         value={{
@@ -50,8 +72,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     await loginUser(
                         email,
                         password,
-                        (userData: any) => {
+                        (userData: UserType) => {
                             console.log(userData);
+                            setItem('user', JSON.stringify(userData));
                             setUser(userData);
                         },
                         error => {
@@ -62,25 +85,46 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     console.log(error);
                 }
             },
-            register: async (email: string, password: string, firstName: string, lastName: string) => {
-                await registerUser(
-                    email,
-                    password,
-                    firstName,
-                    lastName,
-                    () => {
-                        console.log('Register succeed');
-                    },
-                    error => {
-                        console.error('Register error:', error);
-                    }
-                );
-
-
+            register: async (
+                email: string,
+                password: string,
+                firstName: string,
+                lastName: string,
+                errorHandlers: {
+                    onRegistrationSuccess: () => void;
+                    onEmailTaken: () => void;
+                    onOtherError: (error: Error) => void;
+                }
+            ) => {
+                try {
+                    await registerUser(
+                        email,
+                        password,
+                        firstName,
+                        lastName,
+                        {
+                            onRegistrationSuccess: () => {
+                                errorHandlers.onRegistrationSuccess();
+                            },
+                            onEmailTaken: () => {
+                                console.error('Email is already taken');
+                                errorHandlers.onEmailTaken();
+                            },
+                            onOtherError: error => {
+                                console.error('Register error:', error);
+                                errorHandlers.onOtherError(error);
+                            },
+                        }
+                    );
+                } catch (error) {
+                    console.error('Register error:', error);
+                }
             },
+
             logout: async () => {
                 try {
                     setUser(null);
+                    removeItem('user');
                 } catch (error) {
                     console.log(error);
                 }

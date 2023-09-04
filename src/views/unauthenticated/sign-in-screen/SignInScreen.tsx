@@ -56,7 +56,7 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
             // setUserDetails(userData);
             await login(email, password);
         } catch (error) {
-            console.log(error);
+            setError('email', { message: error as string });
         }
     }
 
