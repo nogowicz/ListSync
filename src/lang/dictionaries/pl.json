@@ -128,5 +128,6 @@
   "views.authenticated.list.details.edit-list": "Edytuj listę",
   "views.authenticated.list.details.share": "Udostępnij",
   "views.authenticated.list.details.invite-friends": "Zaproś znajomych",
-  "views.authenticated.list.details.delete-list": "Usuń listę"
+  "views.authenticated.list.details.delete-list": "Usuń listę",
+  "vies.authenticated.task.delete": "Usuń"
 }
