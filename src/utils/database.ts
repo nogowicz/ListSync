@@ -595,3 +595,24 @@ export function deleteCompletedTasksInDatabase(listId?: number): Promise<void> {
     });
   });
 }
+
+export function deleteTaskFromDatabase(taskId: number): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    database.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM tasks WHERE IdTask = ?',
+        [taskId],
+        (_, result) => {
+          if (result.rowsAffected > 0) {
+            resolve();
+          } else {
+            reject(new Error(`Task with ID ${taskId} not found`));
+          }
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}

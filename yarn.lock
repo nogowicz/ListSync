@@ -5976,10 +5976,10 @@ react-native-modal@^13.0.1:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
-react-native-reanimated@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.3.0.tgz"
-  integrity sha512-LzfpPZ1qXBGy5BcUHqw3pBC0qSd22qXS3t8hWSbozXNrBkzMhhOrcILE/nEg/PHpNNp1xvGOW8NwpAMF006roQ==
+react-native-reanimated@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.4.2.tgz#744154fead6d8d31d5bd9ac617d8c84d74a6f697"
+  integrity sha512-FbtG+f1PB005vDTJSv4zAnTK7nNXi+FjFgbAM5gOzIZDajfph2BFMSUstzIsN8T77+OKuugUBmcTqLnQ24EBVg==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"

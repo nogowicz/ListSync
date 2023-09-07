@@ -6,12 +6,9 @@ import Button, { buttonTypes } from 'components/button';
 import { ListType, SubtaskType, TaskType } from 'data/types';
 import Animated, {
     Easing,
-    Extrapolate,
-    interpolate,
-    useAnimatedReaction,
     useAnimatedStyle,
+    useDerivedValue,
     useSharedValue,
-    withSpring,
     withTiming,
 } from 'react-native-reanimated';
 import Arrow from 'assets/button-icons/Back.svg';
@@ -27,6 +24,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 
 //icons:
 import Trash from 'assets/button-icons/trash.svg';
+import { deleteTaskFromDatabase } from 'utils/database';
 
 type TaskProps = {
     task: TaskType;
@@ -121,24 +119,38 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
         });
     };
 
-    const RenderRight = ({ progress, dragX }: any) => {
-        const scale = useSharedValue(0.5);
-        console.log(dragX)
+    const handleDeleteTask = async () => {
+        try {
+            await deleteTaskFromDatabase(task.IdTask);
 
-        const handleScaleChange = () => {
-            scale.value = withSpring(1);
-        };
+            const updatedListData = listData.map((list) => {
+                if (list.IdList === listId) {
+                    const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== task.IdTask);
+                    return {
+                        ...list,
+                        tasks: updatedTasks,
+                    };
+                }
+                return list;
+            });
 
-        const animatedStyle = useAnimatedStyle(() => {
-            return {
-                transform: [{ scale: scale.value }],
-            };
-        });
+            updateListData(() => updatedListData);
+
+        } catch (error) {
+            console.error('Error removing task:', error);
+        }
+    };
+
+
+    const RenderRight = () => {
 
         return (
-            <TouchableOpacity onPress={handleScaleChange} activeOpacity={constants.ACTIVE_OPACITY.HIGH}>
+            <TouchableOpacity onPress={handleDeleteTask} activeOpacity={constants.ACTIVE_OPACITY.HIGH}>
                 <View style={[styles.hiddenItemRightContainer, { backgroundColor: theme.DARK_RED }]}>
-                    <Animated.View style={animatedStyle}>
+                    <Animated.View style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
                         <Trash stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
                         <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
                             <FormattedMessage defaultMessage="Delete" id="vies.authenticated.task.delete" />
@@ -156,9 +168,11 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     return (
         <Swipeable
             overshootRight={false}
-            renderRightActions={(progress, dragX) => (
-                <RenderRight progress={progress} dragX={dragX} />
-            )}
+            renderRightActions={(progress, dragX) => {
+                return (
+                    <RenderRight />
+                );
+            }}
         >
             <View style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}>
                 <View style={styles.upperContainer}>
