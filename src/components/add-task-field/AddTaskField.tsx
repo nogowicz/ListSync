@@ -45,7 +45,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [isInputVisible, setIsInputVisible] = useState(false);
     const lists = listData.filter((item: ListType) => item.isArchived === false);
     const [list, setList] = useState<ListType[]>(lists);
-    const [activeList, setActiveList] = useState(list.find((item: ListType) => item.IdList === currentListId));
+    const [activeList, setActiveList] = useState<ListType>();
     const [isListVisible, setIsListVisible] = useState(false);
 
     const [isDeadlineVisible, setIsDeadlineVisible] = useState(false);
@@ -76,6 +76,10 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     });
 
     const inputRef = useRef<TextInput>(null);
+
+    useEffect(() => {
+        setActiveList(list.find((item: ListType) => item.IdList === currentListId));
+    }, [list]);
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -114,6 +118,8 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             try {
                 const taskId = await addTaskToDatabase(newTask, activeList?.IdList || -1);
                 if (taskId !== null) {
+                    newTask.IdTask = taskId;
+
                     const newListData = listData.map((list) => {
                         if (list.IdList === activeList?.IdList && activeList) {
                             return {
@@ -137,6 +143,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             }
         }
     };
+
+
+
 
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);

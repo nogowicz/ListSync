@@ -237,8 +237,8 @@ export function updateListInDatabase(
 export function addTaskToDatabase(
   newTask: TaskType,
   listId: number,
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
         'INSERT INTO tasks (title, isCompleted, deadline, importance, effort, note, addedBy, assignedTo, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -264,14 +264,14 @@ export function addTaskToDatabase(
                   'INSERT INTO task_lists (taskId, listId) VALUES (?, ?)',
                   [taskId, 1],
                   () => {
-                    resolve();
+                    resolve(taskId);
                   },
                   error => {
                     reject(error);
                   },
                 );
               } else {
-                resolve();
+                resolve(taskId);
               }
             },
             error => {
@@ -304,7 +304,7 @@ export function deleteTask(taskId: number): Promise<void> {
   });
 }
 
-export function updateTask(
+export function updateTaskInDatabase(
   taskId: number,
   title: string,
   isCompleted: boolean,
@@ -561,6 +561,53 @@ export function fetchSubtasksForTask(taskID: number): Promise<SubtaskType[]> {
             subtasks.push(subtask);
           }
           resolve(subtasks);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}
+
+export function deleteCompletedTasksInDatabase(listId?: number): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    database.transaction(tx => {
+      let deleteQuery = 'DELETE FROM tasks WHERE isCompleted = 1';
+      const queryParams: any[] = [];
+
+      if (listId) {
+        deleteQuery +=
+          ' AND IdTask IN (SELECT taskId FROM task_lists WHERE listId = ?)';
+        queryParams.push(listId);
+      }
+
+      tx.executeSql(
+        deleteQuery,
+        queryParams,
+        () => {
+          resolve();
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}
+
+export function deleteTaskFromDatabase(taskId: number): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    database.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM tasks WHERE IdTask = ?',
+        [taskId],
+        (_, result) => {
+          if (result.rowsAffected > 0) {
+            resolve();
+          } else {
+            reject(new Error(`Task with ID ${taskId} not found`));
+          }
         },
         (_, error) => {
           reject(error);

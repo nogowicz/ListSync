@@ -1,8 +1,9 @@
 import { StyleSheet, FlatList, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { List, Task as TaskType } from 'data/types';
+import { ListType, TaskType } from 'data/types';
 import Task from 'components/task';
 import { useListContext } from 'context/DataProvider';
+import { updateTaskInDatabase } from 'utils/database';
 
 type TaskListProps = {
     tasks: TaskType[];
@@ -18,21 +19,36 @@ export default function TaskList({ tasks, listId }: TaskListProps) {
     }, [tasks]);
 
     const handleCompleteTask = (taskId: number) => {
-        updateListData((prevListData: List[]) => {
-            const updatedLists = prevListData.map((list: List) => {
-                if (list.IdList === listId) {
-                    const updatedTasks = list.tasks.map((task: TaskType) =>
-                        task.IdTask === taskId ? { ...task, isCompleted: !task.isCompleted } : task
-                    );
+        const taskToUpdate = tasks.find((task) => task.IdTask === taskId);
 
-                    return { ...list, tasks: updatedTasks };
-                } else {
-                    return list;
-                }
+        if (taskToUpdate) {
+            const updatedIsCompleted = !taskToUpdate.isCompleted;
+
+            updateTaskInDatabase(
+                taskId,
+                taskToUpdate.title,
+                updatedIsCompleted,
+                taskToUpdate.deadline,
+                taskToUpdate.importance,
+                taskToUpdate.effort,
+                taskToUpdate.note,
+                taskToUpdate.assignedTo
+            ).then(() => {
+                updateListData((prevListData: ListType[]) => {
+                    const updatedLists = prevListData.map((list: ListType) => {
+                        const updatedTasks = list.tasks.map((task: TaskType) =>
+                            task.IdTask === taskId ? { ...task, isCompleted: updatedIsCompleted } : task
+                        );
+
+                        return { ...list, tasks: updatedTasks };
+                    });
+
+                    return updatedLists;
+                });
+            }).catch((error) => {
+                console.error('Error updating task in the database:', error);
             });
-
-            return updatedLists;
-        });
+        }
     };
 
 

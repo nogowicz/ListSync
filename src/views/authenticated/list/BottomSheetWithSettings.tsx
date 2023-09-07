@@ -19,6 +19,7 @@ import DeleteIcon from 'assets/button-icons/trash.svg';
 //components:
 import BottomSheet from 'components/bottom-sheet';
 import Button, { buttonTypes } from 'components/button';
+import { deleteCompletedTasksInDatabase } from 'utils/database';
 
 type BottomSheetWithSettingsProps = {
     refDetails: RefObject<BottomSheetRefProps>;
@@ -75,20 +76,27 @@ export default function BottomSheetWithSettings({
         navigation.goBack();
     };
 
-    function removeCompletedTasks() {
+    async function removeCompletedTasks() {
         handleShowDetailsBottomSheet();
-        const updatedListData = listData.map((list) => {
-            if (list.IdList === IdList) {
-                const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
-                return {
-                    ...list,
-                    tasks: updatedTasks,
-                };
-            }
-            return list;
-        });
 
-        updateListData(() => updatedListData);
+        try {
+            await deleteCompletedTasksInDatabase(IdList);
+
+            const updatedListData = listData.map((list) => {
+                if (list.IdList === IdList) {
+                    const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
+                    return {
+                        ...list,
+                        tasks: updatedTasks,
+                    };
+                }
+                return list;
+            });
+
+            updateListData(() => updatedListData);
+        } catch (error) {
+            console.error('Error removing completed tasks:', error);
+        }
     }
 
 

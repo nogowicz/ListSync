@@ -7,24 +7,36 @@ import { ListType, SubtaskType, TaskType } from 'data/types';
 import Animated, {
     Easing,
     useAnimatedStyle,
+    useDerivedValue,
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
 import Arrow from 'assets/button-icons/Back.svg';
 import SubtaskTree from 'assets/button-icons/subtasks-icon.svg';
 import Calendar from 'assets/button-icons/calendar-input-selection.svg';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { formatDateToShortDate, isToday, isTomorrow } from 'utils/dateFormat';
 import { toggleAnimation } from './helpers';
 import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
 import { deadlineNames } from 'components/add-task-field/DeadlineSelector';
+import { Swipeable } from 'react-native-gesture-handler';
+
+//icons:
+import Trash from 'assets/button-icons/trash.svg';
+import { deleteTaskFromDatabase } from 'utils/database';
 
 type TaskProps = {
     task: TaskType;
     onTaskComplete: any;
     listId: number;
 };
+
+type RenderRightProps = {
+    progress: any;
+    dragX: any;
+}
+
 
 export default function Task({ task, onTaskComplete, listId }: TaskProps) {
     const theme = useTheme();
@@ -107,83 +119,138 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
         });
     };
 
-    return (
-        <View style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}>
-            <View style={styles.upperContainer}>
-                <View style={styles.leftContainer}>
-                    <Button
-                        type={buttonTypes.BUTTON_TYPES.CHECK}
-                        onPress={onTaskComplete}
-                        isChecked={isCompleted}
-                    />
-                    <Text style={[
-                        styles.text,
-                        isCompleted ?
-                            {
-                                color: theme.HINT,
-                                textDecorationLine: 'line-through',
-                            } :
-                            {
-                                color: theme.TEXT,
-                            }]}>{task.title}</Text>
+    const handleDeleteTask = async () => {
+        try {
+            await deleteTaskFromDatabase(task.IdTask);
+
+            const updatedListData = listData.map((list) => {
+                if (list.IdList === listId) {
+                    const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== task.IdTask);
+                    return {
+                        ...list,
+                        tasks: updatedTasks,
+                    };
+                }
+                return list;
+            });
+
+            updateListData(() => updatedListData);
+
+        } catch (error) {
+            console.error('Error removing task:', error);
+        }
+    };
+
+
+    const RenderRight = () => {
+
+        return (
+            <TouchableOpacity onPress={handleDeleteTask} activeOpacity={constants.ACTIVE_OPACITY.HIGH}>
+                <View style={[styles.hiddenItemRightContainer, { backgroundColor: theme.DARK_RED }]}>
+                    <Animated.View style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <Trash stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
+                        <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
+                            <FormattedMessage defaultMessage="Delete" id="vies.authenticated.task.delete" />
+                        </Text>
+                    </Animated.View>
                 </View>
-                {subTasks.length > 0 &&
-                    <TouchableOpacity
-                        activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        onPress={handleArrowPress}
-                        style={{ height: '100%', paddingLeft: spacing.SCALE_18 }}
-                    >
-                        <Animated.View style={[rotateStyle]}>
-                            <Arrow
-                                width={constants.ICON_SIZE.SUBTASK_ARROW}
-                                height={constants.ICON_SIZE.SUBTASK_ARROW}
-                                fill={theme.TEXT}
+            </TouchableOpacity>
+        );
+    };
+
+
+
+
+
+    return (
+        <Swipeable
+            overshootRight={false}
+            renderRightActions={(progress, dragX) => {
+                return (
+                    <RenderRight />
+                );
+            }}
+        >
+            <View style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}>
+                <View style={styles.upperContainer}>
+                    <View style={styles.leftContainer}>
+                        <Button
+                            type={buttonTypes.BUTTON_TYPES.CHECK}
+                            onPress={onTaskComplete}
+                            isChecked={isCompleted}
+                        />
+                        <Text style={[
+                            styles.text,
+                            isCompleted ?
+                                {
+                                    color: theme.HINT,
+                                    textDecorationLine: 'line-through',
+                                } :
+                                {
+                                    color: theme.TEXT,
+                                }]}>{task.title}</Text>
+                    </View>
+                    {subTasks.length > 0 &&
+                        <TouchableOpacity
+                            activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                            onPress={handleArrowPress}
+                            style={{ height: '100%', paddingLeft: spacing.SCALE_18 }}
+                        >
+                            <Animated.View style={[rotateStyle]}>
+                                <Arrow
+                                    width={constants.ICON_SIZE.SUBTASK_ARROW}
+                                    height={constants.ICON_SIZE.SUBTASK_ARROW}
+                                    fill={theme.TEXT}
+                                />
+                            </Animated.View>
+                        </TouchableOpacity>}
+                </View>
+                <View style={styles.middleContainer}>
+                    {subTasks.length > 0 &&
+                        <View style={styles.middleContainer}>
+                            <SubtaskTree
+                                width={constants.ICON_SIZE.SUBTASK_TREE}
+                                height={constants.ICON_SIZE.SUBTASK_TREE}
                             />
-                        </Animated.View>
-                    </TouchableOpacity>}
-            </View>
-            <View style={styles.middleContainer}>
-                {subTasks.length > 0 &&
-                    <View style={styles.middleContainer}>
-                        <SubtaskTree
-                            width={constants.ICON_SIZE.SUBTASK_TREE}
-                            height={constants.ICON_SIZE.SUBTASK_TREE}
-                        />
-                        <Text style={[styles.subtasksAmount, { color: theme.HINT }]}>
-                            {completedSubTasks.length} / {subTasks.length}
-                        </Text>
-                    </View>}
-                {hasDeadline !== null &&
-                    <View style={styles.middleContainer}>
-                        <Calendar
-                            width={constants.ICON_SIZE.SUBTASK_TREE}
-                            height={constants.ICON_SIZE.SUBTASK_TREE}
-                            fill={deadlineColor()}
-                        />
-                        <Text style={[styles.subtasksAmount, { color: deadlineColor() }]}>
-                            {isToday(deadline) ? deadlineNames.TODAY :
-                                (isTomorrow(deadline) ? deadlineNames.TOMORROW : deadlineAsString)
-                            }
-                        </Text>
-                    </View>}
+                            <Text style={[styles.subtasksAmount, { color: theme.HINT }]}>
+                                {completedSubTasks.length} / {subTasks.length}
+                            </Text>
+                        </View>}
+                    {hasDeadline !== null &&
+                        <View style={styles.middleContainer}>
+                            <Calendar
+                                width={constants.ICON_SIZE.SUBTASK_TREE}
+                                height={constants.ICON_SIZE.SUBTASK_TREE}
+                                fill={deadlineColor()}
+                            />
+                            <Text style={[styles.subtasksAmount, { color: deadlineColor() }]}>
+                                {isToday(deadline) ? deadlineNames.TODAY :
+                                    (isTomorrow(deadline) ? deadlineNames.TOMORROW : deadlineAsString)
+                                }
+                            </Text>
+                        </View>}
+
+                </View>
+
+                {(subTasks.length > 0 && isSubtasksVisible) &&
+                    <Animated.View
+                        style={[styles.subtasks]}
+                    >
+                        {sortedSubTasks.map((item: SubtaskType) => (
+                            <SubTask
+                                key={item.idSubtask}
+                                handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
+                                item={item}
+                            />)
+                        )
+                        }
+                    </Animated.View>}
 
             </View>
-
-            {(subTasks.length > 0 && isSubtasksVisible) &&
-                <Animated.View
-                    style={[styles.subtasks]}
-                >
-                    {sortedSubTasks.map((item: SubtaskType) => (
-                        <SubTask
-                            key={item.idSubtask}
-                            handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
-                            item={item}
-                        />)
-                    )
-                    }
-                </Animated.View>}
-
-        </View>
+        </Swipeable>
     );
 
 }
@@ -231,5 +298,20 @@ const styles = StyleSheet.create({
         marginTop: spacing.SCALE_20,
         marginLeft: spacing.SCALE_30,
         overflow: 'hidden',
-    }
+    },
+    hiddenItemRightContainer: {
+        justifyContent: 'center',
+        flex: 1,
+        paddingHorizontal: 25,
+        alignItems: 'flex-end',
+        borderTopRightRadius: constants.BORDER_RADIUS.BUTTON,
+        borderBottomRightRadius: constants.BORDER_RADIUS.BUTTON,
+        marginVertical: spacing.SCALE_8,
+        marginRight: spacing.SCALE_2,
+
+    },
+
+    hiddenItemText: {
+        fontSize: typography.FONT_SIZE_16,
+    },
 })

@@ -37,6 +37,7 @@ export default function FunctionalPanel({
     isNotificationVisible,
     isImportanceVisible,
 }: FunctionalPanelProps) {
+    console.log(activeList)
     return (
         <View style={styles.upperContainer}>
             <FunctionPanelButtons
