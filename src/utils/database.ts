@@ -237,8 +237,8 @@ export function updateListInDatabase(
 export function addTaskToDatabase(
   newTask: TaskType,
   listId: number,
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
         'INSERT INTO tasks (title, isCompleted, deadline, importance, effort, note, addedBy, assignedTo, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -264,14 +264,14 @@ export function addTaskToDatabase(
                   'INSERT INTO task_lists (taskId, listId) VALUES (?, ?)',
                   [taskId, 1],
                   () => {
-                    resolve();
+                    resolve(taskId);
                   },
                   error => {
                     reject(error);
                   },
                 );
               } else {
-                resolve();
+                resolve(taskId);
               }
             },
             error => {

@@ -118,6 +118,8 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             try {
                 const taskId = await addTaskToDatabase(newTask, activeList?.IdList || -1);
                 if (taskId !== null) {
+                    newTask.IdTask = taskId;
+
                     const newListData = listData.map((list) => {
                         if (list.IdList === activeList?.IdList && activeList) {
                             return {
@@ -141,6 +143,9 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             }
         }
     };
+
+
+
 
     useEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
