@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { RefObject, useEffect, useState } from 'react'
 import { constants, spacing } from 'styles';
 import { useTheme } from 'navigation/utils/ThemeProvider';
@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import { ListType } from 'data/types';
 import { useListContext } from 'context/DataProvider';
 import { useNavigation } from '@react-navigation/native';
-import { deleteCompletedTasksInDatabase, updateListInDatabase } from 'utils/database';
+import { deleteCompletedTasksInDatabase, deleteListFromDatabase, updateListInDatabase } from 'utils/database';
 
 //icons:
 import RemoveCompletedTasksIcon from 'assets/button-icons/remove-completed-tasks.svg';
@@ -21,6 +21,7 @@ import FavoriteListIcon from 'assets/button-icons/favorite.svg';
 //components:
 import BottomSheet from 'components/bottom-sheet';
 import Button, { buttonTypes } from 'components/button';
+import list from '.';
 
 type BottomSheetWithSettingsProps = {
     refDetails: RefObject<BottomSheetRefProps>;
@@ -85,11 +86,18 @@ export default function BottomSheetWithSettings({
         id: 'views.authenticated.list.details.remove-from-favorites'
     });
 
-    const handleDeleteList = () => {
-        const updatedNewListData: ListType[] = listData.filter((list) => (list.IdList !== IdList && list.canBeDeleted));
+    const handleDeleteList = async () => {
+        const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList || !list.canBeDeleted);
         updateListData(() => updatedNewListData);
+
+        try {
+            await deleteListFromDatabase(IdList);
+        } catch (error) {
+            console.error('Error removing list:', error);
+        }
         navigation.goBack();
     };
+
 
     async function removeCompletedTasks() {
         handleShowDetailsBottomSheet();
