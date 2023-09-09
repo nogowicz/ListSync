@@ -31,12 +31,14 @@ import DateTimePickers from './DateTimePickers';
 import Button, { buttonTypes } from 'components/button';
 import { useAuth } from 'context/AuthContext';
 import { addTaskToDatabase } from 'utils/database';
+import { useNotification } from 'hooks/useNotification';
 
 type AddTaskFieldProps = {
     currentListId: number;
+    color?: string;
 }
 
-export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
+export default function AddTaskField({ currentListId, color }: AddTaskFieldProps) {
     const navigation = useNavigation();
     const theme = useTheme();
     const intl = useIntl();
@@ -70,6 +72,8 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
     const [importance, setImportance] = useState<string>(importanceNames.REMOVE);
 
 
+    const { displayTriggerNotification } = useNotification();
+
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
         defaultMessage: 'Add new task',
@@ -95,6 +99,30 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
 
     }, []);
 
+    const notificationBodyTranslate = intl.formatMessage({
+        defaultMessage: "Wake up Samurai, we got a task to complete",
+        id: "views.authenticated.home.text-input.notification-body",
+    })
+
+    const completeTaskAction = {
+        id: 'complete',
+        title: 'Completed',
+        pressAction: {
+            id: 'complete-task',
+        },
+    };
+
+    const handleCreateNotification = (taskId: number) => {
+        if (notificationTime) {
+            displayTriggerNotification(
+                textValue,
+                notificationBodyTranslate,
+                notificationTime.getTime(),
+                taskId,
+                completeTaskAction
+            )
+        }
+    }
     // TODO: Temporary code
     const handleAddTask = async () => {
         if (textValue.trim() === '') {
@@ -136,6 +164,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
                         }
                     });
                     updateListData(() => newListData);
+                    handleCreateNotification(taskId);
                     setTextValue('');
                 }
             } catch (error) {
@@ -280,6 +309,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             <Button
                 type={buttonTypes.BUTTON_TYPES.FAB}
                 onPress={() => setIsInputVisible(true)}
+                color={color}
             />
         );
     }

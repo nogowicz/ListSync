@@ -201,9 +201,9 @@ export function deleteList(listId: number): Promise<void> {
 
 export function updateListInDatabase(
   listId: number,
-  listName: string,
-  iconId: number,
-  colorVariant: number,
+  listName?: string,
+  iconId?: number,
+  colorVariant?: number,
   canBeDeleted?: boolean,
   isShared?: boolean,
   isFavorite?: boolean,
@@ -211,18 +211,46 @@ export function updateListInDatabase(
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     database.transaction(tx => {
+      const queryParams: any[] = [];
+      let updateQuery = 'UPDATE lists SET ';
+
+      if (listName !== undefined) {
+        updateQuery += 'listName = ?, ';
+        queryParams.push(listName);
+      }
+      if (iconId !== undefined) {
+        updateQuery += 'iconId = ?, ';
+        queryParams.push(iconId);
+      }
+      if (canBeDeleted !== undefined) {
+        updateQuery += 'canBeDeleted = ?, ';
+        queryParams.push(canBeDeleted ? 1 : 0);
+      }
+      if (isShared !== undefined) {
+        updateQuery += 'isShared = ?, ';
+        queryParams.push(isShared ? 1 : 0);
+      }
+      if (isFavorite !== undefined) {
+        updateQuery += 'isFavorite = ?, ';
+        queryParams.push(isFavorite ? 1 : 0);
+      }
+      if (isArchived !== undefined) {
+        updateQuery += 'isArchived = ?, ';
+        queryParams.push(isArchived ? 1 : 0);
+      }
+      if (colorVariant !== undefined) {
+        updateQuery += 'colorVariant = ?, ';
+        queryParams.push(colorVariant);
+      }
+
+      let trimmedUpdateQuery = updateQuery.slice(0, -2);
+
+      trimmedUpdateQuery += ' WHERE IdList = ?';
+      queryParams.push(listId);
+
       tx.executeSql(
-        'UPDATE lists SET listName = ?, iconId = ?, canBeDeleted = ?, isShared = ?, isFavorite = ?, isArchived = ?, colorVariant = ? WHERE IdList = ?',
-        [
-          listName,
-          iconId,
-          canBeDeleted ? 1 : 0,
-          isShared ? 1 : 0,
-          isFavorite ? 1 : 0,
-          isArchived ? 1 : 0,
-          colorVariant,
-          listId,
-        ],
+        trimmedUpdateQuery,
+        queryParams,
         () => {
           resolve();
         },
@@ -608,6 +636,23 @@ export function deleteTaskFromDatabase(taskId: number): Promise<void> {
           } else {
             reject(new Error(`Task with ID ${taskId} not found`));
           }
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+}
+
+export function deleteListFromDatabase(listId: number): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    database.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM lists WHERE IdList = ?',
+        [listId],
+        () => {
+          resolve();
         },
         (_, error) => {
           reject(error);

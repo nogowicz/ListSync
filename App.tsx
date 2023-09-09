@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Appearance,
   StatusBar,
-  View,
-  useColorScheme,
 } from 'react-native';
 import Routes from './src/navigation/Routes';
 import { ThemeContext } from './src/navigation/utils/ThemeProvider';
@@ -15,11 +13,13 @@ import { UserProvider } from 'context/UserProvider';
 import { getItem } from 'utils/asyncStorage';
 import { EventRegister } from 'react-native-event-listeners';
 import { AuthProvider } from 'context/AuthContext';
+import { useNotification } from 'hooks/useNotification';
 
 
 export default function App(): JSX.Element {
   const colorScheme = Appearance.getColorScheme();
   const [themeMode, setThemeMode] = useState(false);
+  const { checkNotificationPermission } = useNotification();
 
   useEffect(() => {
     async function fetchTheme() {
@@ -34,9 +34,10 @@ export default function App(): JSX.Element {
         console.error('Error fetching theme:', error);
       }
     }
-
+    checkNotificationPermission();
     fetchTheme();
   }, []);
+
 
   useEffect(() => {
     let eventListener = EventRegister.addEventListener(

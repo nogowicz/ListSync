@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
 import { constants, spacing, typography } from 'styles';
@@ -55,13 +55,13 @@ export default function List({
     const detailsSheetOpen = useRef(false);
     const refDetails = useRef<BottomSheetRefProps>(null);
 
-
+    const { height } = useWindowDimensions();
     const handleShowDetailsBottomSheet = useCallback(() => {
         detailsSheetOpen.current = !detailsSheetOpen.current;
         if (!detailsSheetOpen.current) {
             refDetails.current?.scrollTo(0);
         } else {
-            refDetails.current?.scrollTo(-400);
+            refDetails.current?.scrollTo(-(height - constants.BOTTOM_SHEET_HEIGHT.DETAILS));
         }
     }, []);
 
@@ -141,6 +141,7 @@ export default function List({
                             <TaskList
                                 tasks={unCompletedTasks}
                                 listId={currentList.IdList}
+                                color={listColorTheme[currentList.colorVariant]}
                             /> :
                             completedTasks.length > 0 ?
                                 <View>
@@ -191,6 +192,7 @@ export default function List({
                                     <TaskList
                                         tasks={completedTasks}
                                         listId={currentList.IdList}
+                                        color={listColorTheme[currentList.colorVariant]}
                                     />}
                             </View>
                         )}
@@ -199,6 +201,7 @@ export default function List({
                 {!isModalVisible && (
                     <AddTaskField
                         currentListId={currentList.IdList}
+                        color={listColorTheme[currentList.colorVariant]}
                     />
                 )}
             </View>
