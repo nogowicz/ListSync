@@ -132,5 +132,7 @@
   "vies.authenticated.task.delete": "Delete",
   "vies.authenticated.task.done": "Done",
   "vies.authenticated.task.un-done": "Undone",
-  "views.authenticated.home.text-input.notification-body": "Wake up Samurai, we got a task to complete"
+  "views.authenticated.home.text-input.notification-body": "Wake up Samurai, we got a task to complete",
+  "views.authenticated.list.details.add-to-favorites": "Add to favorites",
+  "views.authenticated.list.details.remove-from-favorites": "Remove from favorites"
 }

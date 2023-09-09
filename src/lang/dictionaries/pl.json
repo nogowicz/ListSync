@@ -132,5 +132,7 @@
   "vies.authenticated.task.delete": "Usuń",
   "vies.authenticated.task.done": "Zrobione",
   "vies.authenticated.task.un-done": "Nie zrobione",
-  "views.authenticated.home.text-input.notification-body": "Obudź się Samuraju, mamy zadanie do wykonania"
+  "views.authenticated.home.text-input.notification-body": "Obudź się Samuraju, mamy zadanie do wykonania",
+  "views.authenticated.list.details.add-to-favorites": "Dodaj do ulubionych",
+  "views.authenticated.list.details.remove-from-favorites": "Usuń z ulubionych"
 }
