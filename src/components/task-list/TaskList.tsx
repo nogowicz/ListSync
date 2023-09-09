@@ -5,6 +5,7 @@ import Task from 'components/task';
 import { useListContext } from 'context/DataProvider';
 import { updateTaskInDatabase } from 'utils/database';
 import notifee, { EventType } from '@notifee/react-native';
+import { useNotification } from 'hooks/useNotification';
 
 type TaskListProps = {
     tasks: TaskType[];
@@ -15,6 +16,7 @@ type TaskListProps = {
 export default function TaskList({ tasks, listId, color }: TaskListProps) {
     const { updateListData } = useListContext();
     const [currentTasks, setCurrentTasks] = useState<TaskType[]>([]);
+    const { cancelNotification } = useNotification();
 
     useEffect(() => {
         setCurrentTasks(tasks);
@@ -36,6 +38,7 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
                 taskToUpdate.note,
                 taskToUpdate.assignedTo
             ).then(() => {
+                cancelNotification(String(taskId));
                 updateListData((prevListData: ListType[]) => {
                     const updatedLists = prevListData.map((list: ListType) => {
                         const updatedTasks = list.tasks.map((task: TaskType) =>

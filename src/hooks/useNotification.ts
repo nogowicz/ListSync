@@ -66,7 +66,7 @@ export const useNotification = () => {
     // Create a trigger notification
     const triggerNotificationId = await notifee.createTriggerNotification(
       {
-        // id: "string" | updates Notification instead if provided id already exists
+        id: String(taskId),
         title: title,
         body: body,
         android: {

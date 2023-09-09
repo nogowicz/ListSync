@@ -7,7 +7,6 @@ import { ListType, SubtaskType, TaskType } from 'data/types';
 import Animated, {
     Easing,
     useAnimatedStyle,
-    useDerivedValue,
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
@@ -48,7 +47,6 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
     const { listData, updateListData } = useListContext();
     const now = new Date();
-
     const rotateStyle = useAnimatedStyle(() => {
         return {
             transform: [{ rotate: `${rotateAnimation.value}deg` }],
