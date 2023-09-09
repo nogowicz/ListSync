@@ -104,9 +104,23 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
         id: "views.authenticated.home.text-input.notification-body",
     })
 
-    const handleCreateNotification = () => {
+    const completeTaskAction = {
+        id: 'complete',
+        title: 'Completed',
+        pressAction: {
+            id: 'complete-task',
+        },
+    };
+
+    const handleCreateNotification = (taskId: number) => {
         if (notificationTime) {
-            displayTriggerNotification(textValue, notificationBodyTranslate, notificationTime.getTime())
+            displayTriggerNotification(
+                textValue,
+                notificationBodyTranslate,
+                notificationTime.getTime(),
+                taskId,
+                completeTaskAction
+            )
         }
     }
     // TODO: Temporary code
@@ -150,7 +164,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                         }
                     });
                     updateListData(() => newListData);
-                    handleCreateNotification();
+                    handleCreateNotification(taskId);
                     setTextValue('');
                 }
             } catch (error) {

@@ -4,6 +4,7 @@ import { ListType, TaskType } from 'data/types';
 import Task from 'components/task';
 import { useListContext } from 'context/DataProvider';
 import { updateTaskInDatabase } from 'utils/database';
+import notifee, { EventType } from '@notifee/react-native';
 
 type TaskListProps = {
     tasks: TaskType[];
@@ -51,7 +52,24 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
             });
         }
     };
+    notifee.onBackgroundEvent(async ({ type, detail }) => {
+        if (type === EventType.ACTION_PRESS && detail.pressAction && detail.pressAction.id === 'complete-task') {
+            if (detail.notification && detail.notification.data) {
+                const taskId: number = Number(detail.notification.data.taskId);
+                handleCompleteTask(taskId);
+            }
+        }
+    });
 
+    notifee.onForegroundEvent(async ({ type, detail }) => {
+        if (type === EventType.ACTION_PRESS && detail.pressAction && detail.pressAction.id === 'complete-task') {
+
+            if (detail.notification && detail.notification.data) {
+                const taskId: number = Number(detail.notification.data.taskId);
+                handleCompleteTask(taskId);
+            }
+        }
+    });
 
 
     return (
@@ -70,4 +88,3 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
     );
 }
 
-const styles = StyleSheet.create({});

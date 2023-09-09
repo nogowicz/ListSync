@@ -3,6 +3,7 @@ import notifee, {
   TriggerType,
   RepeatFrequency,
   AuthorizationStatus,
+  AndroidAction,
 } from '@notifee/react-native';
 
 export const useNotification = () => {
@@ -34,6 +35,8 @@ export const useNotification = () => {
     title: string,
     body: string,
     timestamp: number,
+    taskId: number,
+    action: AndroidAction,
     repeatFrequency: RepeatFrequency | undefined = undefined,
   ) {
     // Create a channel required for Android Notifications
@@ -68,12 +71,13 @@ export const useNotification = () => {
         body: body,
         android: {
           channelId,
+          actions: [action],
         },
+        data: { taskId },
       },
       trigger, // use displayNotification to update triggerNotifications which trigger already fired
     );
 
-    console.log('Notification Triggered');
     return triggerNotificationId;
   }
 
