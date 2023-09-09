@@ -31,6 +31,7 @@ import DateTimePickers from './DateTimePickers';
 import Button, { buttonTypes } from 'components/button';
 import { useAuth } from 'context/AuthContext';
 import { addTaskToDatabase } from 'utils/database';
+import { useNotification } from 'hooks/useNotification';
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -71,6 +72,8 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
     const [importance, setImportance] = useState<string>(importanceNames.REMOVE);
 
 
+    const { displayTriggerNotification } = useNotification();
+
     const placeholderText = intl.formatMessage({
         id: 'views.authenticated.home.text-input.placeholder',
         defaultMessage: 'Add new task',
@@ -96,6 +99,16 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
 
     }, []);
 
+    const notificationBodyTranslate = intl.formatMessage({
+        defaultMessage: "Wake up Samurai, we got a task to complete",
+        id: "views.authenticated.home.text-input.notification-body",
+    })
+
+    const handleCreateNotification = () => {
+        if (notificationTime) {
+            displayTriggerNotification(textValue, notificationBodyTranslate, notificationTime.getTime())
+        }
+    }
     // TODO: Temporary code
     const handleAddTask = async () => {
         if (textValue.trim() === '') {
@@ -137,6 +150,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                         }
                     });
                     updateListData(() => newListData);
+                    handleCreateNotification();
                     setTextValue('');
                 }
             } catch (error) {

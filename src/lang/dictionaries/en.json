@@ -131,5 +131,6 @@
   "views.authenticated.list.details.delete-list": "Delete list",
   "vies.authenticated.task.delete": "Delete",
   "vies.authenticated.task.done": "Done",
-  "vies.authenticated.task.un-done": "Undone"
+  "vies.authenticated.task.un-done": "Undone",
+  "views.authenticated.home.text-input.notification-body": "Wake up Samurai, we got a task to complete"
 }
