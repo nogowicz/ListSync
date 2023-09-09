@@ -31,10 +31,11 @@ type TaskProps = {
     task: TaskType;
     onTaskComplete: any;
     listId: number;
+    color: string;
 };
 
 
-export default function Task({ task, onTaskComplete, listId }: TaskProps) {
+export default function Task({ task, onTaskComplete, listId, color }: TaskProps) {
     const theme = useTheme();
     const intl = useIntl();
     const isCompleted = task.isCompleted;
@@ -156,7 +157,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
 
     const RenderLeft = () => {
         return (
-            <View style={[styles.hiddenItemLeftContainer, { backgroundColor: theme.FIXED_PRIMARY_BLUE }]}>
+            <View style={[styles.hiddenItemLeftContainer, { backgroundColor: color }]}>
                 <Animated.View style={{
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -194,6 +195,7 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
                             type={buttonTypes.BUTTON_TYPES.CHECK}
                             onPress={onTaskComplete}
                             isChecked={isCompleted}
+                            color={color}
                         />
                         <Text style={[
                             styles.text,

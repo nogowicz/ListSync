@@ -89,9 +89,9 @@ export function prepareButtons({
             button: (
                 <TouchableOpacity
                     activeOpacity={activeOpacity}
-                    style={[styles.fabContainer, { backgroundColor: theme.ADD_BUTTON_BACKGROUND }]}
+                    style={[styles.fabContainer, { backgroundColor: color ? color : theme.ADD_BUTTON_BACKGROUND }]}
                     onPress={onPress}>
-                    <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_40} height={spacing.SCALE_40} />
+                    <Plus stroke={color ? theme.WHITE : theme.ADD_BUTTON_TEXT} width={spacing.SCALE_40} height={spacing.SCALE_40} />
                 </TouchableOpacity>
             )
         },
@@ -103,11 +103,11 @@ export function prepareButtons({
                     style={[
                         styles.checkButton,
                         isChecked && {
-                            backgroundColor: theme.PRIMARY,
+                            backgroundColor: color,
                         },
                         {
                             borderWidth: constants.BORDER_WIDTH.CHECK,
-                            borderColor: theme.PRIMARY,
+                            borderColor: color,
                         }]}
                     onPress={onPress}>
                     {isChecked ?

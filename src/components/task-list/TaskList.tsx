@@ -8,9 +8,10 @@ import { updateTaskInDatabase } from 'utils/database';
 type TaskListProps = {
     tasks: TaskType[];
     listId: number;
+    color: string;
 };
 
-export default function TaskList({ tasks, listId }: TaskListProps) {
+export default function TaskList({ tasks, listId, color }: TaskListProps) {
     const { updateListData } = useListContext();
     const [currentTasks, setCurrentTasks] = useState<TaskType[]>([]);
 
@@ -60,6 +61,7 @@ export default function TaskList({ tasks, listId }: TaskListProps) {
                     key={item.IdTask}
                     listId={listId}
                     task={item}
+                    color={color}
                     onTaskComplete={() => handleCompleteTask(item.IdTask)}
                 />
             )

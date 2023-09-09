@@ -141,6 +141,7 @@ export default function List({
                             <TaskList
                                 tasks={unCompletedTasks}
                                 listId={currentList.IdList}
+                                color={listColorTheme[currentList.colorVariant]}
                             /> :
                             completedTasks.length > 0 ?
                                 <View>
@@ -191,6 +192,7 @@ export default function List({
                                     <TaskList
                                         tasks={completedTasks}
                                         listId={currentList.IdList}
+                                        color={listColorTheme[currentList.colorVariant]}
                                     />}
                             </View>
                         )}
@@ -199,6 +201,7 @@ export default function List({
                 {!isModalVisible && (
                     <AddTaskField
                         currentListId={currentList.IdList}
+                        color={listColorTheme[currentList.colorVariant]}
                     />
                 )}
             </View>

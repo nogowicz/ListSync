@@ -34,9 +34,10 @@ import { addTaskToDatabase } from 'utils/database';
 
 type AddTaskFieldProps = {
     currentListId: number;
+    color?: string;
 }
 
-export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
+export default function AddTaskField({ currentListId, color }: AddTaskFieldProps) {
     const navigation = useNavigation();
     const theme = useTheme();
     const intl = useIntl();
@@ -280,6 +281,7 @@ export default function AddTaskField({ currentListId }: AddTaskFieldProps) {
             <Button
                 type={buttonTypes.BUTTON_TYPES.FAB}
                 onPress={() => setIsInputVisible(true)}
+                color={color}
             />
         );
     }
