@@ -129,5 +129,7 @@
   "views.authenticated.list.details.share": "Udostępnij",
   "views.authenticated.list.details.invite-friends": "Zaproś znajomych",
   "views.authenticated.list.details.delete-list": "Usuń listę",
-  "vies.authenticated.task.delete": "Usuń"
+  "vies.authenticated.task.delete": "Usuń",
+  "vies.authenticated.task.done": "Zrobione",
+  "vies.authenticated.task.un-done": "Nie zrobione"
 }

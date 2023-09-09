@@ -21,21 +21,17 @@ import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
 import { deadlineNames } from 'components/add-task-field/DeadlineSelector';
 import { Swipeable } from 'react-native-gesture-handler';
+import { deleteTaskFromDatabase } from 'utils/database';
 
 //icons:
 import Trash from 'assets/button-icons/trash.svg';
-import { deleteTaskFromDatabase } from 'utils/database';
+import Done from 'assets/button-icons/done.svg';
 
 type TaskProps = {
     task: TaskType;
     onTaskComplete: any;
     listId: number;
 };
-
-type RenderRightProps = {
-    progress: any;
-    dragX: any;
-}
 
 
 export default function Task({ task, onTaskComplete, listId }: TaskProps) {
@@ -143,36 +139,53 @@ export default function Task({ task, onTaskComplete, listId }: TaskProps) {
 
 
     const RenderRight = () => {
-
         return (
-            <TouchableOpacity onPress={handleDeleteTask} activeOpacity={constants.ACTIVE_OPACITY.HIGH}>
-                <View style={[styles.hiddenItemRightContainer, { backgroundColor: theme.DARK_RED }]}>
-                    <Animated.View style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                        <Trash stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
-                        <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
-                            <FormattedMessage defaultMessage="Delete" id="vies.authenticated.task.delete" />
-                        </Text>
-                    </Animated.View>
-                </View>
-            </TouchableOpacity>
+            <View style={[styles.hiddenItemRightContainer, { backgroundColor: theme.DARK_RED }]}>
+                <Animated.View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <Trash stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
+                    <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
+                        <FormattedMessage defaultMessage="Delete" id="vies.authenticated.task.delete" />
+                    </Text>
+                </Animated.View>
+            </View>
         );
     };
 
+    const RenderLeft = () => {
+        return (
+            <View style={[styles.hiddenItemLeftContainer, { backgroundColor: theme.FIXED_PRIMARY_BLUE }]}>
+                <Animated.View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <Done stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
+                    <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
+                        <FormattedMessage defaultMessage="Done" id="vies.authenticated.task.done" />
+                    </Text>
+                </Animated.View>
+            </View>
 
+        );
+    };
 
+    function onSwipeableOpen(direction: "left" | "right", swipeable: Swipeable) {
+        if (direction === "left") {
+            onTaskComplete();
+        } else if (direction === 'right') {
+            handleDeleteTask();
+        }
+    }
 
 
     return (
         <Swipeable
             overshootRight={false}
-            renderRightActions={(progress, dragX) => {
-                return (
-                    <RenderRight />
-                );
-            }}
+            renderLeftActions={RenderLeft}
+            renderRightActions={RenderRight}
+            onSwipeableOpen={onSwipeableOpen}
         >
             <View style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}>
                 <View style={styles.upperContainer}>
@@ -302,10 +315,9 @@ const styles = StyleSheet.create({
     hiddenItemRightContainer: {
         justifyContent: 'center',
         flex: 1,
-        paddingHorizontal: 25,
+        paddingHorizontal: spacing.SCALE_22,
         alignItems: 'flex-end',
-        borderTopRightRadius: constants.BORDER_RADIUS.BUTTON,
-        borderBottomRightRadius: constants.BORDER_RADIUS.BUTTON,
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
         marginVertical: spacing.SCALE_8,
         marginRight: spacing.SCALE_2,
 
@@ -314,4 +326,14 @@ const styles = StyleSheet.create({
     hiddenItemText: {
         fontSize: typography.FONT_SIZE_16,
     },
+
+    hiddenItemLeftContainer: {
+        justifyContent: 'center',
+        flex: 1,
+        paddingHorizontal: spacing.SCALE_22,
+        alignItems: 'flex-start',
+        borderRadius: constants.BORDER_RADIUS.BUTTON,
+        marginVertical: spacing.SCALE_8,
+        marginLeft: spacing.SCALE_2,
+    }
 })
