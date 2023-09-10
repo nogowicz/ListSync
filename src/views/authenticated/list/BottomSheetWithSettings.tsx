@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 import { ListType } from 'data/types';
 import { useListContext } from 'context/DataProvider';
 import { useNavigation } from '@react-navigation/native';
-import { deleteCompletedTasksInDatabase, deleteListFromDatabase, updateListInDatabase } from 'utils/database';
+import { deleteCompletedTasksInDatabase, updateListInDatabase } from 'utils/database';
 
 //icons:
 import RemoveCompletedTasksIcon from 'assets/button-icons/remove-completed-tasks.svg';
@@ -21,7 +21,7 @@ import FavoriteListIcon from 'assets/button-icons/favorite.svg';
 //components:
 import BottomSheet from 'components/bottom-sheet';
 import Button, { buttonTypes } from 'components/button';
-import list from '.';
+import { useNotification } from 'hooks/useNotification';
 
 type BottomSheetWithSettingsProps = {
     refDetails: RefObject<BottomSheetRefProps>;
@@ -38,7 +38,7 @@ export default function BottomSheetWithSettings({
 }: BottomSheetWithSettingsProps) {
     const theme = useTheme();
     const intl = useIntl();
-    const { listData, updateListData } = useListContext();
+    const { listData, updateListData, deleteList } = useListContext();
     const navigation = useNavigation();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === IdList));
 
@@ -87,15 +87,9 @@ export default function BottomSheetWithSettings({
     });
 
     const handleDeleteList = async () => {
-        const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList || !list.canBeDeleted);
-        updateListData(() => updatedNewListData);
-
-        try {
-            await deleteListFromDatabase(IdList);
-        } catch (error) {
-            console.error('Error removing list:', error);
-        }
-        navigation.goBack();
+        await deleteList(IdList).then(() => {
+            navigation.goBack();
+        })
     };
 
 

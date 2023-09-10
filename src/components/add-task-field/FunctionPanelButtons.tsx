@@ -60,6 +60,8 @@ export default function FunctionPanelButtons({
 }: FunctionPanelButtonsProps) {
     const theme = useTheme();
     const intl = useIntl();
+
+    //translations:
     const deadlineTranslation: { [key: string]: React.JSX.Element } = {
         'Deadline': (
             <FormattedMessage
@@ -120,6 +122,17 @@ export default function FunctionPanelButtons({
         ),
     };
 
+
+    const allListTranslation = intl.formatMessage({
+        defaultMessage: "All",
+        id: "views.authenticated.home.text-input.list-name.all"
+    });
+
+    const unnamedListTranslation = intl.formatMessage({
+        defaultMessage: "Unnamed list",
+        id: "views.authenticated.home.text-input.list-name.unnamed-list"
+    });
+
     if (type === FUNCTIONAL_BUTTONS_NAMES.LIST) {
         return (
             <TouchableOpacity
@@ -137,13 +150,10 @@ export default function FunctionPanelButtons({
                 <Text style={{
                     color: activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY,
                 }}>
-                    {activeList?.listName === 'All' ?
-                        <FormattedMessage
-                            id='views.authenticated.home.text-input.list-name.all'
-                            defaultMessage={'All'}
-                        /> :
-                        activeList?.listName
-                    }
+
+
+                    {activeList?.listName === "All" ? allListTranslation :
+                        activeList?.listName === "Unnamed list" ? unnamedListTranslation : activeList?.listName}
                 </Text>
             </TouchableOpacity>
         );

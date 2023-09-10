@@ -25,6 +25,11 @@ import { deleteTaskFromDatabase } from 'utils/database';
 //icons:
 import Trash from 'assets/button-icons/trash.svg';
 import Done from 'assets/button-icons/done.svg';
+import { useNotification } from 'hooks/useNotification';
+import { useNavigation } from '@react-navigation/native';
+import { SCREENS } from 'navigation/utils/screens';
+import { NativeStackNavigationProp, NativeStackNavigatorProps } from '@react-navigation/native-stack/lib/typescript/src/types';
+import { RootStackParamList } from 'navigation/navigation';
 
 type TaskProps = {
     task: TaskType;
@@ -37,6 +42,7 @@ type TaskProps = {
 export default function Task({ task, onTaskComplete, listId, color }: TaskProps) {
     const theme = useTheme();
     const intl = useIntl();
+    const { cancelNotification } = useNotification();
     const isCompleted = task.isCompleted;
     const subTasks: SubtaskType[] = task.subtasks;
     const completedSubTasks: SubtaskType[] = subTasks.filter(item => item.isCompleted);
@@ -47,6 +53,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
     const { listData, updateListData } = useListContext();
     const now = new Date();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const rotateStyle = useAnimatedStyle(() => {
         return {
             transform: [{ rotate: `${rotateAnimation.value}deg` }],
@@ -116,7 +123,9 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
     const handleDeleteTask = async () => {
         try {
-            await deleteTaskFromDatabase(task.IdTask);
+            await deleteTaskFromDatabase(task.IdTask).then(() => {
+                cancelNotification(String(task.IdTask));
+            })
 
             const updatedListData = listData.map((list) => {
                 if (list.IdList === listId) {
@@ -162,7 +171,9 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                 }}>
                     <Done stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
                     <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
-                        <FormattedMessage defaultMessage="Done" id="vies.authenticated.task.done" />
+                        {task.isCompleted ?
+                            <FormattedMessage defaultMessage="Undone" id="vies.authenticated.task.un-done" /> :
+                            <FormattedMessage defaultMessage="Done" id="vies.authenticated.task.done" />}
                     </Text>
                 </Animated.View>
             </View>
@@ -186,7 +197,14 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
             renderRightActions={RenderRight}
             onSwipeableOpen={onSwipeableOpen}
         >
-            <View style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}>
+            <TouchableOpacity
+                style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}
+                activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.TASK_DETAILS.ID, {
+                    task: task,
+                    color: color
+                })}
+            >
                 <View style={styles.upperContainer}>
                     <View style={styles.leftContainer}>
                         <Button
@@ -262,7 +280,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                         }
                     </Animated.View>}
 
-            </View>
+            </TouchableOpacity>
         </Swipeable>
     );
 

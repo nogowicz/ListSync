@@ -26,6 +26,7 @@
   "views.authenticated.home.filter-button-text-archived": "Archived",
   "views.authenticated.home.text-input.placeholder": "Add new task",
   "views.authenticated.home.text-input.list-name.all": "All",
+  "views.authenticated.home.text-input.list-name.unnamed-list": "Unnamed list",
   "views.authenticated.home.text-input.deadline.set": "Deadline",
   "views.authenticated.home.text-input.deadline.today": "Today",
   "views.authenticated.home.text-input.deadline.tomorrow": "Tomorrow",
@@ -134,5 +135,6 @@
   "vies.authenticated.task.un-done": "Undone",
   "views.authenticated.home.text-input.notification-body": "Wake up Samurai, we got a task to complete",
   "views.authenticated.list.details.add-to-favorites": "Add to favorites",
-  "views.authenticated.list.details.remove-from-favorites": "Remove from favorites"
+  "views.authenticated.list.details.remove-from-favorites": "Remove from favorites",
+  "vies.authenticated.task.details.edit-task": "Edit task"
 }

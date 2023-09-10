@@ -26,6 +26,7 @@
   "views.authenticated.home.filter-button-text-archived": "Archiwum",
   "views.authenticated.home.text-input.placeholder": "Dodaj nowe zadanie",
   "views.authenticated.home.text-input.list-name.all": "Wszystkie",
+  "views.authenticated.home.text-input.list-name.unnamed-list": "Nienazwana lista",
   "views.authenticated.home.text-input.deadline.set": "Data ukończenia",
   "views.authenticated.home.text-input.deadline.today": "Dzisiaj",
   "views.authenticated.home.text-input.deadline.tomorrow": "Jutro",
@@ -134,5 +135,6 @@
   "vies.authenticated.task.un-done": "Nie zrobione",
   "views.authenticated.home.text-input.notification-body": "Obudź się Samuraju, mamy zadanie do wykonania",
   "views.authenticated.list.details.add-to-favorites": "Dodaj do ulubionych",
-  "views.authenticated.list.details.remove-from-favorites": "Usuń z ulubionych"
+  "views.authenticated.list.details.remove-from-favorites": "Usuń z ulubionych",
+  "vies.authenticated.task.details.edit-task": "Edytuj zadanie"
 }
