@@ -1,18 +1,20 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType } from 'data/types';
-import { addListToDatabase, getUserLists } from 'utils/database';
+import { addListToDatabase, deleteListFromDatabase, getUserLists } from 'utils/database';
 import { useAuth } from './AuthContext';
 
 type DataContextType = {
   listData: ListType[];
   updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
   createList: () => Promise<any | ListType>;
+  deleteList: (IdList: number) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType>({
   listData: [],
   updateListData: () => { },
-  createList: async () => { }
+  createList: async () => { },
+  deleteList: async (IdList: number) => { }
 });
 
 type DataProviderProps = {
@@ -77,9 +79,18 @@ export function DataProvider({ children }: DataProviderProps) {
         console.error("Error occurred while adding list to db:", error);
         throw error;
       }
-
-
+    },
+    deleteList: async (IdList: number): Promise<void> => {
+      const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList || !list.canBeDeleted);
+      updateListData(() => updatedNewListData);
+      try {
+        await deleteListFromDatabase(IdList);
+      } catch (error) {
+        console.error("Error occurred while deleting list from db:", error);
+        throw error;
+      }
     }
+
   };
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

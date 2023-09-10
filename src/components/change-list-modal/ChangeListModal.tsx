@@ -39,7 +39,7 @@ export default function ChangeListModal({
     const theme = useTheme();
     const [newListName, setNewListName] = useState<string>(listName);
     const navigation = useNavigation();
-    const { listData, updateListData } = useListContext();
+    const { deleteList, updateListData } = useListContext();
     const intl = useIntl();
     const [isNewListState, setIsNewListState] = useState(isNewList);
 
@@ -60,10 +60,10 @@ export default function ChangeListModal({
             listName === "Unnamed list" ? unnamedListTranslation : listName)
     }, []);
 
-    const handleDeleteList = () => {
-        const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList);
-        updateListData(() => updatedNewListData);
-        navigation.goBack();
+    const handleDeleteList = async () => {
+        await deleteList(IdList).then(() => {
+            navigation.goBack();
+        })
     };
 
     const handleUpdateList = (

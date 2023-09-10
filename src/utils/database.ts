@@ -182,22 +182,6 @@ export function addListToDatabase(list: ListType): Promise<number> {
     });
   });
 }
-export function deleteList(listId: number): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    database.transaction(tx => {
-      tx.executeSql(
-        'DELETE FROM lists WHERE IdList = ?',
-        [listId],
-        () => {
-          resolve();
-        },
-        (_, error) => {
-          reject(error);
-        },
-      );
-    });
-  });
-}
 
 export function updateListInDatabase(
   listId: number,
