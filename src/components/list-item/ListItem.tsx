@@ -2,7 +2,7 @@ import React, { cloneElement } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { constants, spacing, typography } from 'styles';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 
 //icons:
@@ -38,6 +38,7 @@ export default function ListItem({
     onPress,
 }: ListItemProps) {
     const theme = useTheme();
+    const intl = useIntl();
     const tasks = taskAmount !== 1 ?
         (taskAmount > 4 || taskAmount === 0 ?
             (<FormattedMessage
@@ -66,6 +67,18 @@ export default function ListItem({
     };
 
     const fontSize = getFontSize(listName.length);
+
+
+    //translations:
+    const allListTranslation = intl.formatMessage({
+        defaultMessage: "All",
+        id: "views.authenticated.home.text-input.list-name.all"
+    });
+
+    const unnamedListTranslation = intl.formatMessage({
+        defaultMessage: "Unnamed list",
+        id: "views.authenticated.home.text-input.list-name.unnamed-list"
+    });
 
     return (
         <TouchableOpacity
@@ -96,13 +109,8 @@ export default function ListItem({
                 </View>
             </View>
             <Text style={[{ color: theme.TEXT, fontSize }]}>
-                {listName === "All" ?
-                    <FormattedMessage
-                        id='views.authenticated.home.text-input.list-name.all'
-                        defaultMessage={'All'}
-                    /> :
-                    listName
-                }
+                {listName === "All" ? allListTranslation :
+                    listName === "Unnamed list" ? unnamedListTranslation : listName}
             </Text>
             <Text style={[styles.taskAmount, { color: theme.HINT }]}>{taskAmount} {tasks}</Text>
         </TouchableOpacity>

@@ -25,6 +25,7 @@ import { deleteTaskFromDatabase } from 'utils/database';
 //icons:
 import Trash from 'assets/button-icons/trash.svg';
 import Done from 'assets/button-icons/done.svg';
+import { useNotification } from 'hooks/useNotification';
 
 type TaskProps = {
     task: TaskType;
@@ -37,6 +38,7 @@ type TaskProps = {
 export default function Task({ task, onTaskComplete, listId, color }: TaskProps) {
     const theme = useTheme();
     const intl = useIntl();
+    const { cancelNotification } = useNotification();
     const isCompleted = task.isCompleted;
     const subTasks: SubtaskType[] = task.subtasks;
     const completedSubTasks: SubtaskType[] = subTasks.filter(item => item.isCompleted);
@@ -116,7 +118,9 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
     const handleDeleteTask = async () => {
         try {
-            await deleteTaskFromDatabase(task.IdTask);
+            await deleteTaskFromDatabase(task.IdTask).then(() => {
+                cancelNotification(String(task.IdTask));
+            })
 
             const updatedListData = listData.map((list) => {
                 if (list.IdList === listId) {

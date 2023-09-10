@@ -22,6 +22,7 @@ import FavoriteListIcon from 'assets/button-icons/favorite.svg';
 import BottomSheet from 'components/bottom-sheet';
 import Button, { buttonTypes } from 'components/button';
 import list from '.';
+import { useNotification } from 'hooks/useNotification';
 
 type BottomSheetWithSettingsProps = {
     refDetails: RefObject<BottomSheetRefProps>;
@@ -39,6 +40,7 @@ export default function BottomSheetWithSettings({
     const theme = useTheme();
     const intl = useIntl();
     const { listData, updateListData } = useListContext();
+    const { cancelNotification } = useNotification();
     const navigation = useNavigation();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === IdList));
 

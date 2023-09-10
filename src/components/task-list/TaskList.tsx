@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ListType, TaskType } from 'data/types';
 import Task from 'components/task';

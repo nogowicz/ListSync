@@ -1,7 +1,7 @@
 import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useContext, SetStateAction, Dispatch, cloneElement, useState, } from 'react'
+import React, { useContext, SetStateAction, Dispatch, cloneElement, useState, useEffect, } from 'react'
 import Button, { buttonTypes } from 'components/button';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { typography, spacing, constants } from 'styles';
 import { Modal } from 'components/modal/Modal';
 import { useTheme } from 'navigation/utils/ThemeProvider';
@@ -40,7 +40,25 @@ export default function ChangeListModal({
     const [newListName, setNewListName] = useState<string>(listName);
     const navigation = useNavigation();
     const { listData, updateListData } = useListContext();
+    const intl = useIntl();
     const [isNewListState, setIsNewListState] = useState(isNewList);
+
+    //translations:
+    const allListTranslation = intl.formatMessage({
+        defaultMessage: 'All',
+        id: 'views.authenticated.home.text-input.list-name.all'
+    });
+
+
+    const unnamedListTranslation = intl.formatMessage({
+        defaultMessage: "Unnamed list",
+        id: "views.authenticated.home.text-input.list-name.unnamed-list"
+    });
+
+    useEffect(() => {
+        setNewListName(listName === "All" ? allListTranslation :
+            listName === "Unnamed list" ? unnamedListTranslation : listName)
+    }, []);
 
     const handleDeleteList = () => {
         const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList);

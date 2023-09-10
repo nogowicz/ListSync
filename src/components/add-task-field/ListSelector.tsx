@@ -17,10 +17,17 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
     const intl = useIntl();
 
     //translations:
-    const allListNameTranslation = intl.formatMessage({
+    const allListTranslation = intl.formatMessage({
         defaultMessage: 'All',
         id: 'views.authenticated.home.text-input.list-name.all'
     });
+
+
+    const unnamedListTranslation = intl.formatMessage({
+        defaultMessage: "Unnamed list",
+        id: "views.authenticated.home.text-input.list-name.unnamed-list"
+    });
+
 
     console.log()
 
@@ -42,7 +49,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',
-                            width: spacing.SCALE_60,
+                            width: spacing.SCALE_70,
                         }}
                         onPress={() => {
                             setActiveList(item);
@@ -60,7 +67,8 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                             fontSize: typography.FONT_SIZE_12,
                             textAlign: 'center',
                         }}>
-                            {item.listName === "All" ? allListNameTranslation : item.listName}
+                            {item.listName === "All" ? allListTranslation :
+                                item.listName === "Unnamed list" ? unnamedListTranslation : item.listName}
                         </Text>
                     </TouchableOpacity>
                 ))}

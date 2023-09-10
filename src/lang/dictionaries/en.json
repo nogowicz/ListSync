@@ -26,6 +26,7 @@
   "views.authenticated.home.filter-button-text-archived": "Archived",
   "views.authenticated.home.text-input.placeholder": "Add new task",
   "views.authenticated.home.text-input.list-name.all": "All",
+  "views.authenticated.home.text-input.list-name.unnamed-list": "Unnamed list",
   "views.authenticated.home.text-input.deadline.set": "Deadline",
   "views.authenticated.home.text-input.deadline.today": "Today",
   "views.authenticated.home.text-input.deadline.tomorrow": "Tomorrow",

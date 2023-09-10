@@ -14,6 +14,7 @@ import Details from 'assets/button-icons/details.svg';
 
 //components:
 import Button, { buttonTypes } from "components/button";
+import { useIntl } from "react-intl";
 
 type PrepareNavigationTopBarProps = {
     name: string;
@@ -32,6 +33,7 @@ export function prepareNavigationTopBar({
 }: PrepareNavigationTopBarProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const theme = useTheme();
+    const intl = useIntl();
 
     const getFontSize = (textLength: number) => {
         if (textLength <= 7) {
@@ -43,6 +45,18 @@ export function prepareNavigationTopBar({
         }
     };
     const fontSize = getFontSize(name.length);
+
+    const allListTranslation = intl.formatMessage({
+        defaultMessage: "All",
+        id: "views.authenticated.home.text-input.list-name.all"
+    });
+
+    const unnamedListTranslation = intl.formatMessage({
+        defaultMessage: "Unnamed list",
+        id: "views.authenticated.home.text-input.list-name.unnamed-list"
+    });
+
+
 
     return [
         {
@@ -100,7 +114,8 @@ export function prepareNavigationTopBar({
                             fontSize: fontSize,
                             color: theme.TEXT,
                         }}>
-                            {name}
+                            {name === "All" ? allListTranslation :
+                                name === "Unnamed list" ? unnamedListTranslation : name}
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
