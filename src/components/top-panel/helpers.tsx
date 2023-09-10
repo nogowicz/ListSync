@@ -23,39 +23,16 @@ export function prepareTopPanel() {
     const theme = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const { user } = useAuth();
-    const { listData, updateListData } = useListContext();
+    const { createList } = useListContext();
 
     const handleCreateNewList = async () => {
+        const newList = await createList()
 
-
-        try {
-            const newList: ListType = {
-                IdList: -1,
-                listName: 'Unnamed list',
-                iconId: 1,
-                canBeDeleted: true,
-                isShared: false,
-                createdAt: new Date().toISOString(),
-                isFavorite: false,
-                isArchived: false,
-                createdBy: user?.ID || -1,
-                colorVariant: 1,
-                tasks: []
-            };
-
-            const newListId = await addListToDatabase(newList);
-            newList.IdList = newListId;
-            updateListData(prevListData => [...prevListData, newList]);
-            navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-                data: newList,
-                isModalVisibleOnStart: true,
-                isNewList: true,
-            });
-        } catch (error) {
-
-            console.error("Error occurred while adding list to db:", error);
-        }
-
+        navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
+            data: newList,
+            isModalVisibleOnStart: true,
+            isNewList: true,
+        });
 
     };
 
