@@ -32,6 +32,7 @@ import Button, { buttonTypes } from 'components/button';
 import { useAuth } from 'context/AuthContext';
 import { addTaskToDatabase } from 'utils/database';
 import { useNotification } from 'hooks/useNotification';
+import { notificationTimeNames } from './NotificationSelector';
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -165,6 +166,14 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                     });
                     updateListData(() => newListData);
                     handleCreateNotification(taskId);
+                    setDeadline(deadlineNames.REMOVE);
+                    setDeadlineDate(null);
+                    setIsDeadlineVisible(false);
+                    setNotification(notificationTimeNames.REMOVE);
+                    setNotificationTime(undefined);
+                    setIsNotificationVisible(false);
+                    setImportance(importanceNames.REMOVE);
+                    setIsImportanceVisible(false);
                     setTextValue('');
                 }
             } catch (error) {

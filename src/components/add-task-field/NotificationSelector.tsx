@@ -124,7 +124,7 @@ export default function NotificationSelector({
             isVisible: (notification !== notificationTimeNames.REMOVE),
             onPress: () => {
                 setNotification(notificationTimeNames.REMOVE);
-                const date: string | null = getFormattedDate(notificationTimeNames.REMOVE);
+                setNotificationTime(undefined);
                 setIsNotificationVisible(false);
             }
         },
