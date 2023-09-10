@@ -9,6 +9,9 @@ export const SCREENS = {
     PROFILE: {
       ID: 'PROFILE',
     },
+    TASK_DETAILS: {
+      ID: 'TASK_DETAILS',
+    },
   },
   UNAUTHENTICATED: {
     WELCOME_SCREEN: {

@@ -4,6 +4,7 @@ import Home from 'views/authenticated/home';
 import { SCREENS } from '../utils/screens';
 import List from 'views/authenticated/list';
 import Profile from 'views/authenticated/profile';
+import TaskDetails from 'views/authenticated/task-details';
 
 export default function AuthenticatedStack() {
     const Stack = createNativeStackNavigator();
@@ -28,6 +29,10 @@ export default function AuthenticatedStack() {
             <Stack.Screen
                 name={SCREENS.AUTHENTICATED.PROFILE.ID}
                 component={Profile}
+            />
+            <Stack.Screen
+                name={SCREENS.AUTHENTICATED.TASK_DETAILS.ID}
+                component={TaskDetails}
             />
         </Stack.Navigator>
 
