@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { ListType } from 'data/types';
-import { addListToDatabase, deleteListFromDatabase, getUserLists } from 'utils/database';
+import { ListType, SubtaskType, TaskType } from 'data/types';
+import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 
 type DataContextType = {
@@ -8,13 +8,32 @@ type DataContextType = {
   updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
   createList: () => Promise<any | ListType>;
   deleteList: (IdList: number) => Promise<void>;
+  updateList: (
+    IdList: number,
+    listName?: string,
+    iconId?: number,
+    colorVariant?: number,
+    canBeDeleted?: boolean,
+    isShared?: boolean,
+    isFavorite?: boolean,
+    isArchived?: boolean,
+  ) => Promise<void>;
+  deleteCompletedTasks: (IdList?: number) => Promise<void>;
+  addTask: (newTask: TaskType, IdList?: number) => Promise<any | number>;
+  deleteTask: (IdTask: number, IdList: number) => Promise<void>;
+  completeTask: (IdTask: number, IdSubtask: number, IdList: number) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType>({
   listData: [],
   updateListData: () => { },
   createList: async () => { },
-  deleteList: async (IdList: number) => { }
+  deleteList: async () => { },
+  updateList: async () => { },
+  deleteCompletedTasks: async () => { },
+  addTask: async () => { },
+  deleteTask: async () => { },
+  completeTask: async () => { },
 });
 
 type DataProviderProps = {
@@ -89,8 +108,148 @@ export function DataProvider({ children }: DataProviderProps) {
         console.error("Error occurred while deleting list from db:", error);
         throw error;
       }
-    }
+    },
+    updateList: async (
+      IdList: number,
+      listName?: string,
+      iconId?: number,
+      colorVariant?: number,
+      canBeDeleted?: boolean,
+      isShared?: boolean,
+      isFavorite?: boolean,
+      isArchived?: boolean,
+    ): Promise<void> => {
+      const updatedListData = listData.map((list) => {
+        if (list.IdList === IdList) {
+          return {
+            ...list,
+            listName: listName !== undefined ? listName : list.listName,
+            iconId: iconId !== undefined ? iconId : list.iconId,
+            colorVariant: colorVariant !== undefined ? colorVariant : list.colorVariant,
+            canBeDeleted: canBeDeleted !== undefined ? canBeDeleted : list.canBeDeleted,
+            isShared: isShared !== undefined ? isShared : list.isShared,
+            isFavorite: isFavorite !== undefined ? isFavorite : list.isFavorite,
+            isArchived: isArchived !== undefined ? isArchived : list.isArchived,
+          };
+        }
+        return list;
+      });
 
+      updateListData(() => updatedListData);
+      try {
+        await updateListInDatabase(
+          IdList,
+          listName,
+          iconId,
+          colorVariant,
+          canBeDeleted,
+          isShared,
+          isFavorite,
+          isArchived
+        );
+      } catch (error) {
+        console.error("Error occurred while updating list in db:", error);
+        throw error;
+      }
+    },
+    deleteCompletedTasks: async (IdList?: number): Promise<void> => {
+      const updatedListData = listData.map((list) => {
+        if (list.IdList === IdList) {
+          const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
+          return {
+            ...list,
+            tasks: updatedTasks,
+          };
+        }
+        return list;
+      });
+
+      updateListData(() => updatedListData);
+      try {
+        await deleteCompletedTasksInDatabase(IdList);
+
+      } catch (error) {
+        console.error("Error occurred while deleting completed tasks from db:", error);
+        throw error;
+      }
+    },
+    addTask: async (
+      newTask: TaskType,
+      IdList?: number,
+    ): Promise<number | undefined> => {
+      try {
+        const taskId = await addTaskToDatabase(newTask, IdList || -1);
+        if (taskId !== null) {
+          newTask.IdTask = taskId;
+
+          const newListData = listData.map((list) => {
+            if (list.IdList === IdList) {
+              return {
+                ...list,
+                tasks: [...list.tasks, newTask],
+              };
+            } else if (list.IdList === 1 && IdList !== 1) {
+              return {
+                ...list,
+                tasks: [...list.tasks, newTask],
+              };
+            } else {
+              return list;
+            }
+          });
+          updateListData(() => newListData);
+          return taskId;
+        }
+      } catch (error) {
+        console.error("Error occurred while adding task to db:", error);
+        throw error;
+      }
+    },
+    deleteTask: async (IdTask: number, IdList: number): Promise<void> => {
+      const updatedListData = listData.map((list) => {
+        if (list.IdList === IdList) {
+          const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== IdTask);
+          return {
+            ...list,
+            tasks: updatedTasks,
+          };
+        }
+        return list;
+      });
+
+      updateListData(() => updatedListData);
+      try {
+        await deleteTaskFromDatabase(IdTask);
+      } catch (error) {
+        console.error("Error occurred while deleting task from db:", error);
+        throw error;
+      }
+    },
+    completeTask: async (IdTask: number, IdSubtask: number, IdList: number): Promise<void> => {
+      updateListData((prevListData: ListType[]) => {
+        const updatedLists = prevListData.map((list: ListType) => {
+          if (list.IdList === IdList) {
+            const updatedTasks = list.tasks.map((task: TaskType) => {
+              if (task.IdTask === IdTask) {
+                const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
+                  subtask.idSubtask === IdSubtask ? { ...subtask, isCompleted: !subtask.isCompleted } : subtask
+                );
+                return { ...task, subtasks: updatedSubtasks };
+              } else {
+                return task;
+              }
+            });
+
+            return { ...list, tasks: updatedTasks };
+          } else {
+            return list;
+          }
+        });
+
+        return updatedLists;
+      });
+    }
   };
+
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

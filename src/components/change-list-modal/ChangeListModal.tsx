@@ -9,7 +9,7 @@ import { useListContext } from 'context/DataProvider';
 import { ListType } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 import { useNavigation } from '@react-navigation/native';
-import { updateListInDatabase } from 'utils/database';
+
 
 type ChangeListModalProps = {
     isModalVisible: boolean;
@@ -39,7 +39,7 @@ export default function ChangeListModal({
     const theme = useTheme();
     const [newListName, setNewListName] = useState<string>(listName);
     const navigation = useNavigation();
-    const { deleteList, updateListData } = useListContext();
+    const { deleteList, updateList } = useListContext();
     const intl = useIntl();
     const [isNewListState, setIsNewListState] = useState(isNewList);
 
@@ -73,36 +73,9 @@ export default function ChangeListModal({
         colorVariant: number
     ) => {
         setIsNewListState(false);
-
-        updateListInDatabase(
-            listId,
-            listName,
-            iconId,
-            colorVariant
-        )
-            .then(() => {
-                updateListData((prevListData: ListType[]) => {
-                    const updatedLists = prevListData.map((list: ListType) => {
-                        if (list.IdList === listId) {
-                            return {
-                                ...list,
-                                listName: listName,
-                                iconId: iconId,
-                                colorVariant: colorVariant,
-                            };
-                        } else {
-                            return list;
-                        }
-                    });
-
-                    return updatedLists;
-                });
-
-                handleModal();
-            })
-            .catch((error) => {
-                console.error('Błąd aktualizacji listy:', error);
-            });
+        updateList(listId, listName, iconId, colorVariant).then(() => {
+            handleModal();
+        });
     };
 
     const handleCancelPress = () => {

@@ -299,23 +299,6 @@ export function addTaskToDatabase(
   });
 }
 
-export function deleteTask(taskId: number): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    database.transaction(tx => {
-      tx.executeSql(
-        'DELETE FROM tasks WHERE IdTask = ?',
-        [taskId],
-        () => {
-          resolve();
-        },
-        (_, error) => {
-          reject(error);
-        },
-      );
-    });
-  });
-}
-
 export function updateTaskInDatabase(
   taskId: number,
   title: string,
