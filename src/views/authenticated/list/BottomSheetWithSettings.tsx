@@ -7,7 +7,6 @@ import { useIntl } from 'react-intl';
 import { ListType } from 'data/types';
 import { useListContext } from 'context/DataProvider';
 import { useNavigation } from '@react-navigation/native';
-import { deleteCompletedTasksInDatabase, updateListInDatabase } from 'utils/database';
 
 //icons:
 import RemoveCompletedTasksIcon from 'assets/button-icons/remove-completed-tasks.svg';
@@ -21,7 +20,6 @@ import FavoriteListIcon from 'assets/button-icons/favorite.svg';
 //components:
 import BottomSheet from 'components/bottom-sheet';
 import Button, { buttonTypes } from 'components/button';
-import { useNotification } from 'hooks/useNotification';
 
 type BottomSheetWithSettingsProps = {
     refDetails: RefObject<BottomSheetRefProps>;
@@ -38,7 +36,7 @@ export default function BottomSheetWithSettings({
 }: BottomSheetWithSettingsProps) {
     const theme = useTheme();
     const intl = useIntl();
-    const { listData, updateListData, deleteList } = useListContext();
+    const { listData, updateList, deleteList, deleteCompletedTasks } = useListContext();
     const navigation = useNavigation();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === IdList));
 
@@ -95,25 +93,8 @@ export default function BottomSheetWithSettings({
 
     async function removeCompletedTasks() {
         handleShowDetailsBottomSheet();
+        deleteCompletedTasks(IdList);
 
-        try {
-            await deleteCompletedTasksInDatabase(IdList);
-
-            const updatedListData = listData.map((list) => {
-                if (list.IdList === IdList) {
-                    const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
-                    return {
-                        ...list,
-                        tasks: updatedTasks,
-                    };
-                }
-                return list;
-            });
-
-            updateListData(() => updatedListData);
-        } catch (error) {
-            console.error('Error removing completed tasks:', error);
-        }
     }
 
     async function addListToFavoriteList() {
@@ -123,23 +104,7 @@ export default function BottomSheetWithSettings({
             const setIsFavorite = !isCurrentlyFavorite;
 
             try {
-                await updateListInDatabase(currentList.IdList, undefined, undefined, undefined, undefined, undefined, setIsFavorite);
-
-                updateListData((prevListData: ListType[]) => {
-                    const updatedLists = prevListData.map((list: ListType) => {
-                        if (list.IdList === currentList.IdList) {
-                            return {
-                                ...list,
-                                isFavorite: setIsFavorite,
-                            };
-                        } else {
-                            return list;
-                        }
-                    });
-
-                    return updatedLists;
-                });
-
+                updateList(currentList.IdList, undefined, undefined, undefined, undefined, undefined, setIsFavorite);
             } catch (error) {
                 console.error('Error while updating list:', error);
             }

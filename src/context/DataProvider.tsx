@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType } from 'data/types';
-import { addListToDatabase, deleteListFromDatabase, getUserLists } from 'utils/database';
+import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 
 type DataContextType = {
@@ -8,13 +8,26 @@ type DataContextType = {
   updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
   createList: () => Promise<any | ListType>;
   deleteList: (IdList: number) => Promise<void>;
+  updateList: (
+    IdList: number,
+    listName?: string,
+    iconId?: number,
+    colorVariant?: number,
+    canBeDeleted?: boolean,
+    isShared?: boolean,
+    isFavorite?: boolean,
+    isArchived?: boolean,
+  ) => Promise<void>;
+  deleteCompletedTasks: (IdList?: number) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType>({
   listData: [],
   updateListData: () => { },
   createList: async () => { },
-  deleteList: async (IdList: number) => { }
+  deleteList: async () => { },
+  updateList: async () => { },
+  deleteCompletedTasks: async () => { },
 });
 
 type DataProviderProps = {
@@ -89,8 +102,72 @@ export function DataProvider({ children }: DataProviderProps) {
         console.error("Error occurred while deleting list from db:", error);
         throw error;
       }
-    }
+    },
+    updateList: async (
+      IdList: number,
+      listName?: string,
+      iconId?: number,
+      colorVariant?: number,
+      canBeDeleted?: boolean,
+      isShared?: boolean,
+      isFavorite?: boolean,
+      isArchived?: boolean,
+    ): Promise<void> => {
+      const updatedListData = listData.map((list) => {
+        if (list.IdList === IdList) {
+          return {
+            ...list,
+            listName: listName !== undefined ? listName : list.listName,
+            iconId: iconId !== undefined ? iconId : list.iconId,
+            colorVariant: colorVariant !== undefined ? colorVariant : list.colorVariant,
+            canBeDeleted: canBeDeleted !== undefined ? canBeDeleted : list.canBeDeleted,
+            isShared: isShared !== undefined ? isShared : list.isShared,
+            isFavorite: isFavorite !== undefined ? isFavorite : list.isFavorite,
+            isArchived: isArchived !== undefined ? isArchived : list.isArchived,
+          };
+        }
+        return list;
+      });
 
+      updateListData(() => updatedListData);
+      try {
+        await updateListInDatabase(
+          IdList,
+          listName,
+          iconId,
+          colorVariant,
+          canBeDeleted,
+          isShared,
+          isFavorite,
+          isArchived
+        );
+      } catch (error) {
+        console.error("Error occurred while updating list in db:", error);
+        throw error;
+      }
+    },
+    deleteCompletedTasks: async (IdList?: number): Promise<void> => {
+      const updatedListData = listData.map((list) => {
+        if (list.IdList === IdList) {
+          const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
+          return {
+            ...list,
+            tasks: updatedTasks,
+          };
+        }
+        return list;
+      });
+
+      updateListData(() => updatedListData);
+      try {
+        await deleteCompletedTasksInDatabase(IdList);
+
+      } catch (error) {
+        console.error("Error occurred while deleting completed tasks from db:", error);
+        throw error;
+      }
+    },
   };
+
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
