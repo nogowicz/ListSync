@@ -20,6 +20,9 @@ import { getFormattedDate } from 'utils/dateFormat';
 import { importanceNames } from './ImportanceSelector';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from 'navigation/utils/ThemeProvider';
+import { useAuth } from 'context/AuthContext';
+import { useNotification } from 'hooks/useNotification';
+import { notificationTimeNames } from './NotificationSelector';
 
 //icons:
 import AddTaskIcon from 'assets/button-icons/add-task.svg';
@@ -29,10 +32,7 @@ import FunctionalPanel from './FunctionalPanel';
 //components:
 import DateTimePickers from './DateTimePickers';
 import Button, { buttonTypes } from 'components/button';
-import { useAuth } from 'context/AuthContext';
-import { addTaskToDatabase } from 'utils/database';
-import { useNotification } from 'hooks/useNotification';
-import { notificationTimeNames } from './NotificationSelector';
+
 
 type AddTaskFieldProps = {
     currentListId: number;
@@ -44,7 +44,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
     const theme = useTheme();
     const intl = useIntl();
     const { user } = useAuth();
-    const { listData, updateListData } = useListContext();
+    const { listData, addTask } = useListContext();
     const [isInputVisible, setIsInputVisible] = useState(false);
     const lists = listData.filter((item: ListType) => item.isArchived === false);
     const [list, setList] = useState<ListType[]>(lists);
@@ -145,37 +145,18 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             };
 
             try {
-                const taskId = await addTaskToDatabase(newTask, activeList?.IdList || -1);
-                if (taskId !== null) {
-                    newTask.IdTask = taskId;
+                const taskId = await addTask(newTask, activeList?.IdList);
 
-                    const newListData = listData.map((list) => {
-                        if (list.IdList === activeList?.IdList && activeList) {
-                            return {
-                                ...list,
-                                tasks: [...list.tasks, newTask],
-                            };
-                        } else if (list.IdList === 1 && activeList?.IdList !== 1) {
-                            return {
-                                ...list,
-                                tasks: [...list.tasks, newTask],
-                            };
-                        } else {
-                            return list;
-                        }
-                    });
-                    updateListData(() => newListData);
-                    handleCreateNotification(taskId);
-                    setDeadline(deadlineNames.REMOVE);
-                    setDeadlineDate(null);
-                    setIsDeadlineVisible(false);
-                    setNotification(notificationTimeNames.REMOVE);
-                    setNotificationTime(undefined);
-                    setIsNotificationVisible(false);
-                    setImportance(importanceNames.REMOVE);
-                    setIsImportanceVisible(false);
-                    setTextValue('');
-                }
+                handleCreateNotification(taskId);
+                setDeadline(deadlineNames.REMOVE);
+                setDeadlineDate(null);
+                setIsDeadlineVisible(false);
+                setNotification(notificationTimeNames.REMOVE);
+                setNotificationTime(undefined);
+                setIsNotificationVisible(false);
+                setImportance(importanceNames.REMOVE);
+                setIsImportanceVisible(false);
+                setTextValue('');
             } catch (error) {
                 console.error('Error adding task:', error);
             }
