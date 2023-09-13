@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { ListType, TaskType } from 'data/types';
-import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase } from 'utils/database';
+import { ListType, SubtaskType, TaskType } from 'data/types';
+import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 
 type DataContextType = {
@@ -20,6 +20,8 @@ type DataContextType = {
   ) => Promise<void>;
   deleteCompletedTasks: (IdList?: number) => Promise<void>;
   addTask: (newTask: TaskType, IdList?: number) => Promise<any | number>;
+  deleteTask: (IdTask: number, IdList: number) => Promise<void>;
+  completeTask: (IdTask: number, IdSubtask: number, IdList: number) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType>({
@@ -30,6 +32,8 @@ const DataContext = createContext<DataContextType>({
   updateList: async () => { },
   deleteCompletedTasks: async () => { },
   addTask: async () => { },
+  deleteTask: async () => { },
+  completeTask: async () => { },
 });
 
 type DataProviderProps = {
@@ -200,6 +204,50 @@ export function DataProvider({ children }: DataProviderProps) {
         console.error("Error occurred while adding task to db:", error);
         throw error;
       }
+    },
+    deleteTask: async (IdTask: number, IdList: number): Promise<void> => {
+      const updatedListData = listData.map((list) => {
+        if (list.IdList === IdList) {
+          const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== IdTask);
+          return {
+            ...list,
+            tasks: updatedTasks,
+          };
+        }
+        return list;
+      });
+
+      updateListData(() => updatedListData);
+      try {
+        await deleteTaskFromDatabase(IdTask);
+      } catch (error) {
+        console.error("Error occurred while deleting task from db:", error);
+        throw error;
+      }
+    },
+    completeTask: async (IdTask: number, IdSubtask: number, IdList: number): Promise<void> => {
+      updateListData((prevListData: ListType[]) => {
+        const updatedLists = prevListData.map((list: ListType) => {
+          if (list.IdList === IdList) {
+            const updatedTasks = list.tasks.map((task: TaskType) => {
+              if (task.IdTask === IdTask) {
+                const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
+                  subtask.idSubtask === IdSubtask ? { ...subtask, isCompleted: !subtask.isCompleted } : subtask
+                );
+                return { ...task, subtasks: updatedSubtasks };
+              } else {
+                return task;
+              }
+            });
+
+            return { ...list, tasks: updatedTasks };
+          } else {
+            return list;
+          }
+        });
+
+        return updatedLists;
+      });
     }
   };
 

@@ -146,7 +146,6 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
 
             try {
                 const taskId = await addTask(newTask, activeList?.IdList);
-
                 handleCreateNotification(taskId);
                 setDeadline(deadlineNames.REMOVE);
                 setDeadlineDate(null);

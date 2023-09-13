@@ -20,7 +20,6 @@ import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
 import { deadlineNames } from 'components/add-task-field/DeadlineSelector';
 import { Swipeable } from 'react-native-gesture-handler';
-import { deleteTaskFromDatabase } from 'utils/database';
 
 //icons:
 import Trash from 'assets/button-icons/trash.svg';
@@ -28,7 +27,7 @@ import Done from 'assets/button-icons/done.svg';
 import { useNotification } from 'hooks/useNotification';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from 'navigation/utils/screens';
-import { NativeStackNavigationProp, NativeStackNavigatorProps } from '@react-navigation/native-stack/lib/typescript/src/types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 import { RootStackParamList } from 'navigation/navigation';
 
 type TaskProps = {
@@ -51,7 +50,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const deadlineAsString = formatDateToShortDate(deadline, intl);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
-    const { listData, updateListData } = useListContext();
+    const { completeTask, deleteTask } = useListContext();
     const now = new Date();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const rotateStyle = useAnimatedStyle(() => {
@@ -97,48 +96,14 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     }, [subTasks]);
 
     const handleCompleteSubtask = (taskId: number, subtaskId: number) => {
-        updateListData((prevListData: ListType[]) => {
-            const updatedLists = prevListData.map((list: ListType) => {
-                if (list.IdList === listId) {
-                    const updatedTasks = list.tasks.map((task: TaskType) => {
-                        if (task.IdTask === taskId) {
-                            const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
-                                subtask.idSubtask === subtaskId ? { ...subtask, isCompleted: !subtask.isCompleted } : subtask
-                            );
-                            return { ...task, subtasks: updatedSubtasks };
-                        } else {
-                            return task;
-                        }
-                    });
-
-                    return { ...list, tasks: updatedTasks };
-                } else {
-                    return list;
-                }
-            });
-
-            return updatedLists;
-        });
+        completeTask(taskId, subtaskId, listId);
     };
 
     const handleDeleteTask = async () => {
         try {
-            await deleteTaskFromDatabase(task.IdTask).then(() => {
+            await deleteTask(task.IdTask, listId).then(() => {
                 cancelNotification(String(task.IdTask));
             })
-
-            const updatedListData = listData.map((list) => {
-                if (list.IdList === listId) {
-                    const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== task.IdTask);
-                    return {
-                        ...list,
-                        tasks: updatedTasks,
-                    };
-                }
-                return list;
-            });
-
-            updateListData(() => updatedListData);
 
         } catch (error) {
             console.error('Error removing task:', error);
