@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType, SubtaskType, TaskType } from 'data/types';
-import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase } from 'utils/database';
+import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 
 type DataContextType = {
@@ -19,9 +19,13 @@ type DataContextType = {
     isArchived?: boolean,
   ) => Promise<void>;
   deleteCompletedTasks: (IdList?: number) => Promise<void>;
-  addTask: (newTask: TaskType, IdList?: number) => Promise<any | number>;
+  addTask: (newTask: TaskType, IdList?: number) => Promise<number | undefined>;
   deleteTask: (IdTask: number, IdList: number) => Promise<void>;
   completeTask: (IdTask: number, IdSubtask: number, IdList: number) => Promise<void>;
+  addSubtask: (
+    newSubtask: SubtaskType,
+    idTask: number,
+  ) => Promise<number | undefined>;
 };
 
 const DataContext = createContext<DataContextType>({
@@ -31,9 +35,15 @@ const DataContext = createContext<DataContextType>({
   deleteList: async () => { },
   updateList: async () => { },
   deleteCompletedTasks: async () => { },
-  addTask: async () => { },
+  addTask: async () => {
+    return -1;
+
+  },
   deleteTask: async () => { },
   completeTask: async () => { },
+  addSubtask: async () => {
+    return -1;
+  },
 });
 
 type DataProviderProps = {
@@ -248,6 +258,48 @@ export function DataProvider({ children }: DataProviderProps) {
 
         return updatedLists;
       });
+    },
+    addSubtask: async (
+      newSubtask: SubtaskType,
+      taskId: number
+    ): Promise<number | undefined> => {
+      try {
+        const idSubtask = await addSubtaskToDatabase(
+          newSubtask,
+          taskId
+        );
+        if (idSubtask !== undefined) {
+          newSubtask.idSubtask = idSubtask;
+
+          const newListData = listData.map((list) => {
+            if (list.IdList === taskId) {
+              const updatedTasks = list.tasks.map((task) => {
+                if (task.IdTask === taskId) {
+                  return {
+                    ...task,
+                    subtasks: [...task.subtasks, newSubtask],
+                  };
+                }
+                return task;
+              });
+
+              return {
+                ...list,
+                tasks: updatedTasks,
+              };
+            }
+            return list;
+          });
+          updateListData(() => newListData);
+          return idSubtask;
+        } else {
+          console.error('Error adding subtask: Subtask ID is undefined.');
+          return undefined;
+        }
+      } catch (error) {
+        console.error("Error occurred while adding subtask to db:", error);
+        throw error;
+      }
     }
   };
 

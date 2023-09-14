@@ -334,20 +334,32 @@ export function updateTaskInDatabase(
   });
 }
 
-export function addSubtask(
-  title: string,
-  isCompleted: boolean,
-  addedBy: string,
-  createdAt: string,
-  Task_idTask: number,
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export function addSubtaskToDatabase(
+  newSubtask: SubtaskType,
+  idTask: number,
+): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO subtasks (title, isCompleted, addedBy, createdAt, Task_idTask) VALUES (?, ?, ?, ?, ?)',
-        [title, isCompleted ? 1 : 0, addedBy, createdAt, Task_idTask],
+        'INSERT INTO tasks (title, isCompleted, addedBy,  createdAt) VALUES (?, ?, ?, ?)',
+        [
+          newSubtask.title,
+          newSubtask.isCompleted ? 1 : 0,
+          newSubtask.addedBy,
+          newSubtask.createdAt,
+        ],
         (_, result) => {
-          resolve();
+          const IdSubtask = result.insertId;
+          tx.executeSql(
+            'INSERT INTO subtasks (idSubtask, Task_idTask) VALUES (?, ?)',
+            [IdSubtask, idTask],
+            () => {
+              resolve(IdSubtask);
+            },
+            error => {
+              reject(error);
+            },
+          );
         },
         (_, error) => {
           reject(error);
@@ -489,45 +501,6 @@ export async function getUserTasksForList(listId: number): Promise<TaskType[]> {
         },
         error => {
           console.error('Database error:', error);
-          reject(error);
-        },
-      );
-    });
-  });
-}
-
-export function getUserTasks(userId: number): Promise<TaskType[]> {
-  return new Promise<TaskType[]>((resolve, reject) => {
-    database.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM tasks WHERE assignedTo = ?',
-        [userId],
-        async (_, resultSet) => {
-          const tasks: TaskType[] = [];
-          for (let i = 0; i < resultSet.rows.length; i++) {
-            const rowData = resultSet.rows.item(i);
-            const task: TaskType = {
-              IdTask: rowData.IdTask,
-              title: rowData.title,
-              isCompleted: rowData.isCompleted === 1,
-              deadline: rowData.deadline,
-              importance: rowData.importance,
-              effort: rowData.effort,
-              note: rowData.note,
-              addedBy: rowData.addedBy,
-              assignedTo: rowData.assignedTo,
-              createdAt: rowData.createdAt,
-              subtasks: [],
-            };
-
-            const subtasks = await fetchSubtasksForTask(task.IdTask);
-            task.subtasks = subtasks;
-
-            tasks.push(task);
-          }
-          resolve(tasks);
-        },
-        (_, error) => {
           reject(error);
         },
       );
