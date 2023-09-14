@@ -14,7 +14,7 @@ type TaskListProps = {
 };
 
 export default function TaskList({ tasks, listId, color }: TaskListProps) {
-    const { updateListData } = useListContext();
+    const { completeTask } = useListContext();
     const [currentTasks, setCurrentTasks] = useState<TaskType[]>([]);
     const { cancelNotification } = useNotification();
 
@@ -27,31 +27,8 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
 
         if (taskToUpdate) {
             const updatedIsCompleted = !taskToUpdate.isCompleted;
-
-            updateTaskInDatabase(
-                taskId,
-                taskToUpdate.title,
-                updatedIsCompleted,
-                taskToUpdate.deadline,
-                taskToUpdate.importance,
-                taskToUpdate.effort,
-                taskToUpdate.note,
-                taskToUpdate.assignedTo
-            ).then(() => {
+            completeTask(taskToUpdate).then(() => {
                 cancelNotification(String(taskId));
-                updateListData((prevListData: ListType[]) => {
-                    const updatedLists = prevListData.map((list: ListType) => {
-                        const updatedTasks = list.tasks.map((task: TaskType) =>
-                            task.IdTask === taskId ? { ...task, isCompleted: updatedIsCompleted } : task
-                        );
-
-                        return { ...list, tasks: updatedTasks };
-                    });
-
-                    return updatedLists;
-                });
-            }).catch((error) => {
-                console.error('Error updating task in the database:', error);
             });
         }
     };

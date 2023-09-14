@@ -8,10 +8,7 @@ import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIntl } from 'react-intl';
 import Button, { buttonTypes } from 'components/button';
-import { updateTaskInDatabase } from 'utils/database';
-import { useNotification } from 'hooks/useNotification';
-import { useListContext } from 'context/DataProvider';
-import { ListType, TaskType } from 'data/types';
+
 
 
 type TaskDetailsScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'TASK_DETAILS'>;

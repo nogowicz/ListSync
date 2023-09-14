@@ -386,7 +386,7 @@ export function deleteSubtaskFromDatabase(subtaskId: number): Promise<void> {
   });
 }
 
-export function updateSubtask(
+export function updateSubtaskInDatabase(
   subtaskId: number,
   title: string,
   isCompleted: boolean,
