@@ -369,7 +369,7 @@ export function addSubtaskToDatabase(
   });
 }
 
-export function deleteSubtask(subtaskId: number): Promise<void> {
+export function deleteSubtaskFromDatabase(subtaskId: number): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
