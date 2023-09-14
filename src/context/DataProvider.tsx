@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType, SubtaskType, TaskType } from 'data/types';
-import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase } from 'utils/database';
+import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 
 type DataContextType = {
@@ -32,7 +32,7 @@ type DataContextType = {
     idTask: number,
     idList: number,
   ) => Promise<void>;
-  completeSubtask: (idSubtask: number, idTask: number, idList: number) => Promise<void>;
+  completeSubtask: (updatedSubtask: SubtaskType) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType>({
@@ -344,29 +344,29 @@ export function DataProvider({ children }: DataProviderProps) {
         throw error;
       }
     },
-    completeSubtask: async (idSubtask: number, idTask: number, IdList: number): Promise<void> => {
-      // updateListData((prevListData: ListType[]) => {
-      //   const updatedLists = prevListData.map((list: ListType) => {
-      //     if (list.IdList === IdList) {
-      //       const updatedTasks = list.tasks.map((task: TaskType) => {
-      //         if (task.IdTask === IdTask) {
-      //           const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
-      //             subtask.idSubtask === IdSubtask ? { ...subtask, isCompleted: !subtask.isCompleted } : subtask
-      //           );
-      //           return { ...task, subtasks: updatedSubtasks };
-      //         } else {
-      //           return task;
-      //         }
-      //       });
+    completeSubtask: async (updatedSubtask: SubtaskType): Promise<void> => {
+      const updatedIsCompleted = !updatedSubtask.isCompleted;
+      await updateSubtaskInDatabase(
+        updatedSubtask.idSubtask,
+        updatedSubtask.title,
+        updatedIsCompleted,
+      )
+      updateListData((prevListData: ListType[]) => {
+        const updatedLists = prevListData.map((list: ListType) => {
+          const updatedTasks = list.tasks.map((task: TaskType) => {
+            const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
+              subtask.idSubtask === updatedSubtask.idSubtask ? { ...subtask, isCompleted: updatedIsCompleted } : subtask
+            );
+            return { ...task, subtasks: updatedSubtasks };
+          }
+          );
+          return { ...list, tasks: updatedTasks };
 
-      //       return { ...list, tasks: updatedTasks };
-      //     } else {
-      //       return list;
-      //     }
-      //   });
+        });
 
-      //   return updatedLists;
-      // });
+        return updatedLists;
+      });
+
     },
   };
 
