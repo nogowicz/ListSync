@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { spacing, typography } from 'styles'
 import { useTheme } from 'navigation/utils/ThemeProvider'
 import NavigationTopBar, { navigationTypes } from 'components/navigation-top-bar';
@@ -8,6 +8,9 @@ import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIntl } from 'react-intl';
 import Button, { buttonTypes } from 'components/button';
+import { useListContext } from 'context/DataProvider';
+import { ListType, TaskType } from 'data/types';
+import list from '../list';
 
 
 
@@ -24,8 +27,10 @@ type TaskDetailsProps = {
 export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const theme = useTheme();
     const intl = useIntl();
-    const { task, color }: any = route.params;
+    const { task, color, currentListId }: any = route.params;
     const [taskTitle, setTaskTitle] = useState<string>(task.title);
+    const { listData, completeTask } = useListContext();
+    const [currentTask, setCurrentTask] = useState<TaskType | undefined>(task);
 
     //translations:
     const editTaskTranslation = intl.formatMessage({
@@ -37,6 +42,9 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
         defaultMessage: "Task name"
     })
 
+    useEffect(() => {
+        setCurrentTask(listData.find((list: ListType) => list.IdList === currentListId)?.tasks.find((taskItem: TaskType) => taskItem.IdTask === currentTask?.IdTask));
+    }, [listData])
 
 
     return (
@@ -49,12 +57,12 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 <View style={styles.taskTitleContainer}>
                     <Button
                         type={buttonTypes.BUTTON_TYPES.CHECK}
-                        onPress={() => { }}
-                        isChecked={task.isCompleted}
+                        onPress={() => completeTask(currentTask ? currentTask : task)}
+                        isChecked={currentTask?.isCompleted}
                         color={color}
                     />
                     <TextInput
-                        defaultValue={task.title}
+                        defaultValue={currentTask?.title}
                         value={taskTitle}
                         onChangeText={(text: string) => setTaskTitle(text)}
                         style={[styles.textInputStyle, { color: theme.TEXT }]}
@@ -81,6 +89,7 @@ const styles = StyleSheet.create({
     },
     textInputStyle: {
         fontSize: typography.FONT_SIZE_18,
+        flex: 1,
     }
 
 })

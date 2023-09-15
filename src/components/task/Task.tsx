@@ -50,7 +50,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const deadlineAsString = formatDateToShortDate(deadline, intl);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
-    const { completeTask, deleteTask } = useListContext();
+    const { completeSubtask, deleteTask } = useListContext();
     const now = new Date();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const rotateStyle = useAnimatedStyle(() => {
@@ -95,8 +95,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
         setSortedSubTasks(sortedTasks);
     }, [subTasks]);
 
-    const handleCompleteSubtask = (taskId: number, subtaskId: number) => {
-        completeTask(taskId, subtaskId, listId);
+    const handleCompleteSubtask = (updatedSubtask: SubtaskType) => {
+        completeSubtask(updatedSubtask);
     };
 
     const handleDeleteTask = async () => {
@@ -167,7 +167,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                 activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                 onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.TASK_DETAILS.ID, {
                     task: task,
-                    color: color
+                    color: color,
+                    currentListId: listId
                 })}
             >
                 <View style={styles.upperContainer}>
@@ -238,7 +239,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                         {sortedSubTasks.map((item: SubtaskType) => (
                             <SubTask
                                 key={item.idSubtask}
-                                handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
+                                handleCompleteSubtask={() => handleCompleteSubtask(item)}
                                 item={item}
                             />)
                         )

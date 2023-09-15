@@ -9,5 +9,6 @@ export type RootStackParamList = {
         isNewList?: boolean;
         task?: TaskType;
         color?: string;
+        currentListId?: number;
       };
 };

@@ -26,7 +26,6 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
         const taskToUpdate = tasks.find((task) => task.IdTask === taskId);
 
         if (taskToUpdate) {
-            const updatedIsCompleted = !taskToUpdate.isCompleted;
             completeTask(taskToUpdate).then(() => {
                 cancelNotification(String(taskId));
             });
