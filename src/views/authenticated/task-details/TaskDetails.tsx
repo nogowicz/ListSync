@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { spacing } from 'styles'
+import { StyleSheet, TextInput, View } from 'react-native'
+import React, { useState } from 'react'
+import { spacing, typography } from 'styles'
 import { useTheme } from 'navigation/utils/ThemeProvider'
 import NavigationTopBar, { navigationTypes } from 'components/navigation-top-bar';
 import { RouteProp } from '@react-navigation/native';
@@ -25,12 +25,17 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const theme = useTheme();
     const intl = useIntl();
     const { task, color }: any = route.params;
+    const [taskTitle, setTaskTitle] = useState<string>(task.title);
 
     //translations:
     const editTaskTranslation = intl.formatMessage({
         defaultMessage: "Edit task",
-        id: "vies.authenticated.task.details.edit-task"
+        id: "views.authenticated.task.details.edit-task"
     });
+    const taskTitlePlaceholderTranslation = intl.formatMessage({
+        id: "views.authenticated.task.details.task-title-placeholder",
+        defaultMessage: "Task name"
+    })
 
 
 
@@ -41,12 +46,19 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                     name={editTaskTranslation}
                     type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.BASIC}
                 />
-                <View>
+                <View style={styles.taskTitleContainer}>
                     <Button
                         type={buttonTypes.BUTTON_TYPES.CHECK}
                         onPress={() => { }}
                         isChecked={task.isCompleted}
                         color={color}
+                    />
+                    <TextInput
+                        defaultValue={task.title}
+                        value={taskTitle}
+                        onChangeText={(text: string) => setTaskTitle(text)}
+                        style={[styles.textInputStyle, { color: theme.TEXT }]}
+                        placeholder={taskTitlePlaceholderTranslation}
                     />
                 </View>
             </View>
@@ -62,6 +74,13 @@ const styles = StyleSheet.create({
         marginHorizontal: spacing.SCALE_20,
         marginTop: spacing.SCALE_20,
         flex: 1,
+    },
+    taskTitleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    textInputStyle: {
+        fontSize: typography.FONT_SIZE_18,
     }
 
 })

@@ -120,7 +120,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                 }}>
                     <Trash stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
                     <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
-                        <FormattedMessage defaultMessage="Delete" id="vies.authenticated.task.delete" />
+                        <FormattedMessage defaultMessage="Delete" id="view.authenticated.task.delete" />
                     </Text>
                 </Animated.View>
             </View>
@@ -137,8 +137,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                     <Done stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
                     <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
                         {task.isCompleted ?
-                            <FormattedMessage defaultMessage="Undone" id="vies.authenticated.task.un-done" /> :
-                            <FormattedMessage defaultMessage="Done" id="vies.authenticated.task.done" />}
+                            <FormattedMessage defaultMessage="Undone" id="view.authenticated.task.un-done" /> :
+                            <FormattedMessage defaultMessage="Done" id="view.authenticated.task.done" />}
                     </Text>
                 </Animated.View>
             </View>
