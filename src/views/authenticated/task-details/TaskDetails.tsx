@@ -6,15 +6,16 @@ import NavigationTopBar, { navigationTypes } from 'components/navigation-top-bar
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from 'navigation/navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import Button, { buttonTypes } from 'components/button';
 import { useListContext } from 'context/DataProvider';
 import { ListType, SubtaskType, TaskType } from 'data/types';
 import { useAuth } from 'context/AuthContext';
+import SubTask from 'components/sub-task';
 
 //icons:
 import AddIcon from 'assets/button-icons/plus.svg';
-import SubTask from 'components/sub-task';
+import NotificationIcon from 'assets/button-icons/notification-bell.svg';
 
 
 
@@ -118,7 +119,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
 
                         />
                     </View>
-                    <Animated.View
+                    <View
                         style={[styles.subtasks]}
                     >
                         {currentTask?.subtasks.map((subtask: SubtaskType) => (
@@ -131,7 +132,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                                 listId={currentListId}
                             />
                         ))}
-                    </Animated.View>
+                    </View>
                     {isSubtaskInputVisible ?
                         <View style={styles.subtaskTitleContainer}>
                             <Button
@@ -167,6 +168,24 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                                 {subtaskTitlePlaceholderTranslation}
                             </Text>
                         </TouchableOpacity>}
+                </View>
+                <View style={styles.detailsButtons}>
+                    <TouchableOpacity
+                        activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                        onPress={() => { }}
+                        style={[styles.notificationButton, { borderBottomColor: theme.TEXT }]}
+                    >
+                        <NotificationIcon
+                            stroke={theme.TEXT}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />
+                        <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
+                            <FormattedMessage
+                                id='views.authenticated.task.details.set-notification'
+                                defaultMessage='Set notification'
+                            />
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -212,4 +231,19 @@ const styles = StyleSheet.create({
         marginHorizontal: spacing.SCALE_16,
         overflow: 'hidden',
     },
+    detailsButtons: {
+        marginTop: spacing.SCALE_20,
+        marginHorizontal: spacing.SCALE_22,
+    },
+    notificationButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.SCALE_10,
+        borderBottomWidth: 1,
+        paddingVertical: spacing.SCALE_8,
+
+    },
+    notificationButtonText: {
+        fontSize: typography.FONT_SIZE_16,
+    }
 });
