@@ -8,9 +8,10 @@ import { useTheme } from 'navigation/utils/ThemeProvider';
 type SubtaskProps = {
     item: SubtaskType;
     handleCompleteSubtask: any;
+    color: string;
 };
 
-export default function Subtask({ item, handleCompleteSubtask }: SubtaskProps) {
+export default function Subtask({ item, handleCompleteSubtask, color }: SubtaskProps) {
     const theme = useTheme();
     return (
         <View
@@ -20,6 +21,7 @@ export default function Subtask({ item, handleCompleteSubtask }: SubtaskProps) {
                 type={buttonTypes.BUTTON_TYPES.CHECK}
                 onPress={handleCompleteSubtask}
                 isChecked={item.isCompleted}
+                color={color}
             />
             <Text style={[
                 styles.text,

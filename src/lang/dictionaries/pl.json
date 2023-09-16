@@ -137,5 +137,6 @@
   "views.authenticated.list.details.add-to-favorites": "Dodaj do ulubionych",
   "views.authenticated.list.details.remove-from-favorites": "Usuń z ulubionych",
   "views.authenticated.task.details.edit-task": "Edytuj zadanie",
-  "views.authenticated.task.details.task-title-placeholder": "Task name"
+  "views.authenticated.task.details.task-title-placeholder": "Task name",
+  "views.authenticated.task.details.add-subtask": "Dodaj podzadanie"
 }

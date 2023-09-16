@@ -241,6 +241,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                                 key={item.idSubtask}
                                 handleCompleteSubtask={() => handleCompleteSubtask(item)}
                                 item={item}
+                                color={color}
                             />)
                         )
                         }

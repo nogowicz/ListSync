@@ -137,5 +137,6 @@
   "views.authenticated.list.details.add-to-favorites": "Add to favorites",
   "views.authenticated.list.details.remove-from-favorites": "Remove from favorites",
   "views.authenticated.task.details.edit-task": "Edit task",
-  "views.authenticated.task.details.task-title-placeholder": "Task name"
+  "views.authenticated.task.details.task-title-placeholder": "Task name",
+  "views.authenticated.task.details.add-subtask": "Add subtask"
 }

@@ -4,6 +4,7 @@ import { useTheme } from "navigation/utils/ThemeProvider";
 import { constants, spacing, typography } from "styles";
 import { ReactNode, cloneElement } from "react";
 import { FormattedMessage } from "react-intl";
+import React from "react";
 
 //icons:
 import Plus from 'assets/button-icons/plus.svg';
@@ -26,6 +27,7 @@ type PrepareButtonsProps = {
     icon?: ReactNode;
     color?: string;
     isAvailable?: boolean;
+    size?: number;
 };
 
 export function prepareButtons({
@@ -38,7 +40,8 @@ export function prepareButtons({
     secureTextEntry,
     icon,
     color,
-    isAvailable
+    isAvailable,
+    size,
 }: PrepareButtonsProps) {
     const theme = useTheme();
 
@@ -119,8 +122,8 @@ export function prepareButtons({
                         /> :
                         <View
                             style={{
-                                width: constants.ICON_SIZE.CHECK,
-                                height: constants.ICON_SIZE.CHECK
+                                width: size ? size : constants.ICON_SIZE.CHECK,
+                                height: size ? size : constants.ICON_SIZE.CHECK
                             }} />
                     }
                 </TouchableOpacity>
