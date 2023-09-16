@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard, NativeSyntheticEvent, TextInputKeyPressEventData, } from 'react-native'
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard, NativeSyntheticEvent, TextInputKeyPressEventData, Animated, } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { constants, spacing, typography } from 'styles'
 import { useTheme } from 'navigation/utils/ThemeProvider'
@@ -14,6 +14,7 @@ import { useAuth } from 'context/AuthContext';
 
 //icons:
 import AddIcon from 'assets/button-icons/plus.svg';
+import SubTask from 'components/sub-task';
 
 
 
@@ -32,7 +33,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const intl = useIntl();
     const { task, color, currentListId }: any = route.params;
     const [taskTitle, setTaskTitle] = useState<string>(task.title);
-    const { listData, completeTask, addSubtask } = useListContext();
+    const { listData, completeTask, addSubtask, completeSubtask } = useListContext();
     const { user } = useAuth();
     const [currentTask, setCurrentTask] = useState<TaskType | undefined>(task);
     const [isSubtaskInputVisible, setIsSubtaskInputVisible] = useState<boolean>(false);
@@ -87,6 +88,10 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
 
     }
 
+    const handleCompleteSubtask = (updatedSubtask: SubtaskType) => {
+        completeSubtask(updatedSubtask);
+    };
+
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -113,13 +118,24 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
 
                         />
                     </View>
+                    <Animated.View
+                        style={[styles.subtasks]}
+                    >
+                        {currentTask?.subtasks.map((subtask: SubtaskType) => (
+                            <SubTask
+                                key={subtask.idSubtask}
+                                handleCompleteSubtask={() => handleCompleteSubtask(subtask)}
+                                item={subtask}
+                                color={color}
+                            />
+                        ))}
+                    </Animated.View>
                     {isSubtaskInputVisible ?
                         <View style={styles.subtaskTitleContainer}>
                             <Button
                                 type={buttonTypes.BUTTON_TYPES.CHECK}
                                 onPress={() => { }}
                                 color={color}
-                                size={constants.ICON_SIZE.SUBTASK_SQUARE_CHECK}
 
                             />
                             <TextInput
@@ -142,8 +158,8 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                             <AddIcon
                                 stroke={color}
                                 strokeWidth={1.5}
-                                width={constants.ICON_SIZE.SETTING_BUTTON}
-                                height={constants.ICON_SIZE.SETTING_BUTTON}
+                                width={constants.ICON_SIZE.COLOR}
+                                height={constants.ICON_SIZE.COLOR}
                             />
                             <Text style={[{ color: theme.TEXT }, styles.addSubtaskText]}>
                                 {subtaskTitlePlaceholderTranslation}
@@ -178,7 +194,8 @@ const styles = StyleSheet.create({
     addSubtaskContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: spacing.SCALE_10,
+        marginTop: spacing.SCALE_4,
+        paddingLeft: spacing.SCALE_8
     },
     addSubtaskText: {
         fontSize: typography.FONT_SIZE_16,
@@ -186,6 +203,11 @@ const styles = StyleSheet.create({
     subtaskTitleContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: spacing.SCALE_10,
+        paddingLeft: spacing.SCALE_16
+    },
+    subtasks: {
+        marginTop: spacing.SCALE_4,
+        marginLeft: spacing.SCALE_16,
+        overflow: 'hidden',
     },
 });
