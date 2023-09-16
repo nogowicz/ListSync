@@ -252,7 +252,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.SCALE_8
     },
     addSubtaskText: {
-        fontSize: typography.FONT_SIZE_16,
+        fontSize: typography.FONT_SIZE_18,
+        marginLeft: spacing.SCALE_8,
     },
     subtaskTitleContainer: {
         flexDirection: 'row',
@@ -273,10 +274,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: spacing.SCALE_10,
         borderBottomWidth: 1,
-        paddingVertical: spacing.SCALE_8,
+        paddingVertical: spacing.SCALE_16,
 
     },
     notificationButtonText: {
         fontSize: typography.FONT_SIZE_16,
-    }
+    },
 });
