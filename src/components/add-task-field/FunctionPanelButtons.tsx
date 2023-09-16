@@ -141,6 +141,7 @@ export default function FunctionPanelButtons({
                     setIsListVisible(!isListVisible)
                     setIsDeadlineVisible(false);
                     setIsNotificationVisible(false);
+                    setIsImportanceVisible(false);
                 }}
             >
                 <ListSelection

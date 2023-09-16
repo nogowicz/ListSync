@@ -130,11 +130,16 @@
   "views.authenticated.list.details.share": "Udostępnij",
   "views.authenticated.list.details.invite-friends": "Zaproś znajomych",
   "views.authenticated.list.details.delete-list": "Usuń listę",
-  "vies.authenticated.task.delete": "Usuń",
-  "vies.authenticated.task.done": "Zrobione",
-  "vies.authenticated.task.un-done": "Nie zrobione",
+  "view.authenticated.task.delete": "Usuń",
+  "view.authenticated.task.done": "Zrobione",
+  "view.authenticated.task.un-done": "Nie zrobione",
   "views.authenticated.home.text-input.notification-body": "Obudź się Samuraju, mamy zadanie do wykonania",
   "views.authenticated.list.details.add-to-favorites": "Dodaj do ulubionych",
   "views.authenticated.list.details.remove-from-favorites": "Usuń z ulubionych",
-  "vies.authenticated.task.details.edit-task": "Edytuj zadanie"
+  "views.authenticated.task.details.edit-task": "Edytuj zadanie",
+  "views.authenticated.task.details.task-title-placeholder": "Task name",
+  "views.authenticated.task.details.add-subtask": "Dodaj podzadanie",
+  "views.authenticated.task.details.set-notification": "Ustaw powiadomienie",
+  "views.authenticated.task.details.set-deadline": "Ustaw datę ukończenia",
+  "views.authenticated.task.details.set-importance": "Ustaw priorytet"
 }

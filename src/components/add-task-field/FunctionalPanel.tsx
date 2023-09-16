@@ -37,7 +37,6 @@ export default function FunctionalPanel({
     isNotificationVisible,
     isImportanceVisible,
 }: FunctionalPanelProps) {
-    console.log(activeList)
     return (
         <View style={styles.upperContainer}>
             <FunctionPanelButtons
@@ -51,6 +50,16 @@ export default function FunctionalPanel({
             />
 
             <FunctionPanelButtons
+                isNotificationVisible={isNotificationVisible}
+                setIsListVisible={setIsListVisible}
+                setIsDeadlineVisible={setIsDeadlineVisible}
+                setIsNotificationVisible={setIsNotificationVisible}
+                setIsImportanceVisible={setIsImportanceVisible}
+                type={FUNCTIONAL_BUTTONS_NAMES.NOTIFICATION}
+                notification={notification}
+                notificationTime={notificationTime}
+            />
+            <FunctionPanelButtons
                 isDeadlineVisible={isDeadlineVisible}
                 setIsListVisible={setIsListVisible}
                 setIsDeadlineVisible={setIsDeadlineVisible}
@@ -62,16 +71,6 @@ export default function FunctionalPanel({
             />
 
 
-            <FunctionPanelButtons
-                isNotificationVisible={isNotificationVisible}
-                setIsListVisible={setIsListVisible}
-                setIsDeadlineVisible={setIsDeadlineVisible}
-                setIsNotificationVisible={setIsNotificationVisible}
-                setIsImportanceVisible={setIsImportanceVisible}
-                type={FUNCTIONAL_BUTTONS_NAMES.NOTIFICATION}
-                notification={notification}
-                notificationTime={notificationTime}
-            />
 
             <FunctionPanelButtons
                 isImportanceVisible={isImportanceVisible}

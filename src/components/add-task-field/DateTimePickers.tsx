@@ -66,7 +66,6 @@ export default function DateTimePickers({
                 currentDate.getMinutes()
             );
 
-            console.log(combinedDate.toISOString())
             setNotificationTime(combinedDate);
             setNotification(notificationTimeNames.PICK_DATE);
         } else if (event.type === 'dismissed') {

@@ -20,15 +20,16 @@ import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
 import { deadlineNames } from 'components/add-task-field/DeadlineSelector';
 import { Swipeable } from 'react-native-gesture-handler';
-
-//icons:
-import Trash from 'assets/button-icons/trash.svg';
-import Done from 'assets/button-icons/done.svg';
 import { useNotification } from 'hooks/useNotification';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 import { RootStackParamList } from 'navigation/navigation';
+
+//icons:
+import Trash from 'assets/button-icons/trash.svg';
+import Done from 'assets/button-icons/done.svg';
+
 
 type TaskProps = {
     task: TaskType;
@@ -50,7 +51,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const deadlineAsString = formatDateToShortDate(deadline, intl);
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
-    const { completeTask, deleteTask } = useListContext();
+    const { completeSubtask, deleteTask } = useListContext();
     const now = new Date();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const rotateStyle = useAnimatedStyle(() => {
@@ -95,8 +96,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
         setSortedSubTasks(sortedTasks);
     }, [subTasks]);
 
-    const handleCompleteSubtask = (taskId: number, subtaskId: number) => {
-        completeTask(taskId, subtaskId, listId);
+    const handleCompleteSubtask = (updatedSubtask: SubtaskType) => {
+        completeSubtask(updatedSubtask);
     };
 
     const handleDeleteTask = async () => {
@@ -120,7 +121,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                 }}>
                     <Trash stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
                     <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
-                        <FormattedMessage defaultMessage="Delete" id="vies.authenticated.task.delete" />
+                        <FormattedMessage defaultMessage="Delete" id="view.authenticated.task.delete" />
                     </Text>
                 </Animated.View>
             </View>
@@ -137,8 +138,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                     <Done stroke={theme.WHITE} strokeWidth={constants.STROKE_WIDTH.ICON} />
                     <Text style={[styles.hiddenItemText, { color: theme.WHITE }]}>
                         {task.isCompleted ?
-                            <FormattedMessage defaultMessage="Undone" id="vies.authenticated.task.un-done" /> :
-                            <FormattedMessage defaultMessage="Done" id="vies.authenticated.task.done" />}
+                            <FormattedMessage defaultMessage="Undone" id="view.authenticated.task.un-done" /> :
+                            <FormattedMessage defaultMessage="Done" id="view.authenticated.task.done" />}
                     </Text>
                 </Animated.View>
             </View>
@@ -167,7 +168,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                 activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                 onPress={() => navigation.navigate(SCREENS.AUTHENTICATED.TASK_DETAILS.ID, {
                     task: task,
-                    color: color
+                    color: color,
+                    currentListId: listId
                 })}
             >
                 <View style={styles.upperContainer}>
@@ -238,8 +240,9 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                         {sortedSubTasks.map((item: SubtaskType) => (
                             <SubTask
                                 key={item.idSubtask}
-                                handleCompleteSubtask={() => handleCompleteSubtask(task.IdTask, item.idSubtask)}
+                                handleCompleteSubtask={() => handleCompleteSubtask(item)}
                                 item={item}
+                                color={color}
                             />)
                         )
                         }

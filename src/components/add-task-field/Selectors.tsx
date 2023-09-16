@@ -76,16 +76,6 @@ export default function Selectors({
                 />
             }
 
-            {isDeadlineVisible &&
-                <DeadLineSelector
-                    setDeadline={setDeadline}
-                    deadline={deadline}
-                    setIsDeadlineVisible={setIsDeadlineVisible}
-                    setDeadlineDate={setDeadlineDate}
-                    onPickDatePress={handlePickDate}
-                />
-            }
-
             {isNotificationVisible &&
                 <NotificationSelector
                     setNotification={setNotification}
@@ -97,6 +87,18 @@ export default function Selectors({
                     notificationTomorrowHour={notificationTomorrowHour}
                 />
             }
+
+            {isDeadlineVisible &&
+                <DeadLineSelector
+                    setDeadline={setDeadline}
+                    deadline={deadline}
+                    setIsDeadlineVisible={setIsDeadlineVisible}
+                    setDeadlineDate={setDeadlineDate}
+                    onPickDatePress={handlePickDate}
+                />
+            }
+
+
 
             {isImportanceVisible &&
                 <ImportanceSelector
