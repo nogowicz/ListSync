@@ -16,7 +16,8 @@ import SubTask from 'components/sub-task';
 //icons:
 import AddIcon from 'assets/button-icons/plus.svg';
 import NotificationIcon from 'assets/button-icons/notification-bell.svg';
-
+import DeadlineIcon from 'assets/button-icons/calendar-pick-date.svg';
+import ImportanceIcon from 'assets/button-icons/importance-input-selection.svg';
 
 
 type TaskDetailsScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'TASK_DETAILS'>;
@@ -173,7 +174,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                         onPress={() => { }}
-                        style={[styles.notificationButton, { borderBottomColor: theme.TEXT }]}
+                        style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
                     >
                         <NotificationIcon
                             stroke={theme.TEXT}
@@ -183,6 +184,38 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                             <FormattedMessage
                                 id='views.authenticated.task.details.set-notification'
                                 defaultMessage='Set notification'
+                            />
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                        onPress={() => { }}
+                        style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
+                    >
+                        <DeadlineIcon
+                            stroke={theme.TEXT}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />
+                        <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
+                            <FormattedMessage
+                                id='views.authenticated.task.details.set-deadline'
+                                defaultMessage='Set deadline'
+                            />
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={constants.ACTIVE_OPACITY.HIGH}
+                        onPress={() => { }}
+                        style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
+                    >
+                        <ImportanceIcon
+                            stroke={theme.TEXT}
+                            strokeWidth={constants.STROKE_WIDTH.ICON}
+                        />
+                        <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
+                            <FormattedMessage
+                                id='views.authenticated.task.details.set-importance'
+                                defaultMessage='Set importance'
                             />
                         </Text>
                     </TouchableOpacity>

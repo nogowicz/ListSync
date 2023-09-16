@@ -139,5 +139,7 @@
   "views.authenticated.task.details.edit-task": "Edytuj zadanie",
   "views.authenticated.task.details.task-title-placeholder": "Task name",
   "views.authenticated.task.details.add-subtask": "Dodaj podzadanie",
-  "views.authenticated.task.details.set-notification": "Ustaw powiadomienie"
+  "views.authenticated.task.details.set-notification": "Ustaw powiadomienie",
+  "views.authenticated.task.details.set-deadline": "Ustaw datę ukończenia",
+  "views.authenticated.task.details.set-importance": "Ustaw priorytet"
 }

@@ -139,5 +139,7 @@
   "views.authenticated.task.details.edit-task": "Edit task",
   "views.authenticated.task.details.task-title-placeholder": "Task name",
   "views.authenticated.task.details.add-subtask": "Add subtask",
-  "views.authenticated.task.details.set-notification": "Set notification"
+  "views.authenticated.task.details.set-notification": "Set notification",
+  "views.authenticated.task.details.set-deadline": "Set deadline",
+  "views.authenticated.task.details.set-importance": "Set importance"
 }
