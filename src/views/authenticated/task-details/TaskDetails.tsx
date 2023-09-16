@@ -127,6 +127,8 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                                 handleCompleteSubtask={() => handleCompleteSubtask(subtask)}
                                 item={subtask}
                                 color={color}
+                                deleteButton={true}
+                                listId={currentListId}
                             />
                         ))}
                     </Animated.View>
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: spacing.SCALE_4,
-        paddingLeft: spacing.SCALE_8
+        paddingHorizontal: spacing.SCALE_8
     },
     addSubtaskText: {
         fontSize: typography.FONT_SIZE_16,
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
     },
     subtasks: {
         marginTop: spacing.SCALE_4,
-        marginLeft: spacing.SCALE_16,
+        marginHorizontal: spacing.SCALE_16,
         overflow: 'hidden',
     },
 });

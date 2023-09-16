@@ -20,15 +20,16 @@ import SubTask from 'components/sub-task';
 import { useListContext } from 'context/DataProvider';
 import { deadlineNames } from 'components/add-task-field/DeadlineSelector';
 import { Swipeable } from 'react-native-gesture-handler';
-
-//icons:
-import Trash from 'assets/button-icons/trash.svg';
-import Done from 'assets/button-icons/done.svg';
 import { useNotification } from 'hooks/useNotification';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 import { RootStackParamList } from 'navigation/navigation';
+
+//icons:
+import Trash from 'assets/button-icons/trash.svg';
+import Done from 'assets/button-icons/done.svg';
+
 
 type TaskProps = {
     task: TaskType;

@@ -332,6 +332,25 @@ export function prepareButtons({
                     </Text>
                 </TouchableOpacity>
             )
+        },
+        {
+            type: buttonTypes.BUTTON_TYPES.WITH_ICON,
+            button: (
+                <TouchableOpacity
+                    activeOpacity={activeOpacity}
+                    onPress={() => onPress()}
+                    style={styles.buttonWithIcon}
+                >
+                    {icon && cloneElement(icon as JSX.Element,
+                        {
+                            strokeWidth: constants.STROKE_WIDTH.ICON,
+                            width: constants.ICON_SIZE.SETTING_BUTTON,
+                            height: constants.ICON_SIZE.SETTING_BUTTON,
+                            stroke: color ? color : theme.TEXT,
+                            opacity: constants.ACTIVE_OPACITY.HIGH
+                        })}
+                </TouchableOpacity>
+            )
         }
     ];
 }
@@ -453,5 +472,8 @@ const styles = StyleSheet.create({
     bottomSheetButton: {
         flexDirection: 'row',
         gap: spacing.SCALE_30,
+    },
+    buttonWithIcon: {
+
     }
 });

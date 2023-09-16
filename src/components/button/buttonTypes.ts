@@ -12,4 +12,5 @@ export enum BUTTON_TYPES {
   BACK = 'back',
   SETTING = 'setting',
   BOTTOM_SHEET_BUTTON = 'buttonSheetButton',
+  WITH_ICON = 'withIcon',
 }
