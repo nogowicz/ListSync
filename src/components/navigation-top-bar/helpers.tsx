@@ -22,6 +22,7 @@ type PrepareNavigationTopBarProps = {
     color?: string;
     onTitlePress?: () => void;
     handleShowDetailsBottomSheet?: () => void;
+    extraActionWhenGoBackPressed?: () => void;
 };
 
 export function prepareNavigationTopBar({
@@ -29,7 +30,8 @@ export function prepareNavigationTopBar({
     onTitlePress,
     icon,
     color,
-    handleShowDetailsBottomSheet
+    handleShowDetailsBottomSheet,
+    extraActionWhenGoBackPressed
 }: PrepareNavigationTopBarProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const theme = useTheme();
@@ -66,6 +68,9 @@ export function prepareNavigationTopBar({
                     <Button
                         onPress={() => {
                             navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
+                            if (extraActionWhenGoBackPressed) {
+                                extraActionWhenGoBackPressed();
+                            }
                         }}
                         type={buttonTypes.BUTTON_TYPES.BACK}
                     />
@@ -100,6 +105,9 @@ export function prepareNavigationTopBar({
                     <Button
                         onPress={() => {
                             navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
+                            if (extraActionWhenGoBackPressed) {
+                                extraActionWhenGoBackPressed();
+                            }
                         }}
                         type={buttonTypes.BUTTON_TYPES.BACK}
                     />

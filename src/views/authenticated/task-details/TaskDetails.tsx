@@ -13,6 +13,8 @@ import { ListType, SubtaskType, TaskType } from 'data/types';
 import { useAuth } from 'context/AuthContext';
 import SubTask from 'components/sub-task';
 import DateTimePickers from 'components/add-task-field/DateTimePickers';
+import { formatDateToShortDateWithTime } from 'utils/dateFormat';
+import { useNotification } from 'hooks/useNotification';
 
 //icons:
 import AddIcon from 'assets/button-icons/plus.svg';
@@ -20,7 +22,7 @@ import NotificationIcon from 'assets/button-icons/notification-bell.svg';
 import DeadlineIcon from 'assets/button-icons/calendar-pick-date.svg';
 import ImportanceIcon from 'assets/button-icons/importance-input-selection.svg';
 import CloseIcon from 'assets/button-icons/close.svg';
-import { formatDateToShortDateWithTime } from 'utils/dateFormat';
+
 
 
 type TaskDetailsScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'TASK_DETAILS'>;
@@ -38,7 +40,8 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const intl = useIntl();
     const { task, color, currentListId }: any = route.params;
     const [taskTitle, setTaskTitle] = useState<string>(task.title);
-    const { listData, completeTask, addSubtask, completeSubtask } = useListContext();
+    const { listData, completeTask, addSubtask, completeSubtask, updateTask } = useListContext();
+    const { displayTriggerNotification } = useNotification();
     const { user } = useAuth();
     const [currentTask, setCurrentTask] = useState<TaskType | undefined>(task);
     const [isSubtaskInputVisible, setIsSubtaskInputVisible] = useState<boolean>(false);
@@ -68,6 +71,10 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
         id: 'views.authenticated.task.details.add-subtask',
         defaultMessage: 'Add subtask'
     });
+    const notificationBodyTranslate = intl.formatMessage({
+        defaultMessage: "Wake up Samurai, we got a task to complete",
+        id: "views.authenticated.home.text-input.notification-body",
+    })
 
     useEffect(() => {
         setCurrentTask(listData.find((list: ListType) => list.IdList === currentListId)?.tasks.find((taskItem: TaskType) => taskItem.IdTask === currentTask?.IdTask));
@@ -103,10 +110,46 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
         }
 
     }
+    const completeTaskAction = {
+        id: 'complete',
+        title: 'Completed',
+        pressAction: {
+            id: 'complete-task',
+        },
+    };
 
     const handleCompleteSubtask = (updatedSubtask: SubtaskType) => {
         completeSubtask(updatedSubtask);
     };
+
+    const extraActionWhenGoBackPressed = () => {
+        if (currentTask) {
+            const updatedTask: TaskType = {
+                IdTask: currentTask.IdTask,
+                title: taskTitle,
+                isCompleted: currentTask.isCompleted,
+                deadline: currentTask.deadline,
+                importance: currentTask.importance,
+                effort: currentTask.effort,
+                note: currentTask.note,
+                addedBy: currentTask.addedBy,
+                assignedTo: currentTask.assignedTo,
+                createdAt: currentTask.createdAt,
+                subtasks: currentTask.subtasks,
+            }
+            updateTask(updatedTask);
+            if (notificationTime) {
+                displayTriggerNotification(
+                    taskTitle,
+                    notificationBodyTranslate,
+                    notificationTime.getTime(),
+                    currentTask.IdTask,
+                    completeTaskAction
+                )
+            }
+        }
+
+    }
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -114,6 +157,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 <NavigationTopBar
                     name={editTaskTranslation}
                     type={navigationTypes.NAVIGATION_TOP_BAR_TYPES.BASIC}
+                    extraActionWhenGoBackPressed={extraActionWhenGoBackPressed}
                 />
                 <View style={styles.editTaskContainer}>
                     <View style={styles.taskTitleContainer}>

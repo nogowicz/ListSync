@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { ListType, SubtaskType, TaskType } from 'data/types';
 import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
+import { Task } from 'react-native';
 
 type DataContextType = {
   listData: ListType[];
@@ -21,6 +22,7 @@ type DataContextType = {
   deleteCompletedTasks: (idList?: number) => Promise<void>;
   addTask: (newTask: TaskType, idList?: number) => Promise<number | undefined>;
   deleteTask: (idTask: number, idList: number) => Promise<void>;
+  updateTask: (updatedTask: TaskType) => Promise<void>;
   completeTask: (updatedTask: TaskType) => Promise<void>;
   addSubtask: (
     newSubtask: SubtaskType,
@@ -48,6 +50,7 @@ const DataContext = createContext<DataContextType>({
   },
   deleteTask: async () => { },
   completeTask: async () => { },
+  updateTask: async () => { },
   addSubtask: async () => {
     return -1;
   },
@@ -271,6 +274,31 @@ export function DataProvider({ children }: DataProviderProps) {
 
 
     },
+    updateTask: async (updatedTask: TaskType): Promise<void> => {
+      await updateTaskInDatabase(
+        updatedTask.IdTask,
+        updatedTask.title,
+        updatedTask.isCompleted,
+        updatedTask.deadline,
+        updatedTask.importance,
+        updatedTask.effort,
+        updatedTask.note,
+        updatedTask.assignedTo
+      );
+
+      updateListData((prevListData: ListType[]) => {
+        const updatedLists = prevListData.map((list: ListType) => {
+          const updatedTasks = list.tasks.map((task: TaskType) =>
+            task.IdTask === updatedTask.IdTask ? updatedTask : task
+          );
+
+          return { ...list, tasks: updatedTasks };
+        });
+
+        return updatedLists;
+      });
+    },
+
     addSubtask: async (
       newSubtask: SubtaskType,
       idTask: number,
