@@ -5,6 +5,7 @@ export const BORDER_RADIUS = {
 
 export const STROKE_WIDTH = {
   ICON: 1.5,
+  ICON_BOLD: 2,
 };
 
 export const ICON_SIZE = {

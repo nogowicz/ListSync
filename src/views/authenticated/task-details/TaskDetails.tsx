@@ -12,12 +12,15 @@ import { useListContext } from 'context/DataProvider';
 import { ListType, SubtaskType, TaskType } from 'data/types';
 import { useAuth } from 'context/AuthContext';
 import SubTask from 'components/sub-task';
+import DateTimePickers from 'components/add-task-field/DateTimePickers';
 
 //icons:
 import AddIcon from 'assets/button-icons/plus.svg';
 import NotificationIcon from 'assets/button-icons/notification-bell.svg';
 import DeadlineIcon from 'assets/button-icons/calendar-pick-date.svg';
 import ImportanceIcon from 'assets/button-icons/importance-input-selection.svg';
+import CloseIcon from 'assets/button-icons/close.svg';
+import { formatDateToShortDateWithTime } from 'utils/dateFormat';
 
 
 type TaskDetailsScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'TASK_DETAILS'>;
@@ -40,6 +43,17 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const [currentTask, setCurrentTask] = useState<TaskType | undefined>(task);
     const [isSubtaskInputVisible, setIsSubtaskInputVisible] = useState<boolean>(false);
     const [subtaskTitle, setSubtaskTitle] = useState<string>("");
+
+    const [deadline, setDeadline] = useState<string>("Deadline");
+    const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
+    const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
+    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date>();
+
+    const [notification, setNotification] = useState<string>("Notification");
+    const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
+    const [showNotificationTimePicker, setShowNotificationTimePicker] = useState(false);
+    const [notificationTime, setNotificationTime] = useState<Date>();
+    const [timePickerTime, setTimePickerTime] = useState<Date>();
 
     //translations:
     const editTaskTranslation = intl.formatMessage({
@@ -93,7 +107,6 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const handleCompleteSubtask = (updatedSubtask: SubtaskType) => {
         completeSubtask(updatedSubtask);
     };
-
 
     return (
         <View style={[styles.root, { backgroundColor: theme.BACKGROUND }]}>
@@ -173,54 +186,92 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 <View style={styles.detailsButtons}>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        onPress={() => { }}
+                        onPress={() => setShowNotificationDatePicker(true)}
                         style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
                     >
-                        <NotificationIcon
-                            stroke={theme.TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                        />
-                        <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
-                            <FormattedMessage
-                                id='views.authenticated.task.details.set-notification'
-                                defaultMessage='Set notification'
+                        <View style={styles.buttonLeftContainer}>
+                            <NotificationIcon
+                                stroke={notificationTime ? color : theme.TEXT}
+                                strokeWidth={notificationTime ? constants.STROKE_WIDTH.ICON_BOLD : constants.STROKE_WIDTH.ICON}
                             />
-                        </Text>
+                            <Text style={[{
+                                color: notificationTime ? color : theme.TEXT,
+                                fontWeight: notificationTime ? typography.FONT_WEIGHT_BOLD : typography.FONT_WEIGHT_REGULAR,
+                            },
+                            styles.notificationButtonText]}>
+
+                                {notificationTime ?
+                                    formatDateToShortDateWithTime(notificationTime, intl)
+                                    :
+                                    <FormattedMessage
+                                        id='views.authenticated.task.details.set-notification'
+                                        defaultMessage='Set notification'
+                                    />}
+                            </Text>
+                        </View>
+                        {notificationTime &&
+                            <Button
+                                icon={<CloseIcon />}
+                                onPress={() => setNotificationTime(undefined)}
+                                type={buttonTypes.BUTTON_TYPES.WITH_ICON}
+                                color={color}
+                            />}
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                         onPress={() => { }}
                         style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
                     >
-                        <DeadlineIcon
-                            stroke={theme.TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                        />
-                        <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
-                            <FormattedMessage
-                                id='views.authenticated.task.details.set-deadline'
-                                defaultMessage='Set deadline'
+                        <View style={styles.buttonLeftContainer}>
+                            <DeadlineIcon
+                                stroke={theme.TEXT}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
                             />
-                        </Text>
+                            <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
+                                <FormattedMessage
+                                    id='views.authenticated.task.details.set-deadline'
+                                    defaultMessage='Set deadline'
+                                />
+                            </Text>
+                        </View>
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                         onPress={() => { }}
                         style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
                     >
-                        <ImportanceIcon
-                            stroke={theme.TEXT}
-                            strokeWidth={constants.STROKE_WIDTH.ICON}
-                        />
-                        <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
-                            <FormattedMessage
-                                id='views.authenticated.task.details.set-importance'
-                                defaultMessage='Set importance'
+                        <View style={styles.buttonLeftContainer}>
+                            <ImportanceIcon
+                                stroke={theme.TEXT}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
                             />
-                        </Text>
+                            <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
+                                <FormattedMessage
+                                    id='views.authenticated.task.details.set-importance'
+                                    defaultMessage='Set importance'
+                                />
+                            </Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>
+            <DateTimePickers
+                deadlineDatePickerDate={deadlineDatePickerDate}
+                timePickerTime={timePickerTime}
+                notificationDatePickerDate={notificationDatePickerDate}
+                showDeadlineDatePicker={showDeadlineDatePicker}
+                showNotificationDatePicker={showNotificationDatePicker}
+                showNotificationTimePicker={showNotificationTimePicker}
+                setShowDeadlineDatePicker={setShowDeadlineDatePicker}
+                setDeadlineDatePickerDate={setDeadlineDatePickerDate}
+                setDeadline={setDeadline}
+                setShowNotificationTimePicker={setShowNotificationTimePicker}
+                setTimePickerTime={setTimePickerTime}
+                setNotificationTime={setNotificationTime}
+                setNotification={setNotification}
+                setShowNotificationDatePicker={setShowNotificationDatePicker}
+                setNotificationDatePickerDate={setNotificationDatePickerDate}
+            />
         </View>
     )
 }
@@ -272,10 +323,14 @@ const styles = StyleSheet.create({
     notificationButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing.SCALE_10,
         borderBottomWidth: 1,
         paddingVertical: spacing.SCALE_16,
-
+        justifyContent: 'space-between'
+    },
+    buttonLeftContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.SCALE_10,
     },
     notificationButtonText: {
         fontSize: typography.FONT_SIZE_16,
