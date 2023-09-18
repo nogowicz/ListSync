@@ -29,7 +29,7 @@ export default function ListList({ list }: ListListProps) {
                     colorVariant={item.colorVariant}
                     onPress={() =>
                         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-                            data: item,
+                            currentListId: item.IdList,
                         } as any)
                     }
                 />

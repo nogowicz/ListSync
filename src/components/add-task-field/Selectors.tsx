@@ -20,7 +20,7 @@ type SelectorsProps = {
     notification: string;
     setNotification: Dispatch<SetStateAction<string>>;
     setIsNotificationVisible: Dispatch<SetStateAction<boolean>>;
-    setNotificationTime: Dispatch<SetStateAction<Date | undefined>>;
+    setNotificationTime: Dispatch<SetStateAction<string | null>>;
     isImportanceVisible: boolean;
     importance: string;
     setImportance: Dispatch<SetStateAction<string>>;

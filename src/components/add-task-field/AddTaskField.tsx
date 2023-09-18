@@ -63,7 +63,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
     const [notification, setNotification] = useState<string>("Notification");
     const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
     const [showNotificationTimePicker, setShowNotificationTimePicker] = useState(false);
-    const [notificationTime, setNotificationTime] = useState<Date>();
+    const [notificationTime, setNotificationTime] = useState<string | null>(null);
     const [notificationTodayHour, setNotificationTodayHour] = useState<string>('18:00');
     const [notificationTomorrowHour, setNotificationTomorrowHour] = useState<string>('18:00');
     const [datePickerDate, setDatePickerDate] = useState<Date>();
@@ -118,7 +118,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             displayTriggerNotification(
                 textValue,
                 notificationBodyTranslate,
-                notificationTime.getTime(),
+                new Date(notificationTime).getTime(),
                 taskId,
                 completeTaskAction
             )
@@ -141,6 +141,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                 importance: importance,
                 note: '',
                 createdAt: new Date().toISOString(),
+                notificationTime: notificationTime,
                 subtasks: [],
             };
 
@@ -153,7 +154,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                 setDeadlineDate(null);
                 setIsDeadlineVisible(false);
                 setNotification(notificationTimeNames.REMOVE);
-                setNotificationTime(undefined);
+                setNotificationTime(null);
                 setIsNotificationVisible(false);
                 setImportance(importanceNames.REMOVE);
                 setIsImportanceVisible(false);

@@ -41,7 +41,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const { task, color, currentListId }: any = route.params;
     const [taskTitle, setTaskTitle] = useState<string>(task.title);
     const { listData, completeTask, addSubtask, completeSubtask, updateTask } = useListContext();
-    const { displayTriggerNotification } = useNotification();
+    const { displayTriggerNotification, cancelNotification } = useNotification();
     const { user } = useAuth();
     const [currentTask, setCurrentTask] = useState<TaskType | undefined>(task);
     const [isSubtaskInputVisible, setIsSubtaskInputVisible] = useState<boolean>(false);
@@ -55,7 +55,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const [notification, setNotification] = useState<string>("Notification");
     const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
     const [showNotificationTimePicker, setShowNotificationTimePicker] = useState(false);
-    const [notificationTime, setNotificationTime] = useState<Date>();
+    const [notificationTime, setNotificationTime] = useState<string | null>(currentTask ? currentTask.notificationTime : null);
     const [timePickerTime, setTimePickerTime] = useState<Date>();
 
     //translations:
@@ -80,6 +80,17 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
         setCurrentTask(listData.find((list: ListType) => list.IdList === currentListId)?.tasks.find((taskItem: TaskType) => taskItem.IdTask === currentTask?.IdTask));
     }, [listData]);
 
+    useEffect(() => {
+        if (notificationTime && currentTask) {
+            displayTriggerNotification(
+                taskTitle,
+                notificationBodyTranslate,
+                new Date(notificationTime).getTime(),
+                currentTask.IdTask,
+                completeTaskAction
+            )
+        }
+    }, [notificationTime]);
 
     useEffect(() => {
         const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -135,18 +146,11 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 addedBy: currentTask.addedBy,
                 assignedTo: currentTask.assignedTo,
                 createdAt: currentTask.createdAt,
+                notificationTime: notificationTime,
                 subtasks: currentTask.subtasks,
             }
+            console.log("Updated task", updatedTask)
             updateTask(updatedTask);
-            if (notificationTime) {
-                displayTriggerNotification(
-                    taskTitle,
-                    notificationBodyTranslate,
-                    notificationTime.getTime(),
-                    currentTask.IdTask,
-                    completeTaskAction
-                )
-            }
         }
 
     }
@@ -230,7 +234,9 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 <View style={styles.detailsButtons}>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        onPress={() => setShowNotificationDatePicker(true)}
+                        onPress={() => {
+                            setShowNotificationDatePicker(true)
+                        }}
                         style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
                     >
                         <View style={styles.buttonLeftContainer}>
@@ -245,7 +251,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                             styles.notificationButtonText]}>
 
                                 {notificationTime ?
-                                    formatDateToShortDateWithTime(notificationTime, intl)
+                                    formatDateToShortDateWithTime(new Date(notificationTime), intl)
                                     :
                                     <FormattedMessage
                                         id='views.authenticated.task.details.set-notification'
@@ -256,7 +262,10 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                         {notificationTime &&
                             <Button
                                 icon={<CloseIcon />}
-                                onPress={() => setNotificationTime(undefined)}
+                                onPress={() => {
+                                    setNotificationTime(null);
+                                    cancelNotification(String(currentTask?.IdTask));
+                                }}
                                 type={buttonTypes.BUTTON_TYPES.WITH_ICON}
                                 color={color}
                             />}

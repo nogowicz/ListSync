@@ -14,7 +14,7 @@ type FunctionalPanelProps = {
     deadline: string;
     deadlineDate: string | null;
     notification: string;
-    notificationTime: Date | undefined;
+    notificationTime: string | null;
     importance: string;
     isDeadlineVisible: boolean;
     isNotificationVisible: boolean;
@@ -47,6 +47,7 @@ export default function FunctionalPanel({
                 setIsImportanceVisible={setIsImportanceVisible}
                 type={FUNCTIONAL_BUTTONS_NAMES.LIST}
                 activeList={activeList}
+                notificationTime={null}
             />
 
             <FunctionPanelButtons
@@ -68,6 +69,7 @@ export default function FunctionalPanel({
                 type={FUNCTIONAL_BUTTONS_NAMES.DEADLINE}
                 deadline={deadline}
                 deadlineDate={deadlineDate}
+                notificationTime={null}
             />
 
 
@@ -80,6 +82,7 @@ export default function FunctionalPanel({
                 setIsImportanceVisible={setIsImportanceVisible}
                 type={FUNCTIONAL_BUTTONS_NAMES.IMPORTANCE}
                 importance={importance}
+                notificationTime={null}
             />
 
         </View>

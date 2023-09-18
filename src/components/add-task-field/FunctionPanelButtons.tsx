@@ -36,7 +36,7 @@ type FunctionPanelButtonsProps = {
     activeList?: ListType;
     deadline?: string;
     notification?: string;
-    notificationTime?: Date;
+    notificationTime: string | null;
     importance?: string;
     deadlineDate?: string | null;
 }
@@ -211,7 +211,7 @@ export default function FunctionPanelButtons({
                             id='views.authenticated.home.text-input.notification'
                             defaultMessage={'Notification'}
                         /> :
-                        formatDateToShortDateWithTime(notificationTime, intl)
+                        formatDateToShortDateWithTime(new Date(notificationTime), intl)
                     }
 
                 </Text>

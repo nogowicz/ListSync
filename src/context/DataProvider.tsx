@@ -203,7 +203,6 @@ export function DataProvider({ children }: DataProviderProps) {
         const taskId = await addTaskToDatabase(newTask, IdList || -1);
         if (taskId !== null) {
           newTask.IdTask = taskId;
-
           const newListData = listData.map((list) => {
             if (list.IdList === IdList) {
               return {
@@ -219,6 +218,7 @@ export function DataProvider({ children }: DataProviderProps) {
               return list;
             }
           });
+
           updateListData(() => newListData);
           return taskId;
         }
@@ -249,6 +249,7 @@ export function DataProvider({ children }: DataProviderProps) {
     },
     completeTask: async (updatedTask: TaskType): Promise<void> => {
       const updatedIsCompleted = !updatedTask.isCompleted;
+      const updatedNotificationTime = null;
       await updateTaskInDatabase(
         updatedTask.IdTask,
         updatedTask.title,
@@ -257,8 +258,8 @@ export function DataProvider({ children }: DataProviderProps) {
         updatedTask.importance,
         updatedTask.effort,
         updatedTask.note,
-        updatedTask.assignedTo
-
+        updatedTask.assignedTo,
+        updatedNotificationTime
       )
       updateListData((prevListData: ListType[]) => {
         const updatedLists = prevListData.map((list: ListType) => {
@@ -283,7 +284,8 @@ export function DataProvider({ children }: DataProviderProps) {
         updatedTask.importance,
         updatedTask.effort,
         updatedTask.note,
-        updatedTask.assignedTo
+        updatedTask.assignedTo,
+        updatedTask.notificationTime
       );
 
       updateListData((prevListData: ListType[]) => {

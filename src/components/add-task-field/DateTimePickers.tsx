@@ -16,7 +16,7 @@ type DateTimePickersProps = {
     setDeadline: Dispatch<SetStateAction<string>>;
     setShowNotificationTimePicker: Dispatch<SetStateAction<boolean>>;
     setTimePickerTime: Dispatch<SetStateAction<Date | undefined>>;
-    setNotificationTime: Dispatch<SetStateAction<Date | undefined>>;
+    setNotificationTime: Dispatch<SetStateAction<string | null>>;
     setNotification: Dispatch<SetStateAction<string>>;
     setShowNotificationDatePicker: Dispatch<SetStateAction<boolean>>;
     setNotificationDatePickerDate: Dispatch<SetStateAction<Date>>;
@@ -66,7 +66,7 @@ export default function DateTimePickers({
                 currentDate.getMinutes()
             );
 
-            setNotificationTime(combinedDate);
+            setNotificationTime(combinedDate.toISOString());
             setNotification(notificationTimeNames.PICK_DATE);
         } else if (event.type === 'dismissed') {
             setShowNotificationDatePicker(false);
@@ -97,6 +97,7 @@ export default function DateTimePickers({
                     is24Hour={true}
                     display='default'
                     onChange={onChangeDeadlineDate}
+                    minimumDate={new Date()}
                 />
             )}
             {showNotificationDatePicker && (
@@ -107,6 +108,7 @@ export default function DateTimePickers({
                     is24Hour={true}
                     display='default'
                     onChange={onChangeNotificationDate}
+                    minimumDate={new Date()}
                 />
             )}
             {showNotificationTimePicker &&

@@ -36,12 +36,12 @@ export default function List({
 }: ListProps) {
     const theme = useTheme();
     const {
-        data,
+        currentListId,
         isModalVisibleOnStart = false,
         isNewList = false,
     }: any = route.params;
     const { listData } = useListContext();
-    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
+    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === currentListId));
     const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
@@ -87,13 +87,14 @@ export default function List({
     };
 
     useEffect(() => {
-        setCurrentList(listData.find((item: ListType) => item.IdList === data.IdList));
-    }, [listData, data.IdList]);
+        setCurrentList(listData.find((item: ListType) => item.IdList === currentListId));
+    }, [listData, currentListId]);
 
     useEffect(() => {
         setUnCompletedTasks(currentList?.tasks.filter((item: TaskType) => !item.isCompleted) || []);
         setCompletedTasks(currentList?.tasks.filter((item: TaskType) => item.isCompleted) || []);
         setListName(currentList?.listName || '');
+        console.log(currentList)
     }, [currentList]);
 
     const placeholderText = intl.formatMessage({

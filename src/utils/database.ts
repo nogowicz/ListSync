@@ -93,11 +93,15 @@ export function createTaskTable() {
     tx.executeSql(
       'CREATE TABLE IF NOT EXISTS ' +
         'tasks ' +
-        '(IdTask INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, isCompleted INTEGER, deadline TEXT, importance TEXT, effort TEXT, note TEXT, addedBy TEXT, assignedTo INTEGER, createdAt TEXT);',
-    ),
+        '(IdTask INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, isCompleted INTEGER, deadline TEXT, importance TEXT, effort TEXT, note TEXT, addedBy TEXT, assignedTo INTEGER, notificationTime TEXT, createdAt TEXT);',
+      [],
       () => {
-        console.log('created tasks_list');
-      };
+        console.log('created tasks table');
+      },
+      (_, error) => {
+        console.error('Error while creating task table:', error);
+      },
+    );
   });
 }
 
@@ -251,9 +255,10 @@ export function addTaskToDatabase(
   listId: number,
 ): Promise<number> {
   return new Promise<number>((resolve, reject) => {
+    console.log(newTask);
     database.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tasks (title, isCompleted, deadline, importance, effort, note, addedBy, assignedTo, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO tasks (title, isCompleted, deadline, importance, effort, note, addedBy, assignedTo, notificationTime, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           newTask.title,
           newTask.isCompleted ? 1 : 0,
@@ -263,6 +268,7 @@ export function addTaskToDatabase(
           newTask.note,
           newTask.addedBy,
           newTask.assignedTo,
+          newTask.notificationTime,
           newTask.createdAt,
         ],
         (_, result) => {
@@ -279,6 +285,10 @@ export function addTaskToDatabase(
                     resolve(taskId);
                   },
                   error => {
+                    console.error(
+                      'Error while inserting into task_lists (second query):',
+                      error,
+                    );
                     reject(error);
                   },
                 );
@@ -286,12 +296,20 @@ export function addTaskToDatabase(
                 resolve(taskId);
               }
             },
-            error => {
+            (_, error) => {
+              console.error(
+                'Error while inserting into task_lists (first query):',
+                error,
+              );
               reject(error);
             },
           );
         },
         (_, error) => {
+          console.error(
+            'Error while inserting into tasks (main query):',
+            error,
+          );
           reject(error);
         },
       );
@@ -308,11 +326,13 @@ export function updateTaskInDatabase(
   effort: string,
   note: string,
   assignedTo: number | null,
+  notificationTime: string | null,
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     database.transaction(tx => {
+      console.log(console.log('Notification time', notificationTime));
       tx.executeSql(
-        'UPDATE tasks SET title = ?, isCompleted = ?, deadline = ?, importance = ?, effort = ?, note = ?, assignedTo = ? WHERE IdTask = ?',
+        'UPDATE tasks SET title = ?, isCompleted = ?, deadline = ?, importance = ?, effort = ?, note = ?, assignedTo = ?, notificationTime = ? WHERE IdTask = ?',
         [
           title,
           isCompleted ? 1 : 0,
@@ -321,6 +341,7 @@ export function updateTaskInDatabase(
           effort,
           note,
           assignedTo,
+          notificationTime,
           taskId,
         ],
         () => {
@@ -467,6 +488,7 @@ export async function getUserTasksForList(listId: number): Promise<TaskType[]> {
           const tasks: TaskType[] = [];
           for (let i = 0; i < resultSet.rows.length; i++) {
             const row = resultSet.rows.item(i);
+            console.log(row.notificationTime);
             const task: TaskType = {
               IdTask: row.IdTask,
               title: row.title,
@@ -478,6 +500,7 @@ export async function getUserTasksForList(listId: number): Promise<TaskType[]> {
               addedBy: row.addedBy,
               assignedTo: row.assignedTo,
               createdAt: row.createdAt,
+              notificationTime: row.notificationTime,
               subtasks: [],
             };
             tasks.push(task);

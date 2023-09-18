@@ -18,6 +18,7 @@ export interface TaskType {
   addedBy: number;
   assignedTo: number | null;
   createdAt: string;
+  notificationTime: string | null;
   subtasks: SubtaskType[];
 }
 
