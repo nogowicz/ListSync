@@ -82,13 +82,16 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
 
     useEffect(() => {
         if (notificationTime && currentTask) {
-            displayTriggerNotification(
-                taskTitle,
-                notificationBodyTranslate,
-                new Date(notificationTime).getTime(),
-                currentTask.IdTask,
-                completeTaskAction
-            )
+            const notificationTimeAsDate = new Date(notificationTime).getTime();
+            if (notificationTimeAsDate > new Date().getTime()) {
+                displayTriggerNotification(
+                    taskTitle,
+                    notificationBodyTranslate,
+                    notificationTimeAsDate,
+                    currentTask.IdTask,
+                    completeTaskAction
+                );
+            }
         }
     }, [notificationTime]);
 

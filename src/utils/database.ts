@@ -362,25 +362,17 @@ export function addSubtaskToDatabase(
   return new Promise<number>((resolve, reject) => {
     database.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tasks (title, isCompleted, addedBy,  createdAt) VALUES (?, ?, ?, ?)',
+        'INSERT INTO subtasks (title, isCompleted, addedBy,  createdAt, Task_idTask) VALUES (?, ?, ?, ?, ?)',
         [
           newSubtask.title,
           newSubtask.isCompleted ? 1 : 0,
           newSubtask.addedBy,
           newSubtask.createdAt,
+          idTask,
         ],
         (_, result) => {
           const IdSubtask = result.insertId;
-          tx.executeSql(
-            'INSERT INTO subtasks (idSubtask, Task_idTask) VALUES (?, ?)',
-            [IdSubtask, idTask],
-            () => {
-              resolve(IdSubtask);
-            },
-            error => {
-              reject(error);
-            },
-          );
+          resolve(IdSubtask);
         },
         (_, error) => {
           reject(error);
@@ -541,6 +533,7 @@ export function fetchSubtasksForTask(taskID: number): Promise<SubtaskType[]> {
           const subtasks: SubtaskType[] = [];
           for (let i = 0; i < result.rows.length; i++) {
             const row = result.rows.item(i);
+            console.log(row);
             const subtask: SubtaskType = {
               idSubtask: row.idSubtask,
               title: row.title,
