@@ -13,7 +13,7 @@ import { ListType, SubtaskType, TaskType } from 'data/types';
 import { useAuth } from 'context/AuthContext';
 import SubTask from 'components/sub-task';
 import DateTimePickers from 'components/add-task-field/DateTimePickers';
-import { formatDateToShortDateWithTime } from 'utils/dateFormat';
+import { formatDateToLongDate, formatDateToShortDate, formatDateToShortDateWithTime } from 'utils/dateFormat';
 import { useNotification } from 'hooks/useNotification';
 
 //icons:
@@ -50,7 +50,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const [deadline, setDeadline] = useState<string>("Deadline");
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
     const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
-    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date>();
+    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date | null>(null);
 
     const [notification, setNotification] = useState<string>("Notification");
     const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
@@ -252,7 +252,6 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                                 fontWeight: notificationTime ? typography.FONT_WEIGHT_BOLD : typography.FONT_WEIGHT_REGULAR,
                             },
                             styles.notificationButtonText]}>
-
                                 {notificationTime ?
                                     formatDateToShortDateWithTime(new Date(notificationTime), intl)
                                     :
@@ -275,21 +274,39 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        onPress={() => { }}
+                        onPress={() => {
+                            setShowDeadlineDatePicker(true);
+                        }}
                         style={[styles.notificationButton, { borderBottomColor: theme.HINT }]}
                     >
                         <View style={styles.buttonLeftContainer}>
                             <DeadlineIcon
-                                stroke={theme.TEXT}
+                                stroke={deadlineDatePickerDate ? color : theme.TEXT}
                                 strokeWidth={constants.STROKE_WIDTH.ICON}
                             />
-                            <Text style={[{ color: theme.TEXT }, styles.notificationButtonText]}>
-                                <FormattedMessage
-                                    id='views.authenticated.task.details.set-deadline'
-                                    defaultMessage='Set deadline'
-                                />
+
+                            <Text style={[{
+                                color: deadlineDatePickerDate ? color : theme.TEXT,
+                                fontWeight: deadlineDatePickerDate ? typography.FONT_WEIGHT_BOLD : typography.FONT_WEIGHT_REGULAR,
+                            }, styles.notificationButtonText]}>
+                                {deadlineDatePickerDate ?
+                                    formatDateToLongDate(deadlineDatePickerDate, intl) :
+                                    <FormattedMessage
+                                        id='views.authenticated.task.details.set-deadline'
+                                        defaultMessage='Set deadline'
+                                    />
+                                }
                             </Text>
                         </View>
+                        {deadlineDatePickerDate &&
+                            <Button
+                                icon={<CloseIcon />}
+                                onPress={() => {
+
+                                }}
+                                type={buttonTypes.BUTTON_TYPES.WITH_ICON}
+                                color={color}
+                            />}
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}

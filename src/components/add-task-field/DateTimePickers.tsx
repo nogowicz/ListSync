@@ -8,11 +8,11 @@ type DateTimePickersProps = {
     showDeadlineDatePicker: boolean;
     showNotificationDatePicker: boolean;
     showNotificationTimePicker: boolean;
-    deadlineDatePickerDate: Date | undefined;
+    deadlineDatePickerDate: Date | null;
     notificationDatePickerDate: Date;
     timePickerTime: Date | undefined;
     setShowDeadlineDatePicker: Dispatch<SetStateAction<boolean>>;
-    setDeadlineDatePickerDate: Dispatch<SetStateAction<Date | undefined>>;
+    setDeadlineDatePickerDate: Dispatch<SetStateAction<Date | null>>;
     setDeadline: Dispatch<SetStateAction<string>>;
     setShowNotificationTimePicker: Dispatch<SetStateAction<boolean>>;
     setTimePickerTime: Dispatch<SetStateAction<Date | undefined>>;
