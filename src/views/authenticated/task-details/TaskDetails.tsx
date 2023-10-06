@@ -50,7 +50,8 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const [deadline, setDeadline] = useState<string>("Deadline");
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
     const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
-    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date | null>(null);
+
+    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<string | null>(currentTask ? currentTask.deadline : null);
 
     const [notification, setNotification] = useState<string>("Notification");
     const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
@@ -142,7 +143,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 IdTask: currentTask.IdTask,
                 title: taskTitle,
                 isCompleted: currentTask.isCompleted,
-                deadline: currentTask.deadline,
+                deadline: deadlineDatePickerDate,
                 importance: currentTask.importance,
                 effort: currentTask.effort,
                 note: currentTask.note,
@@ -290,7 +291,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                                 fontWeight: deadlineDatePickerDate ? typography.FONT_WEIGHT_BOLD : typography.FONT_WEIGHT_REGULAR,
                             }, styles.notificationButtonText]}>
                                 {deadlineDatePickerDate ?
-                                    formatDateToLongDate(deadlineDatePickerDate, intl) :
+                                    formatDateToLongDate(new Date(deadlineDatePickerDate), intl) :
                                     <FormattedMessage
                                         id='views.authenticated.task.details.set-deadline'
                                         defaultMessage='Set deadline'

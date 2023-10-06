@@ -57,7 +57,6 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
     const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
     const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
-    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date>();
 
     const [isNotificationVisible, setIsNotificationVisible] = useState(false);
     const [notification, setNotification] = useState<string>("Notification");
@@ -130,6 +129,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             return;
         }
         if (user) {
+            console.log("Deadline date: ", deadlineDate)
             const newTask: TaskType = {
                 IdTask: -1,
                 title: textValue,
@@ -194,14 +194,14 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
         return (
             <View>
                 <DateTimePickers
-                    deadlineDatePickerDate={deadlineDatePickerDate}
+                    deadlineDatePickerDate={deadlineDate}
                     timePickerTime={timePickerTime}
                     notificationDatePickerDate={notificationDatePickerDate}
                     showDeadlineDatePicker={showDeadlineDatePicker}
                     showNotificationDatePicker={showNotificationDatePicker}
                     showNotificationTimePicker={showNotificationTimePicker}
                     setShowDeadlineDatePicker={setShowDeadlineDatePicker}
-                    setDeadlineDatePickerDate={setDeadlineDatePickerDate}
+                    setDeadlineDatePickerDate={setDeadlineDate}
                     setDeadline={setDeadline}
                     setShowNotificationTimePicker={setShowNotificationTimePicker}
                     setTimePickerTime={setTimePickerTime}

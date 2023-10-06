@@ -8,11 +8,11 @@ type DateTimePickersProps = {
     showDeadlineDatePicker: boolean;
     showNotificationDatePicker: boolean;
     showNotificationTimePicker: boolean;
-    deadlineDatePickerDate: Date | null;
+    deadlineDatePickerDate: string | null;
     notificationDatePickerDate: Date;
     timePickerTime: Date | undefined;
     setShowDeadlineDatePicker: Dispatch<SetStateAction<boolean>>;
-    setDeadlineDatePickerDate: Dispatch<SetStateAction<Date | null>>;
+    setDeadlineDatePickerDate: Dispatch<SetStateAction<string | null>>;
     setDeadline: Dispatch<SetStateAction<string>>;
     setShowNotificationTimePicker: Dispatch<SetStateAction<boolean>>;
     setTimePickerTime: Dispatch<SetStateAction<Date | undefined>>;
@@ -37,14 +37,15 @@ export default function DateTimePickers({
     setNotificationTime,
     setNotification,
     setShowNotificationDatePicker,
-    setNotificationDatePickerDate
+    setNotificationDatePickerDate,
 }: DateTimePickersProps) {
 
     const onChangeDeadlineDate = (event: any, selectedDate?: Date | undefined) => {
         if (event.type === 'set') {
             setShowDeadlineDatePicker(Platform.OS === 'ios' ? true : false);
             const currentDate = selectedDate || deadlineDatePickerDate;
-            setDeadlineDatePickerDate(currentDate);
+            const currentDateAsString = currentDate?.toString();
+            setDeadlineDatePickerDate(currentDateAsString ?? null);
             setDeadline(deadlineNames.PICK_DATE);
         } else if (event.type === 'dismissed') {
             setShowDeadlineDatePicker(false);
@@ -92,7 +93,7 @@ export default function DateTimePickers({
             {showDeadlineDatePicker && (
                 <DateTimePicker
                     testID='dateTimePicker'
-                    value={deadlineDatePickerDate || new Date()}
+                    value={new Date(deadlineDatePickerDate as string) || new Date()}
                     mode={'date'}
                     is24Hour={true}
                     display='default'

@@ -47,6 +47,7 @@ export default function FunctionalPanel({
                 setIsImportanceVisible={setIsImportanceVisible}
                 type={FUNCTIONAL_BUTTONS_NAMES.LIST}
                 activeList={activeList}
+                deadlineDate={null}
                 notificationTime={null}
             />
 
@@ -57,6 +58,7 @@ export default function FunctionalPanel({
                 setIsNotificationVisible={setIsNotificationVisible}
                 setIsImportanceVisible={setIsImportanceVisible}
                 type={FUNCTIONAL_BUTTONS_NAMES.NOTIFICATION}
+                deadlineDate={null}
                 notification={notification}
                 notificationTime={notificationTime}
             />
@@ -80,6 +82,7 @@ export default function FunctionalPanel({
                 setIsDeadlineVisible={setIsDeadlineVisible}
                 setIsNotificationVisible={setIsNotificationVisible}
                 setIsImportanceVisible={setIsImportanceVisible}
+                deadlineDate={null}
                 type={FUNCTIONAL_BUTTONS_NAMES.IMPORTANCE}
                 importance={importance}
                 notificationTime={null}
