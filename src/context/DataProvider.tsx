@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { ListType, SubtaskType, TaskType } from 'data/types';
 import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
-import { Task } from 'react-native';
+import { API_URL } from '@env';
 
 type DataContextType = {
   listData: ListType[];
@@ -65,7 +65,6 @@ type DataProviderProps = {
 
 export function useListContext() {
   const context = useContext(DataContext);
-
   if (!context) {
     throw new Error('useListContext must be used within a ListProvider');
   }
