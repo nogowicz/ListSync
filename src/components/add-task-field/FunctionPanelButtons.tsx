@@ -132,7 +132,7 @@ export default function FunctionPanelButtons({
         defaultMessage: "Unnamed list",
         id: "views.authenticated.home.text-input.list-name.unnamed-list"
     });
-    console.log("DeadlineDate FPB: ", deadlineDate)
+
     if (type === FUNCTIONAL_BUTTONS_NAMES.LIST) {
         return (
             <TouchableOpacity

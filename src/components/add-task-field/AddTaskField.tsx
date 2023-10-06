@@ -129,7 +129,6 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             return;
         }
         if (user) {
-            console.log("Deadline date: ", deadlineDate)
             const newTask: TaskType = {
                 IdTask: -1,
                 title: textValue,
