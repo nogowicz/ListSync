@@ -45,7 +45,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                 {list.map((item: ListType) => (
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        key={item.IdList}
+                        key={item.idList}
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',

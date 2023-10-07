@@ -6,7 +6,6 @@ import { typography, spacing, constants } from 'styles';
 import { Modal } from 'components/modal/Modal';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useListContext } from 'context/DataProvider';
-import { ListType } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 import { useNavigation } from '@react-navigation/native';
 

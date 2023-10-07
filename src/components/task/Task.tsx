@@ -30,6 +30,8 @@ import { RootStackParamList } from 'navigation/navigation';
 import Trash from 'assets/button-icons/trash.svg';
 import Done from 'assets/button-icons/done.svg';
 
+//TODO:
+//SUBTASKS
 
 type TaskProps = {
     task: TaskType;
@@ -44,8 +46,8 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const intl = useIntl();
     const { cancelNotification } = useNotification();
     const isCompleted = task.isCompleted;
-    const subTasks: SubtaskType[] = task.subtasks;
-    const completedSubTasks: SubtaskType[] = subTasks.filter(item => item.isCompleted);
+    // const subTasks: SubtaskType[] = task.subtasks;
+    // const completedSubTasks: SubtaskType[] = subTasks.filter(item => item.isCompleted);
     const hasDeadline = task.deadline;
     const deadline = new Date(task.deadline as string);
     const deadlineAsString = formatDateToShortDate(deadline, intl);
@@ -83,18 +85,18 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
     const [sortedSubTasks, setSortedSubTasks] = useState<SubtaskType[]>([]);
 
-    useEffect(() => {
-        const sortedTasks = [...subTasks].sort((a, b) => {
-            if (a.isCompleted && !b.isCompleted) {
-                return 1;
-            } else if (!a.isCompleted && b.isCompleted) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
-        setSortedSubTasks(sortedTasks);
-    }, [subTasks]);
+    // useEffect(() => {
+    //     const sortedTasks = [...subTasks].sort((a, b) => {
+    //         if (a.isCompleted && !b.isCompleted) {
+    //             return 1;
+    //         } else if (!a.isCompleted && b.isCompleted) {
+    //             return -1;
+    //         } else {
+    //             return 0;
+    //         }
+    //     });
+    //     setSortedSubTasks(sortedTasks);
+    // }, [subTasks]);
 
     const handleCompleteSubtask = (updatedSubtask: SubtaskType) => {
         completeSubtask(updatedSubtask);
@@ -191,7 +193,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                                     color: theme.TEXT,
                                 }]}>{task.title}</Text>
                     </View>
-                    {subTasks.length > 0 &&
+                    {/* {subTasks.length > 0 &&
                         <TouchableOpacity
                             activeOpacity={constants.ACTIVE_OPACITY.HIGH}
                             onPress={handleArrowPress}
@@ -216,7 +218,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                             <Text style={[styles.subtasksAmount, { color: theme.HINT }]}>
                                 {completedSubTasks.length} / {subTasks.length}
                             </Text>
-                        </View>}
+                        </View>} */}
                     {hasDeadline !== null &&
                         <View style={styles.middleContainer}>
                             <Calendar
@@ -233,7 +235,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
                 </View>
 
-                {(subTasks.length > 0 && isSubtasksVisible) &&
+                {/* {(subTasks.length > 0 && isSubtasksVisible) &&
                     <Animated.View
                         style={[styles.subtasks]}
                     >
@@ -246,7 +248,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                             />)
                         )
                         }
-                    </Animated.View>}
+                    </Animated.View>} */}
 
             </TouchableOpacity>
         </Swipeable>

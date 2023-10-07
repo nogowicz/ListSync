@@ -82,7 +82,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
     const inputRef = useRef<TextInput>(null);
 
     useEffect(() => {
-        setActiveList(list.find((item: ListType) => item.IdList === currentListId));
+        setActiveList(list.find((item: ListType) => item.idList === currentListId));
     }, [list]);
 
     useEffect(() => {
@@ -145,7 +145,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             };
 
             try {
-                const taskId = await addTask(newTask, activeList?.IdList);
+                const taskId = await addTask(newTask, activeList?.idList);
                 if (taskId) {
                     handleCreateNotification(taskId);
                 }

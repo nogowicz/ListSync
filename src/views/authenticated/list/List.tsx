@@ -43,10 +43,10 @@ export default function List({
     const { listData } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.idList === currentListId));
     const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
-    const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
-    const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
+    const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 0);
+    const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 0);
     const [listName, setListName] = useState(currentList?.listName || '');
-    const [idList, setidList] = useState(currentList?.idList || 0);
+    const [idList, setIdList] = useState(currentList?.idList || 0);
     const [unCompletedTasks, setUnCompletedTasks] = useState<TaskType[]>([]);
     const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType, SubtaskType, TaskType } from 'data/types';
-import { deleteListFromDatabase, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
+import { deleteCompletedTasksInDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 import { API_URL } from '@env';
 
@@ -94,15 +94,6 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     }
     fetchUserLists();
-
-    // getUserLists(user.id)
-    //   .then(lists => {
-    //     setListData(lists);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error provider fetching user lists:', error);
-    //   });
-
   }, [user?.id]);
 
   const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {
@@ -161,7 +152,19 @@ export function DataProvider({ children }: DataProviderProps) {
       const updatedNewListData: ListType[] = listData.filter((list) => list.idList !== idList || !list.canBeDeleted);
       updateListData(() => updatedNewListData);
       try {
-        await deleteListFromDatabase(idList);
+        const response = await fetch(`${API_URL}/remove_list?IdList=${idList}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.warn(responseData);
+        }
+        console.log(responseData);
       } catch (error) {
         console.error("Error occurred while deleting list from db:", error);
         throw error;
@@ -195,16 +198,30 @@ export function DataProvider({ children }: DataProviderProps) {
 
       updateListData(() => updatedListData);
       try {
-        await updateListInDatabase(
-          idList,
-          listName,
-          iconId,
-          colorVariant,
-          canBeDeleted,
-          isShared,
-          isFavorite,
-          isArchived
-        );
+        const response = await fetch(`${API_URL}/change_in_list`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "id": idList,
+            "listName": listName,
+            "iconId": iconId,
+            "isShared": isShared,
+            "isFavorite": isFavorite,
+            "isArchived": isArchived,
+            "colorVariant": colorVariant
+          })
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.warn(responseData);
+        }
+
+        console.log(responseData);
+
       } catch (error) {
         console.error("Error occurred while updating list in db:", error);
         throw error;
@@ -236,9 +253,35 @@ export function DataProvider({ children }: DataProviderProps) {
       idList?: number,
     ): Promise<number | undefined> => {
       try {
-        const taskId = await addTaskToDatabase(newTask, idList || -1);
+        console.log(newTask, idList)
+        const response = await fetch(`${API_URL}/add_task`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idList": idList,
+            "title": newTask.title,
+            "deadline": newTask.deadline,
+            "importance": newTask.importance,
+            "effort": newTask.importance,
+            "note": newTask.note,
+            "addedBy": newTask.addedBy,
+            "assignedTo": newTask.assignedTo,
+            "notificationTime": newTask.notificationTime
+          })
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.warn(responseData);
+        } else {
+          console.log(responseData)
+        }
+        const taskId = responseData;
         if (taskId !== null) {
-          newTask.IdTask = taskId;
+          newTask.IdTask = Number(taskId);
           const newListData = listData.map((list) => {
             if (list.idList === idList) {
               return {
@@ -256,7 +299,7 @@ export function DataProvider({ children }: DataProviderProps) {
           });
 
           updateListData(() => newListData);
-          return taskId;
+          return Number(taskId);
         }
       } catch (error) {
         console.error("Error occurred while adding task to db:", error);
