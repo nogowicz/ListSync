@@ -216,7 +216,7 @@ export function prepareButtons({
         },
         {
             type: buttonTypes.BUTTON_TYPES.PASSWORD_VISIBILITY,
-            buttonTypes: (
+            button: (
                 <TouchableOpacity
                     activeOpacity={activeOpacity}
                     onPress={onPress}

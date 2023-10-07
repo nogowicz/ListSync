@@ -45,9 +45,10 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         try {
             await login(email, password).then(() => {
                 setLoading(false);
-            })
+            });
         } catch (error: any) {
             setError('email', { message: error.message });
+            setError('password', { message: error.message });
             setLoading(false);
         }
     }
