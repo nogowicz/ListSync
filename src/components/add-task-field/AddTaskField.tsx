@@ -133,7 +133,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                 IdTask: -1,
                 title: textValue,
                 isCompleted: false,
-                addedBy: user.ID,
+                addedBy: user.id,
                 assignedTo: null,
                 deadline: deadlineDate,
                 effort: '',

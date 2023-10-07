@@ -21,6 +21,10 @@ import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import { useAuth } from 'context/AuthContext';
 
+
+//TODO:
+//Error handling
+
 type SignInScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'SIGN_IN_SCREEN'>;
 
 type SignInScreenProps = {

@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 type ChangeListModalProps = {
     isModalVisible: boolean;
     listName: string;
-    IdList: number;
+    idList: number;
     selectedColor: number;
     placeholderText: string;
     setSelectedIcon: Dispatch<SetStateAction<number>>;
@@ -27,7 +27,7 @@ type ChangeListModalProps = {
 export default function ChangeListModal({
     isModalVisible,
     listName,
-    IdList,
+    idList,
     selectedColor,
     placeholderText,
     setSelectedIcon,
@@ -61,7 +61,7 @@ export default function ChangeListModal({
     }, []);
 
     const handleDeleteList = async () => {
-        await deleteList(IdList).then(() => {
+        await deleteList(idList).then(() => {
             navigation.goBack();
         })
     };
@@ -185,7 +185,7 @@ export default function ChangeListModal({
                         />
                     }
                         onPress={() => handleUpdateList(
-                            IdList,
+                            idList,
                             newListName,
                             selectedIcon,
                             selectedColor

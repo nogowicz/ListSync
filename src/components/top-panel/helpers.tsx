@@ -11,7 +11,6 @@ import { ListType } from "data/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "navigation/navigation";
 import { useAuth } from "context/AuthContext";
-import { addListToDatabase } from "utils/database";
 
 
 //components:
@@ -27,13 +26,11 @@ export function prepareTopPanel() {
 
     const handleCreateNewList = async () => {
         const newList = await createList()
-
         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-            data: newList,
+            currentListId: newList,
             isModalVisibleOnStart: true,
             isNewList: true,
         });
-
     };
 
 

@@ -23,7 +23,7 @@ export interface TaskType {
 }
 
 export interface ListType {
-  IdList: number;
+  idList: number;
   listName: string;
   iconId: number;
   canBeDeleted: boolean;

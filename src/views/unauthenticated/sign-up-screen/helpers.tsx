@@ -19,6 +19,8 @@ import EmailIcon from 'assets/button-icons/email.svg';
 import PasswordIcon from 'assets/button-icons/password.svg';
 import PersonIcon from 'assets/button-icons/person-icon.svg';
 
+//TODO:
+//Error handling
 
 type PrepareSignUpPagesType = {
     navigation: SignUpScreenNavigationProp['navigation'];

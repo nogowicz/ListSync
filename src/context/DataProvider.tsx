@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType, SubtaskType, TaskType } from 'data/types';
-import { addListToDatabase, deleteListFromDatabase, getUserLists, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
+import { deleteListFromDatabase, updateListInDatabase, deleteCompletedTasksInDatabase, addTaskToDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 import { API_URL } from '@env';
 
@@ -8,9 +8,9 @@ type DataContextType = {
   listData: ListType[];
   updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
   createList: () => Promise<any | ListType>;
-  deleteList: (IdList: number) => Promise<void>;
+  deleteList: (idList: number) => Promise<void>;
   updateList: (
-    IdList: number,
+    idList: number,
     listName?: string,
     iconId?: number,
     colorVariant?: number,
@@ -76,15 +76,33 @@ export function DataProvider({ children }: DataProviderProps) {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user?.id) {
-      getUserLists(user.id)
-        .then(lists => {
-          setListData(lists);
-        })
-        .catch(error => {
-          console.error('Error provider fetching user lists:', error);
+    async function fetchUserLists() {
+      if (user?.id) {
+        const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
         });
+        const responseData = await response.json();
+        if (!response.ok) {
+          console.warn(responseData)
+        }
+        setListData(responseData)
+        console.log(responseData);
+      }
     }
+    fetchUserLists();
+
+    // getUserLists(user.id)
+    //   .then(lists => {
+    //     setListData(lists);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error provider fetching user lists:', error);
+    //   });
+
   }, [user?.id]);
 
   const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {
@@ -95,10 +113,10 @@ export function DataProvider({ children }: DataProviderProps) {
   const value: DataContextType = {
     listData,
     updateListData,
-    createList: async (): Promise<ListType | undefined> => {
+    createList: async (): Promise<number | undefined> => {
       try {
         const newList: ListType = {
-          IdList: -1,
+          idList: -1,
           listName: 'Unnamed list',
           iconId: 1,
           canBeDeleted: true,
@@ -111,27 +129,46 @@ export function DataProvider({ children }: DataProviderProps) {
           tasks: []
         };
 
-        const newListId = await addListToDatabase(newList);
-        newList.IdList = newListId;
+        const response = await fetch(`${API_URL}/add_list`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "listName": newList.listName,
+            "iconId": newList.iconId,
+            "isShared": newList.isShared,
+            "colorVariant": newList.colorVariant,
+            "createdBy": newList.createdBy
+          })
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.warn(responseData);
+        }
+        console.log(responseData)
+        newList.idList = Number(responseData);
         updateListData(prevListData => [...prevListData, newList]);
-        return newList;
+        return newList.idList;
       } catch (error) {
         console.error("Error occurred while adding list to db:", error);
         throw error;
       }
     },
-    deleteList: async (IdList: number): Promise<void> => {
-      const updatedNewListData: ListType[] = listData.filter((list) => list.IdList !== IdList || !list.canBeDeleted);
+    deleteList: async (idList: number): Promise<void> => {
+      const updatedNewListData: ListType[] = listData.filter((list) => list.idList !== idList || !list.canBeDeleted);
       updateListData(() => updatedNewListData);
       try {
-        await deleteListFromDatabase(IdList);
+        await deleteListFromDatabase(idList);
       } catch (error) {
         console.error("Error occurred while deleting list from db:", error);
         throw error;
       }
     },
     updateList: async (
-      IdList: number,
+      idList: number,
       listName?: string,
       iconId?: number,
       colorVariant?: number,
@@ -141,7 +178,7 @@ export function DataProvider({ children }: DataProviderProps) {
       isArchived?: boolean,
     ): Promise<void> => {
       const updatedListData = listData.map((list) => {
-        if (list.IdList === IdList) {
+        if (list.idList === idList) {
           return {
             ...list,
             listName: listName !== undefined ? listName : list.listName,
@@ -159,7 +196,7 @@ export function DataProvider({ children }: DataProviderProps) {
       updateListData(() => updatedListData);
       try {
         await updateListInDatabase(
-          IdList,
+          idList,
           listName,
           iconId,
           colorVariant,
@@ -173,9 +210,9 @@ export function DataProvider({ children }: DataProviderProps) {
         throw error;
       }
     },
-    deleteCompletedTasks: async (IdList?: number): Promise<void> => {
+    deleteCompletedTasks: async (idList?: number): Promise<void> => {
       const updatedListData = listData.map((list) => {
-        if (list.IdList === IdList) {
+        if (list.idList === idList) {
           const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
           return {
             ...list,
@@ -187,7 +224,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
       updateListData(() => updatedListData);
       try {
-        await deleteCompletedTasksInDatabase(IdList);
+        await deleteCompletedTasksInDatabase(idList);
 
       } catch (error) {
         console.error("Error occurred while deleting completed tasks from db:", error);
@@ -196,19 +233,19 @@ export function DataProvider({ children }: DataProviderProps) {
     },
     addTask: async (
       newTask: TaskType,
-      IdList?: number,
+      idList?: number,
     ): Promise<number | undefined> => {
       try {
-        const taskId = await addTaskToDatabase(newTask, IdList || -1);
+        const taskId = await addTaskToDatabase(newTask, idList || -1);
         if (taskId !== null) {
           newTask.IdTask = taskId;
           const newListData = listData.map((list) => {
-            if (list.IdList === IdList) {
+            if (list.idList === idList) {
               return {
                 ...list,
                 tasks: [...list.tasks, newTask],
               };
-            } else if (list.IdList === 1 && IdList !== 1) {
+            } else if (list.idList === 1 && idList !== 1) {
               return {
                 ...list,
                 tasks: [...list.tasks, newTask],
@@ -226,9 +263,9 @@ export function DataProvider({ children }: DataProviderProps) {
         throw error;
       }
     },
-    deleteTask: async (IdTask: number, IdList: number): Promise<void> => {
+    deleteTask: async (IdTask: number, idList: number): Promise<void> => {
       const updatedListData = listData.map((list) => {
-        if (list.IdList === IdList) {
+        if (list.idList === idList) {
           const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== IdTask);
           return {
             ...list,
@@ -314,7 +351,7 @@ export function DataProvider({ children }: DataProviderProps) {
           newSubtask.idSubtask = idSubtask;
 
           const newListData = listData.map((list) => {
-            if (list.IdList === idList) {
+            if (list.idList === idList) {
               const updatedTasks = list.tasks.map((task) => {
                 if (task.IdTask === idTask) {
                   return {
@@ -345,7 +382,7 @@ export function DataProvider({ children }: DataProviderProps) {
     },
     deleteSubtask: async (idSubtask: number, idTask: number, idList: number): Promise<void> => {
       const updatedListData = listData.map((list) => {
-        if (list.IdList === idList) {
+        if (list.idList === idList) {
           const updatedTasks = list.tasks.map((task) => {
             if (task.IdTask === idTask) {
               const updatedSubtasks = task.subtasks.filter((subtask) => subtask.idSubtask !== idSubtask);

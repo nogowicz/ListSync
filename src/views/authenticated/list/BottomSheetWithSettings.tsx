@@ -23,14 +23,14 @@ import Button, { buttonTypes } from 'components/button';
 
 type BottomSheetWithSettingsProps = {
     refDetails: RefObject<BottomSheetRefProps>;
-    IdList: number;
+    idList: number;
     handleModal: () => void;
     handleShowDetailsBottomSheet: () => void;
 };
 
 export default function BottomSheetWithSettings({
     refDetails,
-    IdList,
+    idList,
     handleModal,
     handleShowDetailsBottomSheet,
 }: BottomSheetWithSettingsProps) {
@@ -38,10 +38,10 @@ export default function BottomSheetWithSettings({
     const intl = useIntl();
     const { listData, updateList, deleteList, deleteCompletedTasks } = useListContext();
     const navigation = useNavigation();
-    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === IdList));
+    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.idList === idList));
 
     useEffect(() => {
-        setCurrentList(listData.find((item: ListType) => item.IdList === IdList));
+        setCurrentList(listData.find((item: ListType) => item.idList === idList));
     }, [listData]);
 
     //translations:
@@ -85,7 +85,7 @@ export default function BottomSheetWithSettings({
     });
 
     const handleDeleteList = async () => {
-        await deleteList(IdList).then(() => {
+        await deleteList(idList).then(() => {
             navigation.goBack();
         })
     };
@@ -93,7 +93,7 @@ export default function BottomSheetWithSettings({
 
     async function removeCompletedTasks() {
         handleShowDetailsBottomSheet();
-        deleteCompletedTasks(IdList);
+        deleteCompletedTasks(idList);
 
     }
 
@@ -104,7 +104,7 @@ export default function BottomSheetWithSettings({
             const setIsFavorite = !isCurrentlyFavorite;
 
             try {
-                updateList(currentList.IdList, undefined, undefined, undefined, undefined, undefined, setIsFavorite);
+                updateList(currentList.idList, undefined, undefined, undefined, undefined, undefined, setIsFavorite);
             } catch (error) {
                 console.error('Error while updating list:', error);
             }

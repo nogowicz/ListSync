@@ -41,12 +41,12 @@ export default function List({
         isNewList = false,
     }: any = route.params;
     const { listData } = useListContext();
-    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === currentListId));
+    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.idList === currentListId));
     const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
     const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
     const [listName, setListName] = useState(currentList?.listName || '');
-    const [IdList, setIdList] = useState(currentList?.IdList || 0);
+    const [idList, setidList] = useState(currentList?.idList || 0);
     const [unCompletedTasks, setUnCompletedTasks] = useState<TaskType[]>([]);
     const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);
@@ -87,7 +87,7 @@ export default function List({
     };
 
     useEffect(() => {
-        setCurrentList(listData.find((item: ListType) => item.IdList === currentListId));
+        setCurrentList(listData.find((item: ListType) => item.idList === currentListId));
     }, [listData, currentListId]);
 
     useEffect(() => {
@@ -104,7 +104,7 @@ export default function List({
 
     if (!currentList) {
         // TODO: Handle no data state
-        return <View><Text>No data here</Text></View>;
+        return <View><Text style={{ color: "black" }}>No data here</Text></View>;
     }
 
     return (
@@ -141,7 +141,7 @@ export default function List({
                         {unCompletedTasks.length > 0 ?
                             <TaskList
                                 tasks={unCompletedTasks}
-                                listId={currentList.IdList}
+                                listId={currentList.idList}
                                 color={listColorTheme[currentList.colorVariant]}
                             /> :
                             completedTasks.length > 0 ?
@@ -192,7 +192,7 @@ export default function List({
                                 {isCompletedVisible &&
                                     <TaskList
                                         tasks={completedTasks}
-                                        listId={currentList.IdList}
+                                        listId={currentList.idList}
                                         color={listColorTheme[currentList.colorVariant]}
                                     />}
                             </View>
@@ -201,7 +201,7 @@ export default function List({
                 </ScrollView>
                 {!isModalVisible && (
                     <AddTaskField
-                        currentListId={currentList.IdList}
+                        currentListId={currentList.idList}
                         color={listColorTheme[currentList.colorVariant]}
                     />
                 )}
@@ -211,7 +211,7 @@ export default function List({
                 handleModal={handleModal}
                 isModalVisible={isModalVisible}
                 listName={listName}
-                IdList={IdList}
+                idList={idList}
                 placeholderText={placeholderText}
                 selectedColor={selectedColor}
                 selectedIcon={selectedIcon}
@@ -222,7 +222,7 @@ export default function List({
 
             <BottomSheetWithSettings
                 refDetails={refDetails}
-                IdList={IdList}
+                idList={idList}
                 handleModal={handleModal}
                 handleShowDetailsBottomSheet={handleShowDetailsBottomSheet}
             />

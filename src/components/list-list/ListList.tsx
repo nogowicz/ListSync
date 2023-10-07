@@ -29,7 +29,7 @@ export default function ListList({ list }: ListListProps) {
                     colorVariant={item.colorVariant}
                     onPress={() =>
                         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-                            currentListId: item.IdList,
+                            currentListId: item.idList,
                         } as any)
                     }
                 />
@@ -42,7 +42,7 @@ export default function ListList({ list }: ListListProps) {
         <View style={{ flex: 1, }}>
             <FlatList
                 data={list}
-                keyExtractor={(item: ListType) => item.IdList.toString()}
+                keyExtractor={(item: ListType) => item.idList.toString()}
                 showsVerticalScrollIndicator={false}
                 renderItem={renderItem}
                 numColumns={numColumns}
