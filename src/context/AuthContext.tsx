@@ -1,6 +1,8 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { removeItem, setItem } from "utils/asyncStorage";
 import { createListTable, createSubtaskTable, createTaskListTable, createTaskTable, createUserTable, loginUser, registerUser } from "utils/database";
+import { API_URL } from '@env';
+import jwtDecode from 'jwt-decode';
 
 
 type AuthContextType = {
@@ -44,10 +46,13 @@ type AuthProviderProps = {
 }
 
 type UserType = {
-    ID: number;
+    id: number;
     email: string;
     firstName: string;
     lastName: string;
+    photo: string;
+    createdAt: string;
+    exp: number;
 }
 
 
@@ -68,55 +73,64 @@ export function AuthProvider({ children }: AuthProviderProps) {
             user,
             setUser,
             login: async (email: string, password: string) => {
-                try {
-                    await loginUser(
-                        email,
-                        password,
-                        (userData: UserType) => {
-                            console.log(userData);
-                            setItem('user', JSON.stringify(userData));
-                            setUser(userData);
-                        },
-                        error => {
-                            console.error('Login error:', error);
-                        }
-                    );
-                } catch (error) {
-                    console.log(error);
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "accept": "text/plain"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+
+                    })
+                });
+
+                const responseData = await response.text();
+                if (!response.ok) {
+                    throw new Error(responseData);
                 }
+
+
+                const decodedResponseData: UserType = jwtDecode(responseData);
+                setItem('user', JSON.stringify(decodedResponseData));
+                setUser(decodedResponseData);
+
             },
             register: async (
                 email: string,
                 password: string,
                 firstName: string,
                 lastName: string,
-                errorHandlers: {
-                    onRegistrationSuccess: () => void;
-                    onEmailTaken: () => void;
-                    onOtherError: (error: Error) => void;
-                }
+                // errorHandlers: {
+                //     onRegistrationSuccess: () => void;
+                //     onEmailTaken: () => void;
+                //     onOtherError: (error: Error) => void;
+                // }
             ) => {
                 try {
-                    await registerUser(
-                        email,
-                        password,
-                        firstName,
-                        lastName,
-                        {
-                            onRegistrationSuccess: () => {
-                                errorHandlers.onRegistrationSuccess();
-                            },
-                            onEmailTaken: () => {
-                                console.error('Email is already taken');
-                                errorHandlers.onEmailTaken();
-                            },
-                            onOtherError: error => {
-                                console.error('Register error:', error);
-                                errorHandlers.onOtherError(error);
-                            },
-                        }
-                    );
-                } catch (error) {
+                    const response = await fetch(`${API_URL}/register`, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "accept": "text/plain"
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            firstName: firstName,
+                            lastName: lastName,
+                            password: password,
+
+                        })
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const responseData = await response.json();
+                    console.log(responseData);
+                }
+                catch (error) {
                     console.error('Register error:', error);
                 }
             },

@@ -9,7 +9,6 @@ import { buttonTypes } from 'components/button';
 import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from './signInVallidationSchema';
-import { UserType, useUser } from 'context/UserProvider';
 
 //components:
 import CustomTextField from 'components/custom-text-field';
@@ -32,7 +31,6 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
     const theme = useTheme();
     const intl = useIntl();
     const [loading, setLoading] = useState(false);
-    const { user, setUserDetails } = useUser();
     const { login } = useAuth();
 
 
@@ -45,18 +43,12 @@ export default function SignInScreen({ navigation }: SignInScreenProps) {
         setLoading(true);
 
         try {
-            // console.log(email, password)
-            // const userData: UserType = {
-            //     id: 1,
-            //     firstName: 'Bartek',
-            //     lastName: 'Noga',
-            //     email: email,
-            //     photoURL: null,
-            // };
-            // setUserDetails(userData);
-            await login(email, password);
-        } catch (error) {
-            setError('email', { message: error as string });
+            await login(email, password).then(() => {
+                setLoading(false);
+            })
+        } catch (error: any) {
+            setError('email', { message: error.message });
+            setLoading(false);
         }
     }
 
