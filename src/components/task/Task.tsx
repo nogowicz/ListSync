@@ -104,8 +104,9 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
     const handleDeleteTask = async () => {
         try {
-            await deleteTask(task.IdTask, listId).then(() => {
-                cancelNotification(String(task.IdTask));
+            console.log(task)
+            await deleteTask(task.idTask, listId).then(() => {
+                cancelNotification(String(task.idTask));
             })
 
         } catch (error) {

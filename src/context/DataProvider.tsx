@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType, SubtaskType, TaskType } from 'data/types';
-import { deleteCompletedTasksInDatabase, deleteTaskFromDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateTaskInDatabase, updateSubtaskInDatabase } from 'utils/database';
+import { deleteCompletedTasksInDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 import { API_URL } from '@env';
 
@@ -163,8 +163,9 @@ export function DataProvider({ children }: DataProviderProps) {
         const responseData = await response.text();
         if (!response.ok) {
           console.warn(responseData);
+        } else {
+          console.log(responseData);
         }
-        console.log(responseData);
       } catch (error) {
         console.error("Error occurred while deleting list from db:", error);
         throw error;
@@ -281,7 +282,7 @@ export function DataProvider({ children }: DataProviderProps) {
         }
         const taskId = responseData;
         if (taskId !== null) {
-          newTask.IdTask = Number(taskId);
+          newTask.idTask = Number(taskId);
           const newListData = listData.map((list) => {
             if (list.idList === idList) {
               return {
@@ -306,10 +307,10 @@ export function DataProvider({ children }: DataProviderProps) {
         throw error;
       }
     },
-    deleteTask: async (IdTask: number, idList: number): Promise<void> => {
+    deleteTask: async (idTask: number, idList: number): Promise<void> => {
       const updatedListData = listData.map((list) => {
         if (list.idList === idList) {
-          const updatedTasks = list.tasks.filter((listTask) => listTask.IdTask !== IdTask);
+          const updatedTasks = list.tasks.filter((listTask) => listTask.idTask !== idTask);
           return {
             ...list,
             tasks: updatedTasks,
@@ -320,7 +321,23 @@ export function DataProvider({ children }: DataProviderProps) {
 
       updateListData(() => updatedListData);
       try {
-        await deleteTaskFromDatabase(IdTask);
+        const response = await fetch(`${API_URL}/remove_task`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "id": idTask,
+          })
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.warn(responseData);
+        } else {
+          console.log(responseData);
+        }
       } catch (error) {
         console.error("Error occurred while deleting task from db:", error);
         throw error;
@@ -329,21 +346,30 @@ export function DataProvider({ children }: DataProviderProps) {
     completeTask: async (updatedTask: TaskType): Promise<void> => {
       const updatedIsCompleted = !updatedTask.isCompleted;
       const updatedNotificationTime = null;
-      await updateTaskInDatabase(
-        updatedTask.IdTask,
-        updatedTask.title,
-        updatedIsCompleted,
-        updatedTask.deadline,
-        updatedTask.importance,
-        updatedTask.effort,
-        updatedTask.note,
-        updatedTask.assignedTo,
-        updatedNotificationTime
-      )
+      const response = await fetch(`${API_URL}/change_in_task`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "text/plain"
+        },
+        body: JSON.stringify({
+          "idTask": updatedTask.idTask,
+          "isCompleted": Number(updatedIsCompleted),
+          "notificationTime": updatedNotificationTime
+        })
+      });
+
+      const responseData = await response.text();
+      if (!response.ok) {
+        console.warn(responseData);
+      } else {
+        console.log(responseData);
+      }
+
       updateListData((prevListData: ListType[]) => {
         const updatedLists = prevListData.map((list: ListType) => {
           const updatedTasks = list.tasks.map((task: TaskType) =>
-            task.IdTask === updatedTask.IdTask ? { ...task, isCompleted: updatedIsCompleted } : task
+            task.idTask === updatedTask.idTask ? { ...task, isCompleted: updatedIsCompleted } : task
           );
 
           return { ...list, tasks: updatedTasks };
@@ -355,22 +381,36 @@ export function DataProvider({ children }: DataProviderProps) {
 
     },
     updateTask: async (updatedTask: TaskType): Promise<void> => {
-      await updateTaskInDatabase(
-        updatedTask.IdTask,
-        updatedTask.title,
-        updatedTask.isCompleted,
-        updatedTask.deadline,
-        updatedTask.importance,
-        updatedTask.effort,
-        updatedTask.note,
-        updatedTask.assignedTo,
-        updatedTask.notificationTime
-      );
+      const response = await fetch(`${API_URL}/change_in_task`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "text/plain"
+        },
+        body: JSON.stringify({
+          "idTask": updatedTask.idTask,
+          "isCompleted": updatedTask.isCompleted,
+          "title": updatedTask.title,
+          "deadline": updatedTask.deadline,
+          "importance": updatedTask.importance,
+          "effort": updatedTask.effort,
+          "note": updatedTask.note,
+          "assignedTo": updatedTask.assignedTo,
+          "notificationTime": updatedTask.notificationTime
+        })
+      });
+
+      const responseData = await response.text();
+      if (!response.ok) {
+        console.warn(responseData);
+      } else {
+        console.log(responseData);
+      }
 
       updateListData((prevListData: ListType[]) => {
         const updatedLists = prevListData.map((list: ListType) => {
           const updatedTasks = list.tasks.map((task: TaskType) =>
-            task.IdTask === updatedTask.IdTask ? updatedTask : task
+            task.idTask === updatedTask.idTask ? updatedTask : task
           );
 
           return { ...list, tasks: updatedTasks };
@@ -396,7 +436,7 @@ export function DataProvider({ children }: DataProviderProps) {
           const newListData = listData.map((list) => {
             if (list.idList === idList) {
               const updatedTasks = list.tasks.map((task) => {
-                if (task.IdTask === idTask) {
+                if (task.idTask === idTask) {
                   return {
                     ...task,
                     subtasks: [...task.subtasks, newSubtask],
@@ -427,7 +467,7 @@ export function DataProvider({ children }: DataProviderProps) {
       const updatedListData = listData.map((list) => {
         if (list.idList === idList) {
           const updatedTasks = list.tasks.map((task) => {
-            if (task.IdTask === idTask) {
+            if (task.idTask === idTask) {
               const updatedSubtasks = task.subtasks.filter((subtask) => subtask.idSubtask !== idSubtask);
               return {
                 ...task,

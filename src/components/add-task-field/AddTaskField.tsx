@@ -130,7 +130,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
         }
         if (user) {
             const newTask: TaskType = {
-                IdTask: -1,
+                idTask: -1,
                 title: textValue,
                 isCompleted: false,
                 addedBy: user.id,

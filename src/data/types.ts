@@ -8,7 +8,7 @@ export interface SubtaskType {
 }
 
 export interface TaskType {
-  IdTask: number;
+  idTask: number;
   title: string;
   isCompleted: boolean;
   deadline: string | null;
