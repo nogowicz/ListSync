@@ -14,11 +14,7 @@ type AuthContextType = {
         password: string,
         firstName: string,
         lastName: string,
-        errorHandlers: {
-            onRegistrationSuccess: () => void;
-            onEmailTaken: () => void;
-            onOtherError: (error: Error) => void;
-        },) => Promise<void>;
+    ) => Promise<void>;
     logout: () => Promise<void>;
 }    // resetPassword: (email: string) => Promise<void>;
 // updateEmail: (newEmail: string) => Promise<void>;
@@ -102,37 +98,48 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 password: string,
                 firstName: string,
                 lastName: string,
-                // errorHandlers: {
-                //     onRegistrationSuccess: () => void;
-                //     onEmailTaken: () => void;
-                //     onOtherError: (error: Error) => void;
-                // }
             ) => {
-                try {
-                    const response = await fetch(`${API_URL}/register`, {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "accept": "text/plain"
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            firstName: firstName,
-                            lastName: lastName,
-                            password: password,
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "accept": "text/plain"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        password: password,
 
-                        })
-                    });
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
+                    })
+                });
+                const responseData = await response.text();
+                if (!response.ok) {
+                    throw new Error(responseData);
+                }
+                const responseLogin = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "accept": "text/plain"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
 
-                    const responseData = await response.json();
-                    console.log(responseData);
+                    })
+                });
+
+                const responseLoginData = await responseLogin.text();
+                if (!response.ok) {
+                    throw new Error(responseLoginData);
                 }
-                catch (error) {
-                    console.error('Register error:', error);
-                }
+
+
+                const decodedResponseData: UserType = jwtDecode(responseLoginData);
+                setItem('user', JSON.stringify(decodedResponseData));
+                setUser(decodedResponseData);
+
             },
 
             logout: async () => {

@@ -76,8 +76,8 @@ export function DataProvider({ children }: DataProviderProps) {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user?.ID) {
-      getUserLists(user.ID)
+    if (user?.id) {
+      getUserLists(user.id)
         .then(lists => {
           setListData(lists);
         })
@@ -85,7 +85,7 @@ export function DataProvider({ children }: DataProviderProps) {
           console.error('Error provider fetching user lists:', error);
         });
     }
-  }, [user?.ID]);
+  }, [user?.id]);
 
   const updateListData = (callback: (prevListData: ListType[]) => ListType[]) => {
     setListData(prevListData => callback(prevListData));
@@ -106,7 +106,7 @@ export function DataProvider({ children }: DataProviderProps) {
           createdAt: new Date().toISOString(),
           isFavorite: false,
           isArchived: false,
-          createdBy: user?.ID || -1,
+          createdBy: user?.id || -1,
           colorVariant: 1,
           tasks: []
         };
