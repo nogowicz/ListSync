@@ -93,6 +93,10 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.retry",
     defaultMessage: "Retry"
   });
+  const creatingListError = intl.formatMessage({
+    id: "views.authenticated.snackbar.creating-list-error",
+    defaultMessage: "Error occurred while creating list"
+  });
 
 
   useEffect(() => {
@@ -189,7 +193,11 @@ export function DataProvider({ children }: DataProviderProps) {
 
           // Displaying a warning if the response is not OK
           if (!response.ok) {
-            console.warn(responseData);
+            console.log(responseData);
+            Snackbar.show({
+              text: creatingListError,
+              duration: Snackbar.LENGTH_SHORT,
+            });
           }
 
           // Updating the list's ID with the data from the server
@@ -201,9 +209,12 @@ export function DataProvider({ children }: DataProviderProps) {
           // Returning the ID of the newly created list
           return newList.idList;
         }
-      } catch (error) {
-        console.error("Error occurred while adding list to db:", error);
-        throw error;
+      } catch (error: any) {
+        console.log("Error occurred while adding list to db:", error);
+        Snackbar.show({
+          text: creatingListError,
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
     },
     deleteList: async (idList: number): Promise<void> => {

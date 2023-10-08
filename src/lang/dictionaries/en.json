@@ -144,5 +144,6 @@
   "views.authenticated.task.details.set-importance": "Set importance",
   "views.authenticated.snackbar.fetch-list-success-info": "Your lists has been fetched successfully",
   "views.authenticated.snackbar.fetch-list-error-info": "Error occurred while fetching data",
-  "views.authenticated.snackbar.retry": "Retry"
+  "views.authenticated.snackbar.retry": "Retry",
+  "views.authenticated.snackbar.creating-list-error": "Error occurred while creating list"
 }
