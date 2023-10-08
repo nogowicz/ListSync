@@ -64,11 +64,11 @@ export default function App(): JSX.Element {
         <LangModeProvider>
           <AuthProvider>
             <UserProvider>
-              <DataProvider>
-                <LangContext>
+              <LangContext>
+                <DataProvider>
                   <Routes />
-                </LangContext>
-              </DataProvider>
+                </DataProvider>
+              </LangContext>
             </UserProvider>
           </AuthProvider>
         </LangModeProvider>

@@ -3,6 +3,8 @@ import { ListType, SubtaskType, TaskType } from 'data/types';
 import { deleteCompletedTasksInDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 import { API_URL } from '@env';
+import Snackbar from 'react-native-snackbar';
+import { useIntl } from 'react-intl';
 
 type DataContextType = {
   listData: ListType[];
@@ -74,6 +76,17 @@ export function useListContext() {
 export function DataProvider({ children }: DataProviderProps) {
   const [listData, setListData] = useState<ListType[]>([]);
   const { user } = useAuth();
+  const intl = useIntl();
+
+  const successMessageTranslation = intl.formatMessage({
+    id: "views.authenticated.snackbar.fetch-list-success-info",
+    defaultMessage: "Your lists has been fetched successfully"
+  });
+  const errorMessageTranslation = intl.formatMessage({
+    id: "views.authenticated.snackbar.fetch-list-error-info",
+    defaultMessage: "Error occurred while fetching data"
+  });
+
 
   useEffect(() => {
     async function fetchUserLists() {
@@ -88,9 +101,19 @@ export function DataProvider({ children }: DataProviderProps) {
         const responseData = await response.json();
         if (!response.ok) {
           console.warn(responseData)
+          Snackbar.show({
+            text: errorMessageTranslation,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          Snackbar.show({
+            text: successMessageTranslation,
+            duration: Snackbar.LENGTH_SHORT,
+          });
         }
         setListData(responseData)
-        console.log(responseData);
+
+
       }
     }
     fetchUserLists();
