@@ -97,6 +97,10 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.creating-list-error",
     defaultMessage: "Error occurred while creating list"
   });
+  const deletingListError = intl.formatMessage({
+    id: "views.authenticated.snackbar.deleting-list-error",
+    defaultMessage: "Error occurred while deleting list"
+  });
 
 
   useEffect(() => {
@@ -218,26 +222,42 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     },
     deleteList: async (idList: number): Promise<void> => {
-      const updatedNewListData: ListType[] = listData.filter((list) => list.idList !== idList || !list.canBeDeleted);
-      updateListData(() => updatedNewListData);
       try {
+        // Filtering the list data
+        const updatedNewListData: ListType[] = listData.filter(
+          (list) => list.idList !== idList || !list.canBeDeleted
+        );
+
+        // Sending an HTTP request to remove the list by its ID
         const response = await fetch(`${API_URL}/remove_list?IdList=${idList}`, {
           method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            "accept": "text/plain"
+            'Content-Type': 'application/json',
+            accept: 'text/plain',
           },
         });
 
+        // Getting the response from the server
         const responseData = await response.text();
+
+        // Checking if the response is not OK and displaying a warning
         if (!response.ok) {
           console.log(responseData);
+          Snackbar.show({
+            text: deletingListError,
+            duration: Snackbar.LENGTH_SHORT,
+          });
         } else {
+          // Updating the list data in the application
+          updateListData(() => updatedNewListData);
           console.log(responseData);
         }
       } catch (error) {
-        console.log("Error occurred while deleting list from db:", error);
-        throw error;
+        console.log('Error occurred while deleting list from the database:', error);
+        Snackbar.show({
+          text: deletingListError,
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
     },
     updateList: async (
