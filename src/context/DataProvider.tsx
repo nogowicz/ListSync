@@ -198,31 +198,43 @@ export function DataProvider({ children }: DataProviderProps) {
       });
 
       updateListData(() => updatedListData);
+      const updatedList: ListType | undefined = listData.find((list) => idList === list.idList);
       try {
-        const response = await fetch(`${API_URL}/change_in_list`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "text/plain"
-          },
-          body: JSON.stringify({
-            "id": idList,
-            "listName": listName,
-            "iconId": iconId,
-            "isShared": isShared,
-            "isFavorite": isFavorite,
-            "isArchived": isArchived,
-            "colorVariant": colorVariant
-          })
-        });
+        if (updatedList) {
+          console.log(
+            "id", idList,
+            "listName", listName ?? updatedList.listName,
+            "iconId", iconId ?? updatedList.iconId,
+            "isShared", isShared ?? updatedList.isShared,
+            "isFavorite", isFavorite ?? updatedList.isFavorite,
+            "isArchived", isArchived ?? updatedList.isArchived,
+            "colorVariant", colorVariant ?? updatedList.colorVariant
+          )
+          const response = await fetch(`${API_URL}/change_in_list`, {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+              "accept": "text/plain"
+            },
+            body: JSON.stringify({
+              "id": idList,
+              "listName": listName ?? updatedList.listName,
+              "iconId": iconId ?? updatedList.iconId,
+              "isShared": isShared ?? updatedList.isShared,
+              "isFavorite": isFavorite ?? updatedList.isFavorite,
+              "isArchived": isArchived ?? updatedList.isArchived,
+              "colorVariant": colorVariant ?? updatedList.colorVariant
+            })
+          });
 
-        const responseData = await response.text();
-        if (!response.ok) {
-          console.warn(responseData);
+
+          const responseData = await response.text();
+          if (!response.ok) {
+            console.warn(responseData);
+          }
+
+          console.log(responseData);
         }
-
-        console.log(responseData);
-
       } catch (error) {
         console.error("Error occurred while updating list in db:", error);
         throw error;
