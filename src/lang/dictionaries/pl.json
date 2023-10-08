@@ -143,5 +143,6 @@
   "views.authenticated.task.details.set-deadline": "Ustaw datę ukończenia",
   "views.authenticated.task.details.set-importance": "Ustaw priorytet",
   "views.authenticated.snackbar.fetch-list-success-info": "Twoje listy zostały pobrane pomyślnie",
-  "views.authenticated.snackbar.fetch-list-error-info": "Wystąpił problem podczas pobierania danych"
+  "views.authenticated.snackbar.fetch-list-error-info": "Wystąpił problem podczas pobierania danych",
+  "views.authenticated.snackbar.retry": "Spróbuj ponownie"
 }

@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 import { API_URL } from '@env';
 import Snackbar from 'react-native-snackbar';
 import { useIntl } from 'react-intl';
+import { useTheme } from 'navigation/utils/ThemeProvider';
 
 type DataContextType = {
   listData: ListType[];
@@ -77,7 +78,9 @@ export function DataProvider({ children }: DataProviderProps) {
   const [listData, setListData] = useState<ListType[]>([]);
   const { user } = useAuth();
   const intl = useIntl();
+  const theme = useTheme();
 
+  //translations:
   const successMessageTranslation = intl.formatMessage({
     id: "views.authenticated.snackbar.fetch-list-success-info",
     defaultMessage: "Your lists has been fetched successfully"
@@ -86,34 +89,54 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.fetch-list-error-info",
     defaultMessage: "Error occurred while fetching data"
   });
+  const retryTranslation = intl.formatMessage({
+    id: "views.authenticated.snackbar.retry",
+    defaultMessage: "Retry"
+  });
 
 
   useEffect(() => {
     async function fetchUserLists() {
-      if (user?.id) {
-        const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "text/plain"
-          },
-        });
-        const responseData = await response.json();
-        if (!response.ok) {
-          console.warn(responseData)
-          Snackbar.show({
-            text: errorMessageTranslation,
-            duration: Snackbar.LENGTH_SHORT,
+      try {
+        if (user?.id) {
+          const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+              "accept": "text/plain"
+            },
           });
-        } else {
-          Snackbar.show({
-            text: successMessageTranslation,
-            duration: Snackbar.LENGTH_SHORT,
-          });
+          const responseData = await response.json();
+          if (!response.ok) {
+            console.log(responseData)
+            Snackbar.show({
+              text: errorMessageTranslation,
+              duration: Snackbar.LENGTH_LONG,
+              action: {
+                text: retryTranslation,
+                textColor: theme.PRIMARY,
+                onPress: () => fetchUserLists()
+              }
+            });
+          } else {
+            Snackbar.show({
+              text: successMessageTranslation,
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }
+          setListData(responseData);
         }
-        setListData(responseData)
-
-
+      } catch (error: any) {
+        console.log(error)
+        Snackbar.show({
+          text: errorMessageTranslation,
+          duration: Snackbar.LENGTH_LONG,
+          action: {
+            text: retryTranslation,
+            textColor: theme.PRIMARY,
+            onPress: () => fetchUserLists()
+          }
+        });
       }
     }
     fetchUserLists();
@@ -197,12 +220,12 @@ export function DataProvider({ children }: DataProviderProps) {
 
         const responseData = await response.text();
         if (!response.ok) {
-          console.warn(responseData);
+          console.log(responseData);
         } else {
           console.log(responseData);
         }
       } catch (error) {
-        console.error("Error occurred while deleting list from db:", error);
+        console.log("Error occurred while deleting list from db:", error);
         throw error;
       }
     },
