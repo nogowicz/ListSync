@@ -106,43 +106,55 @@ export function DataProvider({ children }: DataProviderProps) {
     updateListData,
     createList: async (): Promise<number | undefined> => {
       try {
-        const newList: ListType = {
-          idList: -1,
-          listName: 'Unnamed list',
-          iconId: 1,
-          canBeDeleted: true,
-          isShared: false,
-          createdAt: new Date().toISOString(),
-          isFavorite: false,
-          isArchived: false,
-          createdBy: user?.id || -1,
-          colorVariant: 1,
-          tasks: []
-        };
+        if (user) {
+          // Creating a new list with default values
+          const newList: ListType = {
+            idList: -1,
+            listName: 'Unnamed list',
+            iconId: 0,
+            canBeDeleted: true,
+            isShared: false,
+            createdAt: new Date().toISOString(),
+            isFavorite: false,
+            isArchived: false,
+            createdBy: user.id,
+            colorVariant: 0,
+            tasks: [],
+          };
 
-        const response = await fetch(`${API_URL}/add_list`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "text/plain"
-          },
-          body: JSON.stringify({
-            "listName": newList.listName,
-            "iconId": newList.iconId,
-            "isShared": newList.isShared,
-            "colorVariant": newList.colorVariant,
-            "createdBy": newList.createdBy
-          })
-        });
+          // Sending an HTTP request to add a new list
+          const response = await fetch(`${API_URL}/add_list`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              accept: 'text/plain',
+            },
+            body: JSON.stringify({
+              listName: newList.listName,
+              iconId: newList.iconId,
+              isShared: newList.isShared,
+              colorVariant: newList.colorVariant,
+              createdBy: newList.createdBy,
+            }),
+          });
 
-        const responseData = await response.text();
-        if (!response.ok) {
-          console.warn(responseData);
+          // Getting the response from the server
+          const responseData = await response.text();
+
+          // Displaying a warning if the response is not OK
+          if (!response.ok) {
+            console.warn(responseData);
+          }
+
+          // Updating the list's ID with the data from the server
+          newList.idList = Number(responseData);
+
+          // Updating the list data in the local temporary storage
+          updateListData((prevListData) => [...prevListData, newList]);
+
+          // Returning the ID of the newly created list
+          return newList.idList;
         }
-        console.log(responseData)
-        newList.idList = Number(responseData);
-        updateListData(prevListData => [...prevListData, newList]);
-        return newList.idList;
       } catch (error) {
         console.error("Error occurred while adding list to db:", error);
         throw error;
