@@ -113,7 +113,10 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.deleting-task-error",
     defaultMessage: "Error occurred while deleting task"
   });
-  const updateTaskError = "TODO:";
+  const updateTaskError = intl.formatMessage({
+    id: "views.authenticated.snackbar.updating-task-error",
+    defaultMessage: "Error occurred while updating task"
+  });
 
   useEffect(() => {
     async function fetchUserLists() {
@@ -577,45 +580,69 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     },
     updateTask: async (updatedTask: TaskType): Promise<void> => {
-      const response = await fetch(`${API_URL}/change_in_task`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "accept": "text/plain"
-        },
-        body: JSON.stringify({
-          "idTask": updatedTask.idTask,
-          "isCompleted": updatedTask.isCompleted,
-          "title": updatedTask.title,
-          "deadline": updatedTask.deadline,
-          "importance": updatedTask.importance,
-          "effort": updatedTask.effort,
-          "note": updatedTask.note,
-          "assignedTo": updatedTask.assignedTo,
-          "notificationTime": updatedTask.notificationTime
-        })
-      });
-
-      const responseData = await response.text();
-      if (!response.ok) {
-        console.warn(responseData);
-      } else {
-        console.log(responseData);
-      }
-
-      updateListData((prevListData: ListType[]) => {
-        const updatedLists = prevListData.map((list: ListType) => {
-          const updatedTasks = list.tasks.map((task: TaskType) =>
-            task.idTask === updatedTask.idTask ? updatedTask : task
-          );
-
-          return { ...list, tasks: updatedTasks };
+      try {
+        // Send an HTTP request to update the task with new data
+        const response = await fetch(`${API_URL}/change_in_task`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idTask": updatedTask.idTask,
+            "isCompleted": updatedTask.isCompleted,
+            "title": updatedTask.title,
+            "deadline": updatedTask.deadline,
+            "importance": updatedTask.importance,
+            "effort": updatedTask.effort,
+            "note": updatedTask.note,
+            "assignedTo": updatedTask.assignedTo,
+            "notificationTime": updatedTask.notificationTime
+          })
         });
 
-        return updatedLists;
-      });
-    },
+        // Get the response data from the server
+        const responseData = await response.text();
 
+        // Check if the response is not OK and log a warning
+        if (!response.ok) {
+          console.log(responseData);
+
+          // Show a Snackbar message for the update task error
+          Snackbar.show({
+            text: updateTaskError,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          console.log(responseData);
+        }
+
+        // Update the list data in the application
+        updateListData((prevListData: ListType[]) => {
+          // Map and update the lists with the updated task
+          const updatedLists = prevListData.map((list: ListType) => {
+            // Map and update the tasks within each list
+            const updatedTasks = list.tasks.map((task: TaskType) =>
+              task.idTask === updatedTask.idTask ? updatedTask : task
+            );
+
+            return { ...list, tasks: updatedTasks };
+          });
+
+          return updatedLists;
+        });
+      } catch (error) {
+        console.log("Error occurred while updating the task in the database:", error);
+
+        // Show a Snackbar message for the update task error
+        Snackbar.show({
+          text: updateTaskError,
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
+
+    },
+    //TODO:
     addSubtask: async (
       newSubtask: SubtaskType,
       idTask: number,
