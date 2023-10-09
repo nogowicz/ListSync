@@ -9,6 +9,7 @@ import { useTheme } from 'navigation/utils/ThemeProvider';
 import { infoTranslation } from '.';
 
 type DataContextType = {
+  isLoadingData: boolean;
   listData: ListType[];
   updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
   createList: () => Promise<any | ListType>;
@@ -42,6 +43,7 @@ type DataContextType = {
 };
 
 const DataContext = createContext<DataContextType>({
+  isLoadingData: true,
   listData: [],
   updateListData: () => { },
   createList: async () => { },
@@ -77,6 +79,7 @@ export function useListContext() {
 
 export function DataProvider({ children }: DataProviderProps) {
   const [listData, setListData] = useState<ListType[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const { user } = useAuth();
   const intl = useIntl();
   const theme = useTheme();
@@ -86,6 +89,7 @@ export function DataProvider({ children }: DataProviderProps) {
   useEffect(() => {
     async function fetchUserLists() {
       try {
+        setIsLoadingData(true);
         if (user?.id) {
           // Send an HTTP request to fetch all lists for the user
           const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
@@ -101,8 +105,8 @@ export function DataProvider({ children }: DataProviderProps) {
 
           // Check if the response is not OK
           if (!response.ok) {
+            setIsLoadingData(false);
             console.log(responseData);
-
             // Show a Snackbar message with an error and retry action
             Snackbar.show({
               text: infoTranslation.errorMessageTranslation(intl),
@@ -119,6 +123,7 @@ export function DataProvider({ children }: DataProviderProps) {
               text: infoTranslation.successMessageTranslation(intl),
               duration: Snackbar.LENGTH_SHORT,
             });
+            setIsLoadingData(false);
           }
 
           // Set the list data to the retrieved data
@@ -126,7 +131,7 @@ export function DataProvider({ children }: DataProviderProps) {
         }
       } catch (error: any) {
         console.log(error);
-
+        setIsLoadingData(false);
         // Show a Snackbar message with an error and retry action
         Snackbar.show({
           text: infoTranslation.errorMessageTranslation(intl),
@@ -149,6 +154,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
 
   const value: DataContextType = {
+    isLoadingData,
     listData,
     updateListData,
     createList: async (): Promise<number | undefined> => {

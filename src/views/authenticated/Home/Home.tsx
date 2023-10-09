@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useLayoutEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -24,11 +24,11 @@ type HomeProps = {
 
 export default function Home({ navigation }: HomeProps) {
     const theme = useTheme();
-    const { listData } = useListContext();
+    const { listData, isLoadingData } = useListContext();
     const newList = listData.filter((item: ListType) => item.isArchived === false);
     const [list, setList] = useState<ListType[]>(newList);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const filteredList = listData.filter((item: ListType) => item.isArchived === false);
         setList(filteredList);
     }, [listData]);
@@ -41,7 +41,9 @@ export default function Home({ navigation }: HomeProps) {
                     type={topPanelTypes.TOP_PANEL_TYPES.HOME_SCREEN}
                 />
                 <FilterPanel setList={setList} />
-                <ListList list={list} />
+                {isLoadingData ?
+                    <Text>Loading...</Text> :
+                    <ListList list={list} />}
                 <AddTaskField
                     currentListId={1}
                 />
