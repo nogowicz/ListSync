@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -86,15 +86,14 @@ export default function List({
         setIsCompletedVisible(!isCompletedVisible);
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setCurrentList(listData.find((item: ListType) => item.idList === currentListId));
     }, [listData, currentListId]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setUnCompletedTasks(currentList?.tasks.filter((item: TaskType) => !item.isCompleted) || []);
         setCompletedTasks(currentList?.tasks.filter((item: TaskType) => item.isCompleted) || []);
         setListName(currentList?.listName || '');
-        console.log(currentList)
     }, [currentList]);
 
     const placeholderText = intl.formatMessage({

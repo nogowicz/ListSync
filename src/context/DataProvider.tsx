@@ -6,6 +6,7 @@ import { API_URL } from '@env';
 import Snackbar from 'react-native-snackbar';
 import { useIntl } from 'react-intl';
 import { useTheme } from 'navigation/utils/ThemeProvider';
+import { infoTranslation } from '.';
 
 type DataContextType = {
   listData: ListType[];
@@ -80,43 +81,7 @@ export function DataProvider({ children }: DataProviderProps) {
   const intl = useIntl();
   const theme = useTheme();
 
-  //translations:
-  const successMessageTranslation = intl.formatMessage({
-    id: "views.authenticated.snackbar.fetch-list-success-info",
-    defaultMessage: "Your lists has been fetched successfully"
-  });
-  const errorMessageTranslation = intl.formatMessage({
-    id: "views.authenticated.snackbar.fetch-list-error-info",
-    defaultMessage: "Error occurred while fetching data"
-  });
-  const retryTranslation = intl.formatMessage({
-    id: "views.authenticated.snackbar.retry",
-    defaultMessage: "Retry"
-  });
-  const creatingListError = intl.formatMessage({
-    id: "views.authenticated.snackbar.creating-list-error",
-    defaultMessage: "Error occurred while creating list"
-  });
-  const deletingListError = intl.formatMessage({
-    id: "views.authenticated.snackbar.deleting-list-error",
-    defaultMessage: "Error occurred while deleting list"
-  });
-  const updatingListError = intl.formatMessage({
-    id: "views.authenticated.snackbar.updating-list-error",
-    defaultMessage: "Error occurred while updating list"
-  });
-  const addingTaskError = intl.formatMessage({
-    id: "views.authenticated.snackbar.adding-task-error",
-    defaultMessage: "Error occurred while adding new task"
-  });
-  const deleteTaskError = intl.formatMessage({
-    id: "views.authenticated.snackbar.deleting-task-error",
-    defaultMessage: "Error occurred while deleting task"
-  });
-  const updateTaskError = intl.formatMessage({
-    id: "views.authenticated.snackbar.updating-task-error",
-    defaultMessage: "Error occurred while updating task"
-  });
+
 
   useEffect(() => {
     async function fetchUserLists() {
@@ -140,10 +105,10 @@ export function DataProvider({ children }: DataProviderProps) {
 
             // Show a Snackbar message with an error and retry action
             Snackbar.show({
-              text: errorMessageTranslation,
+              text: infoTranslation.errorMessageTranslation(intl),
               duration: Snackbar.LENGTH_LONG,
               action: {
-                text: retryTranslation,
+                text: infoTranslation.retryTranslation(intl),
                 textColor: theme.PRIMARY,
                 onPress: () => fetchUserLists() // Retry the function on action press
               }
@@ -151,7 +116,7 @@ export function DataProvider({ children }: DataProviderProps) {
           } else {
             // Show a Snackbar message for a successful response
             Snackbar.show({
-              text: successMessageTranslation,
+              text: infoTranslation.successMessageTranslation(intl),
               duration: Snackbar.LENGTH_SHORT,
             });
           }
@@ -164,10 +129,10 @@ export function DataProvider({ children }: DataProviderProps) {
 
         // Show a Snackbar message with an error and retry action
         Snackbar.show({
-          text: errorMessageTranslation,
+          text: infoTranslation.errorMessageTranslation(intl),
           duration: Snackbar.LENGTH_LONG,
           action: {
-            text: retryTranslation,
+            text: infoTranslation.retryTranslation(intl),
             textColor: theme.PRIMARY,
             onPress: () => fetchUserLists() // Retry the function on action press
           }
@@ -227,7 +192,7 @@ export function DataProvider({ children }: DataProviderProps) {
           if (!response.ok) {
             console.log(responseData);
             Snackbar.show({
-              text: creatingListError,
+              text: infoTranslation.creatingListError(intl),
               duration: Snackbar.LENGTH_SHORT,
             });
           }
@@ -244,7 +209,7 @@ export function DataProvider({ children }: DataProviderProps) {
       } catch (error: any) {
         console.log("Error occurred while adding list to db:", error);
         Snackbar.show({
-          text: creatingListError,
+          text: infoTranslation.creatingListError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -272,7 +237,7 @@ export function DataProvider({ children }: DataProviderProps) {
         if (!response.ok) {
           console.log(responseData);
           Snackbar.show({
-            text: deletingListError,
+            text: infoTranslation.deletingListError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
         } else {
@@ -283,7 +248,7 @@ export function DataProvider({ children }: DataProviderProps) {
       } catch (error) {
         console.log('Error occurred while deleting list from the database:', error);
         Snackbar.show({
-          text: deletingListError,
+          text: infoTranslation.deletingListError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -345,7 +310,7 @@ export function DataProvider({ children }: DataProviderProps) {
             console.log(responseData);
             // Show a Snackbar message for updating list error
             Snackbar.show({
-              text: updatingListError,
+              text: infoTranslation.updatingListError(intl),
               duration: Snackbar.LENGTH_SHORT,
             });
           } else {
@@ -356,7 +321,7 @@ export function DataProvider({ children }: DataProviderProps) {
         console.log("Error occurred while updating list in db:", error);
         // Show a Snackbar message for updating list error
         Snackbar.show({
-          text: updatingListError,
+          text: infoTranslation.updatingListError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -415,7 +380,7 @@ export function DataProvider({ children }: DataProviderProps) {
         if (!response.ok) {
           console.log(responseData);
           Snackbar.show({
-            text: addingTaskError,
+            text: infoTranslation.addingTaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
         } else {
@@ -431,6 +396,8 @@ export function DataProvider({ children }: DataProviderProps) {
           newTask.idTask = Number(taskId);
 
           // Map and update the list data to include the new task
+          //TODO:
+          //Fix adding locally task to All list
           const newListData = listData.map((list) => {
             if (list.idList === idList) {
               return {
@@ -456,7 +423,7 @@ export function DataProvider({ children }: DataProviderProps) {
       } catch (error) {
         console.log("Error occurred while adding a task to the database:", error);
         Snackbar.show({
-          text: addingTaskError,
+          text: infoTranslation.addingTaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -501,7 +468,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
           // Show a Snackbar message for the delete task error
           Snackbar.show({
-            text: deleteTaskError,
+            text: infoTranslation.deleteTaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
         } else {
@@ -512,7 +479,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
         // Show a Snackbar message for the delete task error
         Snackbar.show({
-          text: deleteTaskError,
+          text: infoTranslation.deleteTaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -547,7 +514,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
           // Show a Snackbar message for the update task error
           Snackbar.show({
-            text: updateTaskError,
+            text: infoTranslation.updateTaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
         } else {
@@ -574,7 +541,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
         // Show a Snackbar message for the update task error
         Snackbar.show({
-          text: updateTaskError,
+          text: infoTranslation.updateTaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -610,7 +577,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
           // Show a Snackbar message for the update task error
           Snackbar.show({
-            text: updateTaskError,
+            text: infoTranslation.updateTaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
         } else {
@@ -636,7 +603,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
         // Show a Snackbar message for the update task error
         Snackbar.show({
-          text: updateTaskError,
+          text: infoTranslation.updateTaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
