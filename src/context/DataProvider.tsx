@@ -101,6 +101,10 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.deleting-list-error",
     defaultMessage: "Error occurred while deleting list"
   });
+  const updatingListError = intl.formatMessage({
+    id: "views.authenticated.snackbar.updating-list-error",
+    defaultMessage: "Error occurred while updating list"
+  });
 
 
   useEffect(() => {
@@ -270,35 +274,31 @@ export function DataProvider({ children }: DataProviderProps) {
       isFavorite?: boolean,
       isArchived?: boolean,
     ): Promise<void> => {
-      const updatedListData = listData.map((list) => {
-        if (list.idList === idList) {
-          return {
-            ...list,
-            listName: listName !== undefined ? listName : list.listName,
-            iconId: iconId !== undefined ? iconId : list.iconId,
-            colorVariant: colorVariant !== undefined ? colorVariant : list.colorVariant,
-            canBeDeleted: canBeDeleted !== undefined ? canBeDeleted : list.canBeDeleted,
-            isShared: isShared !== undefined ? isShared : list.isShared,
-            isFavorite: isFavorite !== undefined ? isFavorite : list.isFavorite,
-            isArchived: isArchived !== undefined ? isArchived : list.isArchived,
-          };
-        }
-        return list;
-      });
-
-      updateListData(() => updatedListData);
-      const updatedList: ListType | undefined = listData.find((list) => idList === list.idList);
       try {
+        // Map and update the list data
+        const updatedListData = listData.map((list) => {
+          if (list.idList === idList) {
+            return {
+              ...list,
+              listName: listName ?? list.listName,
+              iconId: iconId ?? list.iconId,
+              colorVariant: colorVariant ?? list.colorVariant,
+              canBeDeleted: canBeDeleted ?? list.canBeDeleted,
+              isShared: isShared ?? list.isShared,
+              isFavorite: isFavorite ?? list.isFavorite,
+              isArchived: isArchived ?? list.isArchived,
+            };
+          }
+          return list;
+        });
+
+        // Update the list data in the application
+        updateListData(() => updatedListData);
+
+        // Find the updated list by ID
+        const updatedList: ListType | undefined = updatedListData.find((list) => idList === list.idList);
+
         if (updatedList) {
-          console.log(
-            "id", idList,
-            "listName", listName ?? updatedList.listName,
-            "iconId", iconId ?? updatedList.iconId,
-            "isShared", isShared ?? updatedList.isShared,
-            "isFavorite", isFavorite ?? updatedList.isFavorite,
-            "isArchived", isArchived ?? updatedList.isArchived,
-            "colorVariant", colorVariant ?? updatedList.colorVariant
-          )
           const response = await fetch(`${API_URL}/change_in_list`, {
             method: 'POST',
             headers: {
@@ -316,17 +316,25 @@ export function DataProvider({ children }: DataProviderProps) {
             })
           });
 
-
           const responseData = await response.text();
           if (!response.ok) {
-            console.warn(responseData);
+            console.log(responseData);
+            // Show a Snackbar message for updating list error
+            Snackbar.show({
+              text: updatingListError,
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          } else {
+            console.log(responseData);
           }
-
-          console.log(responseData);
         }
       } catch (error) {
-        console.error("Error occurred while updating list in db:", error);
-        throw error;
+        console.log("Error occurred while updating list in db:", error);
+        // Show a Snackbar message for updating list error
+        Snackbar.show({
+          text: updatingListError,
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
     },
     deleteCompletedTasks: async (idList?: number): Promise<void> => {
