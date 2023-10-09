@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         fontSize: typography.FONT_SIZE_24,
     },
     dateText: {
-        fontSize: typography.FONT_SIZE_15,
+        fontSize: typography.FONT_SIZE_14,
     },
     profileImage: {
         width: constants.PHOTO_SIZE.BIG,

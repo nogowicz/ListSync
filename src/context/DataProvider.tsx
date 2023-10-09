@@ -105,12 +105,18 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.updating-list-error",
     defaultMessage: "Error occurred while updating list"
   });
+  const addingTaskError = intl.formatMessage({
+    id: "views.authenticated.snackbar.adding-task-error",
+    defaultMessage: "Error occurred while adding new task"
+  });
+
 
 
   useEffect(() => {
     async function fetchUserLists() {
       try {
         if (user?.id) {
+          // Send an HTTP request to fetch all lists for the user
           const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
             method: 'POST',
             headers: {
@@ -118,39 +124,51 @@ export function DataProvider({ children }: DataProviderProps) {
               "accept": "text/plain"
             },
           });
+
+          // Get the JSON response data
           const responseData = await response.json();
+
+          // Check if the response is not OK
           if (!response.ok) {
-            console.log(responseData)
+            console.log(responseData);
+
+            // Show a Snackbar message with an error and retry action
             Snackbar.show({
               text: errorMessageTranslation,
               duration: Snackbar.LENGTH_LONG,
               action: {
                 text: retryTranslation,
                 textColor: theme.PRIMARY,
-                onPress: () => fetchUserLists()
+                onPress: () => fetchUserLists() // Retry the function on action press
               }
             });
           } else {
+            // Show a Snackbar message for a successful response
             Snackbar.show({
               text: successMessageTranslation,
               duration: Snackbar.LENGTH_SHORT,
             });
           }
+
+          // Set the list data to the retrieved data
           setListData(responseData);
         }
       } catch (error: any) {
-        console.log(error)
+        console.log(error);
+
+        // Show a Snackbar message with an error and retry action
         Snackbar.show({
           text: errorMessageTranslation,
           duration: Snackbar.LENGTH_LONG,
           action: {
             text: retryTranslation,
             textColor: theme.PRIMARY,
-            onPress: () => fetchUserLists()
+            onPress: () => fetchUserLists() // Retry the function on action press
           }
         });
       }
     }
+
     fetchUserLists();
   }, [user?.id]);
 
@@ -337,6 +355,7 @@ export function DataProvider({ children }: DataProviderProps) {
         });
       }
     },
+    //TODO:
     deleteCompletedTasks: async (idList?: number): Promise<void> => {
       const updatedListData = listData.map((list) => {
         if (list.idList === idList) {
@@ -363,7 +382,7 @@ export function DataProvider({ children }: DataProviderProps) {
       idList?: number,
     ): Promise<number | undefined> => {
       try {
-        console.log(newTask, idList)
+        // Send an HTTP request to add a new task
         const response = await fetch(`${API_URL}/add_task`, {
           method: 'POST',
           headers: {
@@ -375,7 +394,7 @@ export function DataProvider({ children }: DataProviderProps) {
             "title": newTask.title,
             "deadline": newTask.deadline,
             "importance": newTask.importance,
-            "effort": newTask.importance,
+            "effort": newTask.effort,
             "note": newTask.note,
             "addedBy": newTask.addedBy,
             "assignedTo": newTask.assignedTo,
@@ -383,15 +402,29 @@ export function DataProvider({ children }: DataProviderProps) {
           })
         });
 
+        // Get the response data from the server
         const responseData = await response.text();
+
+        // Check if the response is not OK and log a warning
         if (!response.ok) {
-          console.warn(responseData);
+          console.log(responseData);
+          Snackbar.show({
+            text: addingTaskError,
+            duration: Snackbar.LENGTH_SHORT,
+          });
         } else {
-          console.log(responseData)
+          console.log(responseData);
         }
+
+        // Extract the task ID from the response data
         const taskId = responseData;
+
+        // Check if the taskId is not null
         if (taskId !== null) {
+          // Update the newTask object with the task ID
           newTask.idTask = Number(taskId);
+
+          // Map and update the list data to include the new task
           const newListData = listData.map((list) => {
             if (list.idList === idList) {
               return {
@@ -408,13 +441,20 @@ export function DataProvider({ children }: DataProviderProps) {
             }
           });
 
+          // Update the list data in the application
           updateListData(() => newListData);
+
+          // Return the task ID as a number
           return Number(taskId);
         }
       } catch (error) {
-        console.error("Error occurred while adding task to db:", error);
-        throw error;
+        console.log("Error occurred while adding a task to the database:", error);
+        Snackbar.show({
+          text: addingTaskError,
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
+
     },
     deleteTask: async (idTask: number, idList: number): Promise<void> => {
       const updatedListData = listData.map((list) => {

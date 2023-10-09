@@ -147,5 +147,6 @@
   "views.authenticated.snackbar.retry": "Spróbuj ponownie",
   "views.authenticated.snackbar.creating-list-error": "Wystąpił problem podczas tworzenia listy",
   "views.authenticated.snackbar.deleting-list-error": "Wystąpił problem podczas usuwania listy",
-  "views.authenticated.snackbar.updating-list-error": "Wystąpił problem podczas aktualizowania listy"
+  "views.authenticated.snackbar.updating-list-error": "Wystąpił problem podczas aktualizowania listy",
+  "views.authenticated.snackbar.adding-task-error": "Wystąpił problem podczas dodawania nowego zadania"
 }

@@ -54,7 +54,7 @@ export function prepareButtons({
                     style={[styles.addContainer, { backgroundColor: theme.ADD_BUTTON_BACKGROUND }]}
                     activeOpacity={activeOpacity}
                 >
-                    <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_30} height={spacing.SCALE_30} />
+                    <Plus stroke={theme.ADD_BUTTON_TEXT} width={spacing.SCALE_22} height={spacing.SCALE_30} />
                     <Text style={[styles.addText, { color: theme.ADD_BUTTON_TEXT }]}>{text}</Text>
                 </TouchableOpacity>
             )
