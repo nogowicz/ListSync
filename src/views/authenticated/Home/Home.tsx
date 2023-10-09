@@ -13,6 +13,7 @@ import TopPanel from 'components/top-panel';
 import FilterPanel from 'components/filter-panel';
 import ListList from 'components/list-list';
 import AddTaskField from 'components/add-task-field';
+import ActivityIndicator from 'components/activity-indicator';
 
 
 type HomeScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'HOME'>;
@@ -42,7 +43,7 @@ export default function Home({ navigation }: HomeProps) {
                 />
                 <FilterPanel setList={setList} />
                 {isLoadingData ?
-                    <Text>Loading...</Text> :
+                    <ActivityIndicator /> :
                     <ListList list={list} />}
                 <AddTaskField
                     currentListId={1}
