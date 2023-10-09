@@ -113,6 +113,7 @@ export function DataProvider({ children }: DataProviderProps) {
     id: "views.authenticated.snackbar.deleting-task-error",
     defaultMessage: "Error occurred while deleting task"
   });
+  const updateTaskError = "TODO:";
 
   useEffect(() => {
     async function fetchUserLists() {
@@ -515,41 +516,65 @@ export function DataProvider({ children }: DataProviderProps) {
 
     },
     completeTask: async (updatedTask: TaskType): Promise<void> => {
-      const updatedIsCompleted = !updatedTask.isCompleted;
-      const updatedNotificationTime = null;
-      const response = await fetch(`${API_URL}/change_in_task`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "accept": "text/plain"
-        },
-        body: JSON.stringify({
-          "idTask": updatedTask.idTask,
-          "isCompleted": Number(updatedIsCompleted),
-          "notificationTime": updatedNotificationTime
-        })
-      });
+      try {
+        // Toggle the task completion status
+        const updatedIsCompleted = !updatedTask.isCompleted;
+        const updatedNotificationTime = null;
 
-      const responseData = await response.text();
-      if (!response.ok) {
-        console.warn(responseData);
-      } else {
-        console.log(responseData);
-      }
-
-      updateListData((prevListData: ListType[]) => {
-        const updatedLists = prevListData.map((list: ListType) => {
-          const updatedTasks = list.tasks.map((task: TaskType) =>
-            task.idTask === updatedTask.idTask ? { ...task, isCompleted: updatedIsCompleted } : task
-          );
-
-          return { ...list, tasks: updatedTasks };
+        // Send an HTTP request to update the task's completion status and notification time
+        const response = await fetch(`${API_URL}/change_in_task`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idTask": updatedTask.idTask,
+            "isCompleted": Number(updatedIsCompleted),
+            "notificationTime": updatedNotificationTime
+          })
         });
 
-        return updatedLists;
-      });
+        // Get the response data from the server
+        const responseData = await response.text();
 
+        // Check if the response is not OK and log a warning
+        if (!response.ok) {
+          console.log(responseData);
 
+          // Show a Snackbar message for the update task error
+          Snackbar.show({
+            text: updateTaskError,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          console.log(responseData);
+        }
+
+        // Update the list data in the application
+        updateListData((prevListData: ListType[]) => {
+          // Map and update the lists with the updated task completion status
+          const updatedLists = prevListData.map((list: ListType) => {
+            // Map and update the tasks within each list
+            const updatedTasks = list.tasks.map((task: TaskType) =>
+              task.idTask === updatedTask.idTask ? { ...task, isCompleted: updatedIsCompleted } : task
+            );
+
+            return { ...list, tasks: updatedTasks };
+          });
+
+          return updatedLists;
+        });
+
+      } catch (error) {
+        console.log("Error occurred while completing the task in the database:", error);
+
+        // Show a Snackbar message for the update task error
+        Snackbar.show({
+          text: updateTaskError,
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
     },
     updateTask: async (updatedTask: TaskType): Promise<void> => {
       const response = await fetch(`${API_URL}/change_in_task`, {
