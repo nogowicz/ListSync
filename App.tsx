@@ -9,7 +9,6 @@ import { theme } from './src/styles/colors';
 import LangContext, { LangModeProvider } from './src/lang/LangProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DataProvider } from 'context/DataProvider';
-import { UserProvider } from 'context/UserProvider';
 import { getItem } from 'utils/asyncStorage';
 import { EventRegister } from 'react-native-event-listeners';
 import { AuthProvider } from 'context/AuthContext';
@@ -63,13 +62,11 @@ export default function App(): JSX.Element {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <LangModeProvider>
           <AuthProvider>
-            <UserProvider>
-              <LangContext>
-                <DataProvider>
-                  <Routes />
-                </DataProvider>
-              </LangContext>
-            </UserProvider>
+            <LangContext>
+              <DataProvider>
+                <Routes />
+              </DataProvider>
+            </LangContext>
           </AuthProvider>
         </LangModeProvider>
       </GestureHandlerRootView>
