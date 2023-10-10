@@ -104,7 +104,6 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
     const handleDeleteTask = async () => {
         try {
-            console.log(task)
             await deleteTask(task.idTask, listId).then(() => {
                 cancelNotification(String(task.idTask));
             })
@@ -165,6 +164,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
             renderLeftActions={RenderLeft}
             renderRightActions={RenderRight}
             onSwipeableOpen={onSwipeableOpen}
+
         >
             <TouchableOpacity
                 style={[styles.container, { backgroundColor: theme.FIXED_COMPONENT_COLOR }]}

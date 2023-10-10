@@ -1,6 +1,7 @@
 export const BORDER_RADIUS = {
   BUTTON: 10,
   CHECK_BUTTON: 5,
+  CIRCLE: 100,
 };
 
 export const STROKE_WIDTH = {
@@ -18,6 +19,7 @@ export const ICON_SIZE = {
   TEXT_FIELD_LIST_ICON: 25,
   SETTING_BUTTON: 30,
   SUBTASK_SQUARE_CHECK: 8,
+  ACTIVITY_INDICATOR: 70,
 };
 
 export const ACTIVE_OPACITY = {

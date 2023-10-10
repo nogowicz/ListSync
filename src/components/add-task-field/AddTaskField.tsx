@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import React, {
     useEffect,
+    useLayoutEffect,
     useRef,
     useState,
 } from 'react'
@@ -81,7 +82,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
 
     const inputRef = useRef<TextInput>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setActiveList(list.find((item: ListType) => item.idList === currentListId));
     }, [list]);
 
@@ -167,11 +168,11 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
 
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const updatedLists = listData.filter((item: ListType) => item.isArchived === false);
         setList(updatedLists);
     }, [listData]);

@@ -78,7 +78,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     })
 
     useEffect(() => {
-        setCurrentTask(listData.find((list: ListType) => list.IdList === currentListId)?.tasks.find((taskItem: TaskType) => taskItem.IdTask === currentTask?.IdTask));
+        setCurrentTask(listData.find((list: ListType) => list.idList === currentListId)?.tasks.find((taskItem: TaskType) => taskItem.idTask === currentTask?.idTask));
     }, [listData]);
 
     useEffect(() => {
@@ -89,7 +89,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                     taskTitle,
                     notificationBodyTranslate,
                     notificationTimeAsDate,
-                    currentTask.IdTask,
+                    currentTask.idTask,
                     completeTaskAction
                 );
             }
@@ -116,11 +116,11 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 idSubtask: -1,
                 title: subtaskTitle,
                 isCompleted: false,
-                Task_idTask: currentTask.IdTask,
-                addedBy: user.ID,
+                Task_idTask: currentTask.idTask,
+                addedBy: user.id,
                 createdAt: new Date().toISOString(),
             }
-            addSubtask(newSubtask, currentTask.IdTask, currentListId);
+            addSubtask(newSubtask, currentTask.idTask, currentListId);
             setSubtaskTitle("");
         }
 
@@ -140,7 +140,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
     const extraActionWhenGoBackPressed = () => {
         if (currentTask) {
             const updatedTask: TaskType = {
-                IdTask: currentTask.IdTask,
+                idTask: currentTask.idTask,
                 title: taskTitle,
                 isCompleted: currentTask.isCompleted,
                 deadline: deadlineDatePickerDate,
@@ -267,7 +267,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                                 icon={<CloseIcon />}
                                 onPress={() => {
                                     setNotificationTime(null);
-                                    cancelNotification(String(currentTask?.IdTask));
+                                    cancelNotification(String(currentTask?.idTask));
                                 }}
                                 type={buttonTypes.BUTTON_TYPES.WITH_ICON}
                                 color={color}

@@ -145,11 +145,11 @@ export default function FunctionPanelButtons({
                 }}
             >
                 <ListSelection
-                    stroke={activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY}
+                    stroke={activeList?.idList === 1 ? theme.HINT : theme.PRIMARY}
                     strokeWidth={constants.STROKE_WIDTH.ICON}
                 />
                 <Text style={{
-                    color: activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY,
+                    color: activeList?.idList === 1 ? theme.HINT : theme.PRIMARY,
                 }}>
 
 

@@ -2,6 +2,7 @@ import { useTheme } from "navigation/utils/ThemeProvider";
 import { useRef, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { Animated, Easing, View, Modal, Text, StyleSheet } from "react-native";
+import { constants, spacing, typography } from "styles";
 
 function CustomActivityIndicator() {
     const lowestScale = 0.4;
@@ -65,19 +66,19 @@ export default function ActivityIndicator() {
 
 const styles = StyleSheet.create({
     indicatorBox: {
-        width: 70,
-        height: 70,
+        width: constants.ICON_SIZE.ACTIVITY_INDICATOR,
+        height: constants.ICON_SIZE.ACTIVITY_INDICATOR,
         justifyContent: 'center',
         alignItems: 'center'
     },
     indicator: {
-        width: 70,
-        height: 70,
-        borderRadius: 100
+        width: constants.ICON_SIZE.ACTIVITY_INDICATOR,
+        height: constants.ICON_SIZE.ACTIVITY_INDICATOR,
+        borderRadius: constants.BORDER_RADIUS.CIRCLE
     },
     indicatorText: {
-        fontSize: 18,
-        marginTop: 12,
+        fontSize: typography.FONT_SIZE_18,
+        marginTop: spacing.SCALE_12,
     },
     indicatorWrapper: {
         flex: 1,
