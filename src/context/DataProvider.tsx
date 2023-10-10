@@ -330,6 +330,7 @@ export function DataProvider({ children }: DataProviderProps) {
           text: infoTranslation.updatingListError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
+
       }
     },
     //TODO:
@@ -354,13 +355,25 @@ export function DataProvider({ children }: DataProviderProps) {
         throw error;
       }
     },
-    addTask: async (
-      newTask: TaskType,
-      idList?: number,
-    ): Promise<number | undefined> => {
+    addTask: async (newTask: TaskType, idList?: number): Promise<number | undefined> => {
       try {
+        // Update local state
+        if (idList !== undefined) {
+          const updatedListData = listData.map((list) => {
+            if (list.idList === idList || list.idList === 1) {
+              return {
+                ...list,
+                tasks: [...list.tasks, newTask],
+              };
+            }
+            return list;
+          });
+
+          updateListData(() => updatedListData);
+        }
+
         // Send an HTTP request to add a new task
-        const response = await fetch(`${API_URL}/add_task`, {
+        const response = await fetch(`${API_URL}/add_taskA`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -382,13 +395,29 @@ export function DataProvider({ children }: DataProviderProps) {
         // Get the response data from the server
         const responseData = await response.text();
 
-        // Check if the response is not OK and log a warning
+        // Check if the response is not OK
         if (!response.ok) {
           console.log(responseData);
           Snackbar.show({
             text: infoTranslation.addingTaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
+
+          // Delete the task from the list data if it was not added successfully
+          if (idList !== undefined) {
+            const revertedListData = listData.map((list) => {
+              if (list.idList === idList || list.idList === 1) {
+                return {
+                  ...list,
+                  tasks: list.tasks.filter((task) => task.idTask !== newTask.idTask),
+                };
+              }
+              return list;
+            });
+
+            updateListData(() => revertedListData);
+          }
+
         } else {
           console.log(responseData);
         }
@@ -401,28 +430,6 @@ export function DataProvider({ children }: DataProviderProps) {
           // Update the newTask object with the task ID
           newTask.idTask = Number(taskId);
 
-          // Map and update the list data to include the new task
-          //TODO:
-          //Fix adding locally task to All list
-          const newListData = listData.map((list) => {
-            if (list.idList === idList) {
-              return {
-                ...list,
-                tasks: [...list.tasks, newTask],
-              };
-            } else if (list.idList === 1 && idList !== 1) {
-              return {
-                ...list,
-                tasks: [...list.tasks, newTask],
-              };
-            } else {
-              return list;
-            }
-          });
-
-          // Update the list data in the application
-          updateListData(() => newListData);
-
           // Return the task ID as a number
           return Number(taskId);
         }
@@ -432,8 +439,22 @@ export function DataProvider({ children }: DataProviderProps) {
           text: infoTranslation.addingTaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
-      }
 
+        // Delete the task from the list data if it was not added successfully
+        if (idList !== undefined) {
+          const revertedListData = listData.map((list) => {
+            if (list.idList === idList || list.idList === 1) {
+              return {
+                ...list,
+                tasks: list.tasks.filter((task) => task.idTask !== newTask.idTask),
+              };
+            }
+            return list;
+          });
+
+          updateListData(() => revertedListData);
+        }
+      }
     },
     deleteTask: async (idTask: number, idList: number): Promise<void> => {
       // Map and update the list data to remove a task with the specified idTask

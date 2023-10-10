@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     indicator: {
-        // backgroundColor: 'rgba(200, 200, 200, 0.5)',
         width: 70,
         height: 70,
         borderRadius: 100
