@@ -22,6 +22,10 @@ import AddTaskField from 'components/add-task-field';
 import BottomSheetWithSettings from './BottomSheetWithSettings';
 
 
+//images:
+import OopsImage from 'assets/images/opps.svg';
+
+
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
 
@@ -103,8 +107,31 @@ export default function List({
     });
 
     if (!currentList) {
-        // TODO: Handle no data state
-        return <View style={{ backgroundColor: theme.BACKGROUND }} ><Text style={{ color: theme.TEXT }}>No data here</Text></View>;
+        // Handle no data state
+        useEffect(() => {
+            setTimeout(() => {
+                navigation.goBack();
+            }, 500);
+        }, []);
+        return (
+            <View style={{
+                ...styles.noDataStyle,
+                backgroundColor: theme.BACKGROUND,
+            }} >
+                <Text style={{
+                    ...styles.noDataStyleText,
+                    color: theme.TEXT,
+                }}>
+                    Oops!
+                </Text>
+                <OopsImage />
+                <Text style={{
+                    ...styles.noDataStyleText,
+                    color: theme.TEXT,
+                }}>
+                    Something went wrong
+                </Text>
+            </View>);
     }
 
     return (
@@ -229,6 +256,7 @@ export default function List({
 
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
@@ -255,5 +283,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: typography.FONT_SIZE_20,
         marginVertical: spacing.SCALE_8,
+    },
+    noDataStyle: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: spacing.SCALE_20,
+    },
+    noDataStyleText: {
+        fontSize: typography.FONT_SIZE_28,
+        textAlign: 'center',
+        fontWeight: typography.FONT_WEIGHT_BOLD,
     }
 });
