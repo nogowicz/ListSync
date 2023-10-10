@@ -373,7 +373,7 @@ export function DataProvider({ children }: DataProviderProps) {
         }
 
         // Send an HTTP request to add a new task
-        const response = await fetch(`${API_URL}/add_taskA`, {
+        const response = await fetch(`${API_URL}/add_task`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -457,23 +457,23 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     },
     deleteTask: async (idTask: number, idList: number): Promise<void> => {
-      // Map and update the list data to remove a task with the specified idTask
-      const updatedListData = listData.map((list) => {
-        if (list.idList === idList) {
-          // Filter out the task with the specified idTask
-          const updatedTasks = list.tasks.filter((listTask) => listTask.idTask !== idTask);
-          return {
-            ...list,
-            tasks: updatedTasks,
-          };
-        }
-        return list;
-      });
-
-      // Update the list data in the application
-      updateListData(() => updatedListData);
-
       try {
+        // Update local state
+        const updatedListData = listData.map((list) => {
+          if (list.idList === idList) {
+            // Filter out the task with the specified idTask
+            const updatedTasks = list.tasks.filter((listTask) => listTask.idTask !== idTask);
+            return {
+              ...list,
+              tasks: updatedTasks,
+            };
+          }
+          return list;
+        });
+
+        // Update the list data in the application
+        updateListData(() => updatedListData);
+
         // Send an HTTP request to remove the task by its idTask
         const response = await fetch(`${API_URL}/remove_task`, {
           method: 'POST',
@@ -489,9 +489,12 @@ export function DataProvider({ children }: DataProviderProps) {
         // Get the response data from the server
         const responseData = await response.text();
 
-        // Check if the response is not OK and log a warning
+        // Check if the response is not OK
         if (!response.ok) {
           console.log(responseData);
+
+          // Revert the local state update if the server request fails
+          updateListData(() => listData);
 
           // Show a Snackbar message for the delete task error
           Snackbar.show({
@@ -504,13 +507,15 @@ export function DataProvider({ children }: DataProviderProps) {
       } catch (error) {
         console.log("Error occurred while deleting task from the database:", error);
 
+        // Revert the local state update if an error occurs
+        updateListData(() => listData);
+
         // Show a Snackbar message for the delete task error
         Snackbar.show({
           text: infoTranslation.deleteTaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
       }
-
     },
     completeTask: async (updatedTask: TaskType): Promise<void> => {
       try {
