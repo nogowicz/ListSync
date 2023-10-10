@@ -25,14 +25,12 @@ export function prepareTopPanel() {
     const { createList } = useListContext();
 
     const handleCreateNewList = async () => {
-        const newList = await createList()
         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-            currentListId: newList,
             isModalVisibleOnStart: true,
             isNewList: true,
+            currentListId: await createList(),
         });
     };
-
 
 
     return [

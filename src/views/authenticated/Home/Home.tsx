@@ -43,8 +43,8 @@ export default function Home({ navigation }: HomeProps) {
                 />
                 <FilterPanel setList={setList} />
                 {isLoadingData ?
-                    <ActivityIndicator /> :
-                    <ListList list={list} />}
+                    <ActivityIndicator /> : null}
+                <ListList list={list} />
                 <AddTaskField
                     currentListId={1}
                 />

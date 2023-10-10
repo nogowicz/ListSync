@@ -160,6 +160,7 @@ export function DataProvider({ children }: DataProviderProps) {
     createList: async (): Promise<number | undefined> => {
       try {
         if (user) {
+          setIsLoadingData(true);
           // Creating a new list with default values
           const newList: ListType = {
             idList: -1,
@@ -209,6 +210,7 @@ export function DataProvider({ children }: DataProviderProps) {
           // Updating the list data in the local temporary storage
           updateListData((prevListData) => [...prevListData, newList]);
 
+          setIsLoadingData(false);
           // Returning the ID of the newly created list
           return newList.idList;
         }
@@ -218,6 +220,7 @@ export function DataProvider({ children }: DataProviderProps) {
           text: infoTranslation.creatingListError(intl),
           duration: Snackbar.LENGTH_SHORT,
         });
+        setIsLoadingData(false);
       }
     },
     deleteList: async (idList: number): Promise<void> => {

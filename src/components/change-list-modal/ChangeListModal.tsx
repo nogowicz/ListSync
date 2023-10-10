@@ -71,6 +71,7 @@ export default function ChangeListModal({
         iconId: number,
         colorVariant: number
     ) => {
+
         setIsNewListState(false);
         updateList(listId, listName, iconId, colorVariant).then(() => {
             handleModal();

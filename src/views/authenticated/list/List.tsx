@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -40,7 +40,7 @@ export default function List({
         isModalVisibleOnStart = false,
         isNewList = false,
     }: any = route.params;
-    const { listData } = useListContext();
+    const { listData, createList } = useListContext();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.idList === currentListId));
     const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
     const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 0);
@@ -64,6 +64,7 @@ export default function List({
             refDetails.current?.scrollTo(-(height - constants.BOTTOM_SHEET_HEIGHT.DETAILS));
         }
     }, []);
+
 
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
@@ -103,7 +104,7 @@ export default function List({
 
     if (!currentList) {
         // TODO: Handle no data state
-        return <View><Text style={{ color: "black" }}>No data here</Text></View>;
+        return <View style={{ backgroundColor: theme.BACKGROUND }} ><Text style={{ color: theme.TEXT }}>No data here</Text></View>;
     }
 
     return (

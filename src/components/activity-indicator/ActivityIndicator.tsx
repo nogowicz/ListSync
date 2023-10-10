@@ -41,7 +41,8 @@ function CustomActivityIndicator() {
                     ...styles.indicator,
                     scaleX: scaleAnim,
                     scaleY: scaleAnim,
-                    backgroundColor: theme.FIXED_COMPONENT_COLOR,
+                    backgroundColor: theme.FIXED_PRIMARY_BLUE,
+                    opacity: constants.ACTIVE_OPACITY.LOW
                 }}>
             </Animated.View>
         </View>
@@ -84,5 +85,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'rgba(25, 25, 25, 0.6)',
     },
 });
