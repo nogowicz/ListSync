@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import UnauthenticatedStack from './unauthenticated-stack';
 import { useAuth } from 'context/AuthContext';
 import { getItem } from 'utils/asyncStorage';
+import SplashScreen from 'react-native-splash-screen';
 
 
 export default function Routes() {
@@ -15,7 +16,7 @@ export default function Routes() {
             if (userFromAsyncStorage) {
                 setUser(JSON.parse(userFromAsyncStorage));
             }
-
+            SplashScreen.hide();
         })();
     }, []);
 

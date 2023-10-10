@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   Appearance,
   StatusBar,
@@ -13,6 +13,7 @@ import { getItem } from 'utils/asyncStorage';
 import { EventRegister } from 'react-native-event-listeners';
 import { AuthProvider } from 'context/AuthContext';
 import { useNotification } from 'hooks/useNotification';
+
 
 
 export default function App(): JSX.Element {
