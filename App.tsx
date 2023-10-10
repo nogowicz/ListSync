@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
   Appearance,
   StatusBar,
@@ -20,7 +20,7 @@ export default function App(): JSX.Element {
   const [themeMode, setThemeMode] = useState(false);
   const { checkNotificationPermission } = useNotification();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     async function fetchTheme() {
       try {
         await getItem('theme').then((storedTheme) => {
@@ -38,7 +38,7 @@ export default function App(): JSX.Element {
   }, []);
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let eventListener = EventRegister.addEventListener(
       "changeTheme",
       (theme: boolean) => {

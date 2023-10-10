@@ -32,6 +32,7 @@ export default function AuthenticatedStack() {
             />
             <Stack.Screen
                 name={SCREENS.AUTHENTICATED.TASK_DETAILS.ID}
+                //@ts-ignore
                 component={TaskDetails}
             />
         </Stack.Navigator>
