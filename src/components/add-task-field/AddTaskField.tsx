@@ -144,23 +144,18 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                 notificationTime: notificationTime,
                 subtasks: [],
             };
-
-            try {
-                const taskId = await addTask(newTask, activeList?.idList);
-                if (taskId) {
-                    handleCreateNotification(taskId);
-                }
-                setDeadline(deadlineNames.REMOVE);
-                setDeadlineDate(null);
-                setIsDeadlineVisible(false);
-                setNotification(notificationTimeNames.REMOVE);
-                setNotificationTime(null);
-                setIsNotificationVisible(false);
-                setImportance(importanceNames.REMOVE);
-                setIsImportanceVisible(false);
-                setTextValue('');
-            } catch (error) {
-                console.error('Error adding task:', error);
+            setTextValue('');
+            setDeadline(deadlineNames.REMOVE);
+            setDeadlineDate(null);
+            setIsDeadlineVisible(false);
+            setNotification(notificationTimeNames.REMOVE);
+            setNotificationTime(null);
+            setIsNotificationVisible(false);
+            setImportance(importanceNames.REMOVE);
+            setIsImportanceVisible(false);
+            const taskId = await addTask(newTask, activeList?.idList);
+            if (taskId) {
+                handleCreateNotification(taskId);
             }
         }
     };
@@ -281,6 +276,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                             style={[styles.textInput, { color: theme.TEXT, }]}
                             value={textValue}
                             onChangeText={(text) => setTextValue(text)}
+                            onSubmitEditing={handleAddTask}
                         />
                         <TouchableOpacity
                             activeOpacity={constants.ACTIVE_OPACITY.HIGH}
