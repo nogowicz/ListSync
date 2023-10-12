@@ -101,6 +101,14 @@ export default function List({
         setListName(currentList?.listName || '');
     }, [currentList]);
 
+    useEffect(() => {
+        if (!currentList) {
+            setTimeout(() => {
+                navigation.goBack();
+            }, 500);
+        }
+    }, []);
+
     const placeholderText = intl.formatMessage({
         defaultMessage: 'Enter list name',
         id: 'views.authenticated.home.list.modal.placeholder',
@@ -108,11 +116,7 @@ export default function List({
 
     if (!currentList) {
         // Handle no data state
-        useEffect(() => {
-            setTimeout(() => {
-                navigation.goBack();
-            }, 500);
-        }, []);
+
         return (
             <View style={{
                 ...styles.noDataStyle,
