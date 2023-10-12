@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { ListType, SubtaskType, TaskType } from 'data/types';
-import { deleteCompletedTasksInDatabase, addSubtaskToDatabase, deleteSubtaskFromDatabase, updateSubtaskInDatabase } from 'utils/database';
 import { useAuth } from './AuthContext';
 import { API_URL } from '@env';
 import Snackbar from 'react-native-snackbar';
@@ -351,7 +350,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
       updateListData(() => updatedListData);
       try {
-        await deleteCompletedTasksInDatabase(idList);
+        // await deleteCompletedTasksInDatabase(idList);
 
       } catch (error) {
         console.error("Error occurred while deleting completed tasks from db:", error);
@@ -652,10 +651,7 @@ export function DataProvider({ children }: DataProviderProps) {
       idList: number,
     ): Promise<number | undefined> => {
       try {
-        const idSubtask = await addSubtaskToDatabase(
-          newSubtask,
-          idTask
-        );
+        const idSubtask = 0;
         if (idSubtask !== undefined) {
           newSubtask.idSubtask = idSubtask;
 
@@ -713,7 +709,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
       updateListData(() => updatedListData);
       try {
-        await deleteSubtaskFromDatabase(idSubtask);
+        // await deleteSubtaskFromDatabase(idSubtask);
       } catch (error) {
         console.error("Error occurred while deleting task from db:", error);
         throw error;
@@ -721,11 +717,11 @@ export function DataProvider({ children }: DataProviderProps) {
     },
     completeSubtask: async (updatedSubtask: SubtaskType): Promise<void> => {
       const updatedIsCompleted = !updatedSubtask.isCompleted;
-      await updateSubtaskInDatabase(
-        updatedSubtask.idSubtask,
-        updatedSubtask.title,
-        updatedIsCompleted,
-      )
+      // await updateSubtaskInDatabase(
+      //   updatedSubtask.idSubtask,
+      //   updatedSubtask.title,
+      //   updatedIsCompleted,
+      // )
       updateListData((prevListData: ListType[]) => {
         const updatedLists = prevListData.map((list: ListType) => {
           const updatedTasks = list.tasks.map((task: TaskType) => {

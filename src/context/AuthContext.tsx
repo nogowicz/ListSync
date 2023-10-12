@@ -1,6 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { removeItem, setItem } from "utils/asyncStorage";
-import { createListTable, createSubtaskTable, createTaskListTable, createTaskTable, createUserTable, loginUser, registerUser } from "utils/database";
 import { API_URL } from '@env';
 import jwtDecode from 'jwt-decode';
 
@@ -54,15 +53,6 @@ type UserType = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserType | null>(null);
-
-    useEffect(() => {
-        createUserTable();
-        createSubtaskTable();
-        createTaskTable();
-        createListTable();
-        createTaskListTable();
-    }, []);
-
 
     return <AuthContext.Provider
         value={{
