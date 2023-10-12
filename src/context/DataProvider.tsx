@@ -526,6 +526,21 @@ export function DataProvider({ children }: DataProviderProps) {
         const updatedIsCompleted = !updatedTask.isCompleted;
         const updatedNotificationTime = null;
 
+        // Update the list data in the application
+        updateListData((prevListData: ListType[]) => {
+          // Map and update the lists with the updated task completion status
+          const updatedLists = prevListData.map((list: ListType) => {
+            // Map and update the tasks within each list
+            const updatedTasks = list.tasks.map((task: TaskType) =>
+              task.idTask === updatedTask.idTask ? { ...task, isCompleted: updatedIsCompleted } : task
+            );
+
+            return { ...list, tasks: updatedTasks };
+          });
+
+          return updatedLists;
+        });
+
         // Send an HTTP request to update the task's completion status and notification time
         const response = await fetch(`${API_URL}/change_in_task`, {
           method: 'POST',
@@ -556,20 +571,6 @@ export function DataProvider({ children }: DataProviderProps) {
           console.log(responseData);
         }
 
-        // Update the list data in the application
-        updateListData((prevListData: ListType[]) => {
-          // Map and update the lists with the updated task completion status
-          const updatedLists = prevListData.map((list: ListType) => {
-            // Map and update the tasks within each list
-            const updatedTasks = list.tasks.map((task: TaskType) =>
-              task.idTask === updatedTask.idTask ? { ...task, isCompleted: updatedIsCompleted } : task
-            );
-
-            return { ...list, tasks: updatedTasks };
-          });
-
-          return updatedLists;
-        });
 
       } catch (error) {
         console.log("Error occurred while completing the task in the database:", error);

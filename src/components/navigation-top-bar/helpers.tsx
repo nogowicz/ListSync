@@ -81,7 +81,8 @@ export function prepareNavigationTopBar({
                             fontSize: spacing.SCALE_30,
                             color: theme.TEXT,
                             textAlign: 'center',
-                        }}>
+                        }}
+                        >
                             {name}
                         </Text>
                     </View>
@@ -121,7 +122,11 @@ export function prepareNavigationTopBar({
                         <Text style={{
                             fontSize: fontSize,
                             color: theme.TEXT,
-                        }}>
+                            width: '56%',
+                        }}
+                            numberOfLines={3}
+                            ellipsizeMode="tail"
+                        >
                             {name === "All" ? allListTranslation :
                                 name === "Unnamed list" ? unnamedListTranslation : name}
                         </Text>

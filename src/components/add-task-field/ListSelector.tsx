@@ -66,7 +66,10 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                             color: theme.TEXT,
                             fontSize: typography.FONT_SIZE_12,
                             textAlign: 'center',
-                        }}>
+                        }}
+                            ellipsizeMode='tail'
+                            numberOfLines={2}
+                        >
                             {item.listName === "All" ? allListTranslation :
                                 item.listName === "Unnamed list" ? unnamedListTranslation : item.listName}
                         </Text>

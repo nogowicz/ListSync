@@ -150,13 +150,17 @@ export default function FunctionPanelButtons({
                 />
                 <Text style={{
                     color: activeList?.idList === 1 ? theme.HINT : theme.PRIMARY,
-                }}>
+                    maxWidth: 100,
+                }}
+                    ellipsizeMode='tail'
+                    numberOfLines={1}
+                >
 
 
                     {activeList?.listName === "All" ? allListTranslation :
                         activeList?.listName === "Unnamed list" ? unnamedListTranslation : activeList?.listName}
                 </Text>
-            </TouchableOpacity>
+            </TouchableOpacity >
         );
     } else if (type === FUNCTIONAL_BUTTONS_NAMES.DEADLINE && deadline) {
         return (
