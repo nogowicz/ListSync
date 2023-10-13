@@ -259,5 +259,3 @@ export default function BottomSheetWithSettings({
         </BottomSheet>
     )
 }
-
-const styles = StyleSheet.create({})
