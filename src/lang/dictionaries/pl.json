@@ -150,5 +150,6 @@
   "views.authenticated.snackbar.updating-list-error": "Wystąpił problem podczas aktualizowania listy",
   "views.authenticated.snackbar.adding-task-error": "Wystąpił problem podczas dodawania nowego zadania",
   "views.authenticated.snackbar.deleting-task-error": "Wystąpił problem podczas usuwania zadania",
-  "views.authenticated.snackbar.updating-task-error": "Wystąpił problem podczas aktualiozwania zadania"
+  "views.authenticated.snackbar.updating-task-error": "Wystąpił problem podczas aktualiozwania zadania",
+  "views.authenticated.snackbar.adding-subtask-error": "Wystąpił problem podczas dodawania nowego podzadania"
 }

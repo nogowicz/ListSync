@@ -6,6 +6,7 @@ import Snackbar from 'react-native-snackbar';
 import { useIntl } from 'react-intl';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { infoTranslation } from '.';
+import subTask from 'components/sub-task';
 
 type DataContextType = {
   isLoadingData: boolean;
@@ -651,38 +652,68 @@ export function DataProvider({ children }: DataProviderProps) {
       idList: number,
     ): Promise<number | undefined> => {
       try {
-        const idSubtask = 0;
-        if (idSubtask !== undefined) {
-          newSubtask.idSubtask = idSubtask;
+        const newListData = listData.map((list) => {
+          if (list.idList === idList) {
+            const updatedTasks = list.tasks.map((task) => {
+              if (task.idTask === idTask) {
+                return {
+                  ...task,
+                  subtasks: [...task.subtasks, newSubtask],
+                };
+              }
+              return task;
+            });
 
-          const newListData = listData.map((list) => {
-            if (list.idList === idList) {
-              const updatedTasks = list.tasks.map((task) => {
-                if (task.idTask === idTask) {
-                  return {
-                    ...task,
-                    subtasks: [...task.subtasks, newSubtask],
-                  };
-                }
-                return task;
-              });
+            return {
+              ...list,
+              tasks: updatedTasks,
+            };
+          }
+          return list;
+        });
+        updateListData(() => newListData);
 
-              return {
-                ...list,
-                tasks: updatedTasks,
-              };
-            }
-            return list;
+        // Send an HTTP request to add a new task
+        const response = await fetch(`${API_URL}/add_subtask`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idTask": idTask,
+            "title": newSubtask.title,
+            "addedBy": newSubtask.addedBy,
+          })
+        });
+
+        // Get the response data from the server
+        const responseData = await response.text();
+
+        // Check if the response is not OK
+        if (!response.ok) {
+          console.log(responseData);
+          Snackbar.show({
+            text: infoTranslation.addingSubtaskError(intl),
+            duration: Snackbar.LENGTH_SHORT,
           });
-          updateListData(() => newListData);
-          return idSubtask;
-        } else {
-          console.error('Error adding subtask: Subtask ID is undefined.');
-          return undefined;
+
+          const idSubtask = Number(responseData);
+
+          if (idSubtask !== undefined) {
+            newSubtask.idSubtask = idSubtask;
+            return idSubtask;
+          } else {
+            console.error('Error adding subtask: Subtask ID is undefined.');
+            return undefined;
+          }
         }
       } catch (error) {
-        console.error("Error occurred while adding subtask to db:", error);
-        throw error;
+        console.log("Error occurred while adding subtask to db:", error);
+        Snackbar.show({
+          text: infoTranslation.addingSubtaskError(intl),
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
     },
     deleteSubtask: async (idSubtask: number, idTask: number, idList: number): Promise<void> => {

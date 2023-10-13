@@ -150,5 +150,6 @@
   "views.authenticated.snackbar.updating-list-error": "Error occurred while updating list",
   "views.authenticated.snackbar.adding-task-error": "Error occurred while adding new task",
   "views.authenticated.snackbar.deleting-task-error": "Error occurred while deleting task",
-  "views.authenticated.snackbar.updating-task-error": "Error occurred while updating task"
+  "views.authenticated.snackbar.updating-task-error": "Error occurred while updating task",
+  "views.authenticated.snackbar.adding-subtask-error": "Error occurred while adding new subtask"
 }

@@ -77,3 +77,11 @@ export const updateTaskError = (intl: IntlShape) => {
     'Error occurred while updating task',
   );
 };
+
+export const addingSubtaskError = (intl: IntlShape) => {
+  return getTranslation(
+    intl,
+    'views.authenticated.snackbar.adding-subtask-error',
+    'Error occurred while adding new subtask',
+  );
+};

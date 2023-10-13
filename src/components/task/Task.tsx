@@ -207,10 +207,10 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
                                     fill={theme.TEXT}
                                 />
                             </Animated.View>
-                        </TouchableOpacity>}
+                        </TouchableOpacity>} */}
                 </View>
                 <View style={styles.middleContainer}>
-                    {subTasks.length > 0 &&
+                    {/* {subTasks.length > 0 &&
                         <View style={styles.middleContainer}>
                             <SubtaskTree
                                 width={constants.ICON_SIZE.SUBTASK_TREE}
