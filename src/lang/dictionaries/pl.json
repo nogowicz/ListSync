@@ -136,6 +136,8 @@
   "views.authenticated.home.text-input.notification-body": "Obudź się Samuraju, mamy zadanie do wykonania",
   "views.authenticated.list.details.add-to-favorites": "Dodaj do ulubionych",
   "views.authenticated.list.details.remove-from-favorites": "Usuń z ulubionych",
+  "views.authenticated.list.details.archive-list": "Archiwizuj listę",
+  "views.authenticated.list.details.unarchive-list": "Usuń za archwium",
   "views.authenticated.task.details.edit-task": "Edytuj zadanie",
   "views.authenticated.task.details.task-title-placeholder": "Task name",
   "views.authenticated.task.details.add-subtask": "Dodaj podzadanie",

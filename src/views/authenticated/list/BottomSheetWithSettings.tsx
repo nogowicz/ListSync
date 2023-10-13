@@ -16,6 +16,8 @@ import ShareIcon from 'assets/button-icons/share.svg';
 import PeopleIcon from 'assets/button-icons/people.svg';
 import DeleteIcon from 'assets/button-icons/trash.svg';
 import FavoriteListIcon from 'assets/button-icons/favorite.svg';
+import ArchiveIcon from 'assets/button-icons/archive.svg';
+import UnarchiveIcon from 'assets/button-icons/unarchive.svg';
 
 //components:
 import BottomSheet from 'components/bottom-sheet';
@@ -84,6 +86,16 @@ export default function BottomSheetWithSettings({
         id: 'views.authenticated.list.details.remove-from-favorites'
     });
 
+    const archiveList = intl.formatMessage({
+        defaultMessage: 'Archive list',
+        id: 'views.authenticated.list.details.archive-list'
+    });
+
+    const unarchiveList = intl.formatMessage({
+        defaultMessage: 'Unarchive list',
+        id: 'views.authenticated.list.details.unarchive-list'
+    });
+
     const handleDeleteList = async () => {
         await deleteList(idList).then(() => {
             navigation.goBack();
@@ -105,6 +117,20 @@ export default function BottomSheetWithSettings({
 
             try {
                 updateList(currentList.idList, undefined, undefined, undefined, undefined, undefined, setIsFavorite);
+            } catch (error) {
+                console.error('Error while updating list:', error);
+            }
+        }
+    }
+
+    function handleArchiveList() {
+        if (currentList) {
+            handleShowDetailsBottomSheet();
+            const isCurrentlyArchived = currentList.isArchived;
+            const setIsArchived = !isCurrentlyArchived;
+
+            try {
+                updateList(currentList.idList, undefined, undefined, undefined, undefined, undefined, undefined, setIsArchived);
             } catch (error) {
                 console.error('Error while updating list:', error);
             }
@@ -193,6 +219,28 @@ export default function BottomSheetWithSettings({
                     isAvailable={currentList?.canBeDeleted}
                     color={theme.FIXED_DARK_TEXT}
                     onPress={() => console.log("Invite friends")}
+                />
+                <Button
+                    text={currentList?.isArchived ? unarchiveList : archiveList}
+                    icon={
+                        currentList?.isArchived ?
+                            <UnarchiveIcon
+                                stroke={theme.FIXED_DARK_TEXT}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
+                                height={constants.ICON_SIZE.SETTING_BUTTON}
+                                width={constants.ICON_SIZE.SETTING_BUTTON}
+                            /> :
+                            <ArchiveIcon
+                                stroke={theme.FIXED_DARK_TEXT}
+                                strokeWidth={constants.STROKE_WIDTH.ICON}
+                                height={constants.ICON_SIZE.SETTING_BUTTON}
+                                width={constants.ICON_SIZE.SETTING_BUTTON}
+                            />
+                    }
+                    type={buttonTypes.BUTTON_TYPES.BOTTOM_SHEET_BUTTON}
+                    isAvailable={currentList?.canBeDeleted}
+                    color={theme.FIXED_DARK_TEXT}
+                    onPress={handleArchiveList}
                 />
                 <Button
                     text={deleteListTranslation}
