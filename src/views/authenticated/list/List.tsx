@@ -230,7 +230,7 @@ export default function List({
                         )}
                     </View>
                 </ScrollView>
-                {!isModalVisible && (
+                {!(isModalVisible || currentList.isArchived) && (
                     <AddTaskField
                         currentListId={currentList.idList}
                         color={listColorTheme[currentList.colorVariant]}
