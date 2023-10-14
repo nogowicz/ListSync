@@ -38,7 +38,7 @@ export default function BottomSheetWithSettings({
 }: BottomSheetWithSettingsProps) {
     const theme = useTheme();
     const intl = useIntl();
-    const { listData, updateList, deleteList, deleteCompletedTasks } = useListContext();
+    const { listData, updateList, deleteList, deleteCompletedTasksInList } = useListContext();
     const navigation = useNavigation();
     const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.idList === idList));
 
@@ -105,7 +105,7 @@ export default function BottomSheetWithSettings({
 
     async function removeCompletedTasks() {
         handleShowDetailsBottomSheet();
-        deleteCompletedTasks(idList);
+        deleteCompletedTasksInList(idList);
 
     }
 

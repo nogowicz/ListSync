@@ -24,7 +24,8 @@ type DataContextType = {
     isFavorite?: boolean,
     isArchived?: boolean,
   ) => Promise<void>;
-  deleteCompletedTasks: (idList?: number) => Promise<void>;
+  deleteCompletedTasksInList: (idList: number) => Promise<void>;
+  deleteCompletedTasks: (idList: number) => Promise<void>;
   addTask: (newTask: TaskType, idList?: number) => Promise<number | undefined>;
   deleteTask: (idTask: number, idList: number) => Promise<void>;
   updateTask: (updatedTask: TaskType) => Promise<void>;
@@ -49,6 +50,7 @@ const DataContext = createContext<DataContextType>({
   createList: async () => { },
   deleteList: async () => { },
   updateList: async () => { },
+  deleteCompletedTasksInList: async () => { },
   deleteCompletedTasks: async () => { },
   addTask: async () => {
     return -1;
@@ -336,26 +338,95 @@ export function DataProvider({ children }: DataProviderProps) {
 
       }
     },
-    //TODO:
-    deleteCompletedTasks: async (idList?: number): Promise<void> => {
-      const updatedListData = listData.map((list) => {
-        if (list.idList === idList) {
+    deleteCompletedTasksInList: async (idList: number): Promise<void> => {
+      console.log(idList)
+      try {
+        const updatedListData = listData.map((list) => {
+          if (list.idList === idList) {
+            const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
+            return {
+              ...list,
+              tasks: updatedTasks,
+            };
+          }
+          return list;
+        });
+
+
+        const response = await fetch(`${API_URL}/remove_completed_tasks`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idList": idList
+          })
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.log(responseData);
+          // Show a Snackbar message for updating list error
+          Snackbar.show({
+            text: infoTranslation.deleteTaskError(intl),
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          updateListData(() => updatedListData);
+          console.log(responseData);
+        }
+
+      } catch (error) {
+        console.log("Error occurred while deleting completed tasks from db:", error);
+        Snackbar.show({
+          text: infoTranslation.deleteTaskError(intl),
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
+    },
+    deleteCompletedTasks: async (idUser: number): Promise<void> => {
+      try {
+        const updatedListData = listData.map((list) => {
           const updatedTasks = list.tasks.filter((task) => !task.isCompleted);
           return {
             ...list,
             tasks: updatedTasks,
           };
-        }
-        return list;
-      });
+        });
 
-      updateListData(() => updatedListData);
-      try {
-        // await deleteCompletedTasksInDatabase(idList);
+
+
+        const response = await fetch(`${API_URL}/remove_completed_tasks`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idUser": idUser
+          })
+        });
+
+        const responseData = await response.text();
+        if (!response.ok) {
+          console.log(responseData);
+          // Show a Snackbar message for updating list error
+          Snackbar.show({
+            text: infoTranslation.deleteTaskError(intl),
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          updateListData(() => updatedListData);
+          console.log(responseData);
+        }
 
       } catch (error) {
-        console.error("Error occurred while deleting completed tasks from db:", error);
-        throw error;
+        console.log("Error occurred while deleting completed tasks from db:", error);
+        Snackbar.show({
+          text: infoTranslation.deleteTaskError(intl),
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
     },
     addTask: async (newTask: TaskType, idList?: number): Promise<number | undefined> => {
