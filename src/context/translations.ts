@@ -85,3 +85,19 @@ export const addingSubtaskError = (intl: IntlShape) => {
     'Error occurred while adding new subtask',
   );
 };
+
+export const deletingSubtaskError = (intl: IntlShape) => {
+  return getTranslation(
+    intl,
+    'views.authenticated.snackbar.deleting-subtask-error',
+    'Error occurred while deleting subtask',
+  );
+};
+
+export const updatingSubtaskError = (intl: IntlShape) => {
+  return getTranslation(
+    intl,
+    'views.authenticated.snackbar.updating-subtask-error',
+    'Error occurred while updating subtask',
+  );
+};

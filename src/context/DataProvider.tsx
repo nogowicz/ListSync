@@ -231,7 +231,7 @@ export function DataProvider({ children }: DataProviderProps) {
         );
 
         // Sending an HTTP request to remove the list by its ID
-        const response = await fetch(`${API_URL}/remove_list?IdList=${idList}`, {
+        const response = await fetch(`${API_URL}/remove_list?idList=${idList}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -584,6 +584,20 @@ export function DataProvider({ children }: DataProviderProps) {
     },
     updateTask: async (updatedTask: TaskType): Promise<void> => {
       try {
+        // Update the list data in the application
+        updateListData((prevListData: ListType[]) => {
+          // Map and update the lists with the updated task
+          const updatedLists = prevListData.map((list: ListType) => {
+            // Map and update the tasks within each list
+            const updatedTasks = list.tasks.map((task: TaskType) =>
+              task.idTask === updatedTask.idTask ? updatedTask : task
+            );
+
+            return { ...list, tasks: updatedTasks };
+          });
+
+          return updatedLists;
+        });
         // Send an HTTP request to update the task with new data
         const response = await fetch(`${API_URL}/change_in_task`, {
           method: 'POST',
@@ -593,7 +607,7 @@ export function DataProvider({ children }: DataProviderProps) {
           },
           body: JSON.stringify({
             "idTask": updatedTask.idTask,
-            "isCompleted": updatedTask.isCompleted,
+            "isCompleted": Number(updatedTask.isCompleted),
             "title": updatedTask.title,
             "deadline": updatedTask.deadline,
             "importance": updatedTask.importance,
@@ -619,21 +633,6 @@ export function DataProvider({ children }: DataProviderProps) {
         } else {
           console.log(responseData);
         }
-
-        // Update the list data in the application
-        updateListData((prevListData: ListType[]) => {
-          // Map and update the lists with the updated task
-          const updatedLists = prevListData.map((list: ListType) => {
-            // Map and update the tasks within each list
-            const updatedTasks = list.tasks.map((task: TaskType) =>
-              task.idTask === updatedTask.idTask ? updatedTask : task
-            );
-
-            return { ...list, tasks: updatedTasks };
-          });
-
-          return updatedLists;
-        });
       } catch (error) {
         console.log("Error occurred while updating the task in the database:", error);
 
@@ -645,7 +644,6 @@ export function DataProvider({ children }: DataProviderProps) {
       }
 
     },
-    //TODO:
     addSubtask: async (
       newSubtask: SubtaskType,
       idTask: number,
@@ -672,7 +670,6 @@ export function DataProvider({ children }: DataProviderProps) {
           return list;
         });
         updateListData(() => newListData);
-
         // Send an HTTP request to add a new task
         const response = await fetch(`${API_URL}/add_subtask`, {
           method: 'POST',
@@ -717,58 +714,122 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     },
     deleteSubtask: async (idSubtask: number, idTask: number, idList: number): Promise<void> => {
-      const updatedListData = listData.map((list) => {
-        if (list.idList === idList) {
-          const updatedTasks = list.tasks.map((task) => {
-            if (task.idTask === idTask) {
-              const updatedSubtasks = task.subtasks.filter((subtask) => subtask.idSubtask !== idSubtask);
-              return {
-                ...task,
-                subtasks: updatedSubtasks,
-              }
-            }
-            return task;
-          });
-
-          return {
-            ...list,
-            tasks: updatedTasks,
-          };
-        }
-        return list;
-      });
-
-      updateListData(() => updatedListData);
+      console.log(idSubtask)
       try {
-        // await deleteSubtaskFromDatabase(idSubtask);
+        const updatedListData = listData.map((list) => {
+          if (list.idList === idList) {
+            const updatedTasks = list.tasks.map((task) => {
+              if (task.idTask === idTask) {
+                const updatedSubtasks = task.subtasks.filter((subtask) => subtask.idSubtask !== idSubtask);
+                return {
+                  ...task,
+                  subtasks: updatedSubtasks,
+                }
+              }
+              return task;
+            });
+
+            return {
+              ...list,
+              tasks: updatedTasks,
+            };
+          }
+          return list;
+        });
+
+        updateListData(() => updatedListData);
+
+        const response = await fetch(`${API_URL}/remove_subtask`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idSubtask": idSubtask,
+          })
+        });
+
+        // Get the response data from the server
+        const responseData = await response.text();
+
+        // Check if the response is not OK
+        if (!response.ok) {
+          console.log(responseData);
+
+          // Revert the local state update if the server request fails
+          updateListData(() => listData);
+
+          // Show a Snackbar message for the delete task error
+          Snackbar.show({
+            text: infoTranslation.deletingSubtaskError(intl),
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          console.log(responseData);
+        }
       } catch (error) {
-        console.error("Error occurred while deleting task from db:", error);
-        throw error;
+        console.log("Error occurred while deleting subtask from db:", error);
+        Snackbar.show({
+          text: infoTranslation.deletingSubtaskError(intl),
+          duration: Snackbar.LENGTH_SHORT,
+        });
       }
     },
     completeSubtask: async (updatedSubtask: SubtaskType): Promise<void> => {
-      const updatedIsCompleted = !updatedSubtask.isCompleted;
-      // await updateSubtaskInDatabase(
-      //   updatedSubtask.idSubtask,
-      //   updatedSubtask.title,
-      //   updatedIsCompleted,
-      // )
-      updateListData((prevListData: ListType[]) => {
-        const updatedLists = prevListData.map((list: ListType) => {
-          const updatedTasks = list.tasks.map((task: TaskType) => {
-            const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
-              subtask.idSubtask === updatedSubtask.idSubtask ? { ...subtask, isCompleted: updatedIsCompleted } : subtask
+      try {
+        const updatedIsCompleted = !updatedSubtask.isCompleted;
+        updateListData((prevListData: ListType[]) => {
+          const updatedLists = prevListData.map((list: ListType) => {
+            const updatedTasks = list.tasks.map((task: TaskType) => {
+              const updatedSubtasks = task.subtasks.map((subtask: SubtaskType) =>
+                subtask.idSubtask === updatedSubtask.idSubtask ? { ...subtask, isCompleted: updatedIsCompleted } : subtask
+              );
+              return { ...task, subtasks: updatedSubtasks };
+            }
             );
-            return { ...task, subtasks: updatedSubtasks };
-          }
-          );
-          return { ...list, tasks: updatedTasks };
+            return { ...list, tasks: updatedTasks };
 
+          });
+
+          return updatedLists;
         });
 
-        return updatedLists;
-      });
+        const response = await fetch(`${API_URL}/change_in_subtask`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+          body: JSON.stringify({
+            "idSubtask": updatedSubtask.idSubtask,
+            "title": updatedSubtask.title,
+            "isCompleted": updatedIsCompleted
+          })
+        });
 
+        // Get the response data from the server
+        const responseData = await response.text();
+
+        // Check if the response is not OK and log a warning
+        if (!response.ok) {
+          console.log(responseData);
+
+          // Show a Snackbar message for the update task error
+          Snackbar.show({
+            text: infoTranslation.updatingSubtaskError(intl),
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        } else {
+          console.log(responseData);
+        }
+      } catch (error) {
+        console.log("Error occurred while updating subtask in db:", error);
+        Snackbar.show({
+          text: infoTranslation.updatingSubtaskError(intl),
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
     },
   };
 
