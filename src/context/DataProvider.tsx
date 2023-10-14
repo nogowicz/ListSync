@@ -12,6 +12,7 @@ type DataContextType = {
   isLoadingData: boolean;
   listData: ListType[];
   updateListData: (callback: (prevListData: ListType[]) => ListType[]) => void;
+  fetchUserLists: () => Promise<any>;
   createList: () => Promise<any | ListType>;
   deleteList: (idList: number) => Promise<void>;
   updateList: (
@@ -47,6 +48,7 @@ const DataContext = createContext<DataContextType>({
   isLoadingData: true,
   listData: [],
   updateListData: () => { },
+  fetchUserLists: async () => { },
   createList: async () => { },
   deleteList: async () => { },
   updateList: async () => { },
@@ -86,67 +88,65 @@ export function DataProvider({ children }: DataProviderProps) {
   const intl = useIntl();
   const theme = useTheme();
 
+  async function fetchUserLists() {
+    try {
+      setIsLoadingData(true);
+      if (user?.id) {
+        // Send an HTTP request to fetch all lists for the user
+        const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "text/plain"
+          },
+        });
 
+        // Get the JSON response data
+        const responseData = await response.json();
+
+        // Check if the response is not OK
+        if (!response.ok) {
+          setIsLoadingData(false);
+          console.log(responseData);
+          // Show a Snackbar message with an error and retry action
+          Snackbar.show({
+            text: infoTranslation.errorMessageTranslation(intl),
+            duration: Snackbar.LENGTH_LONG,
+            action: {
+              text: infoTranslation.retryTranslation(intl),
+              textColor: theme.PRIMARY,
+              onPress: () => fetchUserLists() // Retry the function on action press
+            }
+          });
+        } else {
+          // Show a Snackbar message for a successful response
+          Snackbar.show({
+            text: infoTranslation.successMessageTranslation(intl),
+            duration: Snackbar.LENGTH_SHORT,
+          });
+          setIsLoadingData(false);
+        }
+
+        // Set the list data to the retrieved data
+        setListData(responseData);
+      }
+    } catch (error: any) {
+      console.log(error);
+      setIsLoadingData(false);
+      // Show a Snackbar message with an error and retry action
+      Snackbar.show({
+        text: infoTranslation.errorMessageTranslation(intl),
+        duration: Snackbar.LENGTH_LONG,
+        action: {
+          text: infoTranslation.retryTranslation(intl),
+          textColor: theme.PRIMARY,
+          onPress: () => fetchUserLists() // Retry the function on action press
+        }
+      });
+    }
+  }
 
   useEffect(() => {
-    async function fetchUserLists() {
-      try {
-        setIsLoadingData(true);
-        if (user?.id) {
-          // Send an HTTP request to fetch all lists for the user
-          const response = await fetch(`${API_URL}/get_all_lists?userId=${user.id}`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json",
-              "accept": "text/plain"
-            },
-          });
-
-          // Get the JSON response data
-          const responseData = await response.json();
-
-          // Check if the response is not OK
-          if (!response.ok) {
-            setIsLoadingData(false);
-            console.log(responseData);
-            // Show a Snackbar message with an error and retry action
-            Snackbar.show({
-              text: infoTranslation.errorMessageTranslation(intl),
-              duration: Snackbar.LENGTH_LONG,
-              action: {
-                text: infoTranslation.retryTranslation(intl),
-                textColor: theme.PRIMARY,
-                onPress: () => fetchUserLists() // Retry the function on action press
-              }
-            });
-          } else {
-            // Show a Snackbar message for a successful response
-            Snackbar.show({
-              text: infoTranslation.successMessageTranslation(intl),
-              duration: Snackbar.LENGTH_SHORT,
-            });
-            setIsLoadingData(false);
-          }
-
-          // Set the list data to the retrieved data
-          setListData(responseData);
-        }
-      } catch (error: any) {
-        console.log(error);
-        setIsLoadingData(false);
-        // Show a Snackbar message with an error and retry action
-        Snackbar.show({
-          text: infoTranslation.errorMessageTranslation(intl),
-          duration: Snackbar.LENGTH_LONG,
-          action: {
-            text: infoTranslation.retryTranslation(intl),
-            textColor: theme.PRIMARY,
-            onPress: () => fetchUserLists() // Retry the function on action press
-          }
-        });
-      }
-    }
-
     fetchUserLists();
   }, [user?.id]);
 
@@ -159,6 +159,7 @@ export function DataProvider({ children }: DataProviderProps) {
     isLoadingData,
     listData,
     updateListData,
+    fetchUserLists,
     createList: async (): Promise<number | undefined> => {
       try {
         if (user) {
@@ -761,23 +762,29 @@ export function DataProvider({ children }: DataProviderProps) {
         // Check if the response is not OK
         if (!response.ok) {
           console.log(responseData);
+          updateListData(() => listData);
           Snackbar.show({
             text: infoTranslation.addingSubtaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
           });
-
+        } else {
           const idSubtask = Number(responseData);
-
           if (idSubtask !== undefined) {
             newSubtask.idSubtask = idSubtask;
             return idSubtask;
           } else {
-            console.error('Error adding subtask: Subtask ID is undefined.');
+            console.log('Error adding subtask: Subtask ID is undefined.');
+            Snackbar.show({
+              text: infoTranslation.addingSubtaskError(intl),
+              duration: Snackbar.LENGTH_SHORT,
+            });
             return undefined;
           }
         }
+
       } catch (error) {
         console.log("Error occurred while adding subtask to db:", error);
+        updateListData(() => listData);
         Snackbar.show({
           text: infoTranslation.addingSubtaskError(intl),
           duration: Snackbar.LENGTH_SHORT,
@@ -785,17 +792,17 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     },
     deleteSubtask: async (idSubtask: number, idTask: number, idList: number): Promise<void> => {
-      console.log(idSubtask)
       try {
         const updatedListData = listData.map((list) => {
           if (list.idList === idList) {
             const updatedTasks = list.tasks.map((task) => {
               if (task.idTask === idTask) {
                 const updatedSubtasks = task.subtasks.filter((subtask) => subtask.idSubtask !== idSubtask);
+                console.log(updatedSubtasks)
                 return {
                   ...task,
                   subtasks: updatedSubtasks,
-                }
+                };
               }
               return task;
             });
@@ -805,20 +812,17 @@ export function DataProvider({ children }: DataProviderProps) {
               tasks: updatedTasks,
             };
           }
+
           return list;
         });
-
         updateListData(() => updatedListData);
 
-        const response = await fetch(`${API_URL}/remove_subtask`, {
+        const response = await fetch(`${API_URL}/remove_subtask?idSubtask=${idSubtask}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
             "accept": "text/plain"
           },
-          body: JSON.stringify({
-            "idSubtask": idSubtask,
-          })
         });
 
         // Get the response data from the server
@@ -831,7 +835,7 @@ export function DataProvider({ children }: DataProviderProps) {
           // Revert the local state update if the server request fails
           updateListData(() => listData);
 
-          // Show a Snackbar message for the delete task error
+          // Show a Snackbar message for the delete subtask error
           Snackbar.show({
             text: infoTranslation.deletingSubtaskError(intl),
             duration: Snackbar.LENGTH_SHORT,
@@ -840,7 +844,13 @@ export function DataProvider({ children }: DataProviderProps) {
           console.log(responseData);
         }
       } catch (error) {
-        console.log("Error occurred while deleting subtask from db:", error);
+        console.log("Error occurred while deleting subtask from the database:", error);
+
+        // Revert the local state update if an error occurs
+        updateListData(() => listData);
+
+
+        // Show a Snackbar message for the delete subtask error
         Snackbar.show({
           text: infoTranslation.deletingSubtaskError(intl),
           duration: Snackbar.LENGTH_SHORT,

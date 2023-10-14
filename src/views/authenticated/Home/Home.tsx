@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useLayoutEffect, useState, } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -28,6 +28,7 @@ export default function Home({ navigation }: HomeProps) {
     const { listData, isLoadingData } = useListContext();
     const newList = listData.filter((item: ListType) => item.isArchived === false);
     const [list, setList] = useState<ListType[]>(newList);
+
 
     useLayoutEffect(() => {
         const filteredList = listData.filter((item: ListType) => item.isArchived === false);

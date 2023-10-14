@@ -4,7 +4,7 @@ export interface SubtaskType {
   isCompleted: boolean;
   addedBy: number;
   createdAt: string;
-  Task_idTask: number;
+  idTask: number;
 }
 
 export interface TaskType {

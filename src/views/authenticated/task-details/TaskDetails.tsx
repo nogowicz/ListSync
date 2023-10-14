@@ -116,7 +116,7 @@ export default function TaskDetails({ navigation, route }: TaskDetailsProps) {
                 idSubtask: -1,
                 title: subtaskTitle,
                 isCompleted: false,
-                Task_idTask: currentTask.idTask,
+                idTask: currentTask.idTask,
                 addedBy: user.id,
                 createdAt: new Date().toISOString(),
             }

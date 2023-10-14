@@ -44,6 +44,7 @@ type UserType = {
     email: string;
     firstName: string;
     lastName: string;
+    idListALl: number;
     photo: string;
     createdAt: string;
     exp: number;
@@ -79,8 +80,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     // Throw an error with the response data
                     throw new Error(responseData);
                 }
-
-                // Decode the response data (assuming it's a JWT token)
+                console.log(responseData)
 
                 // Set the user data in local storage and application state
                 setItem('user', JSON.stringify(responseData));
@@ -140,7 +140,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     throw new Error(responseLoginData);
                 }
 
-                // Decode the response data (assuming it's a JWT token)
                 // Set the user data in local storage and application state
                 setItem('user', JSON.stringify(responseLoginData));
                 setUser(responseLoginData);
