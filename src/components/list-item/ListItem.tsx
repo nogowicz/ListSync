@@ -60,7 +60,7 @@ export default function ListItem({
         if (textLength <= 10) {
             return typography.FONT_SIZE_24;
         } else if (textLength > 10 && textLength <= 20) {
-            return typography.FONT_SIZE_20;
+            return typography.FONT_SIZE_18;
         } else {
             return typography.FONT_SIZE_14;
         }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/navigation';
@@ -22,6 +22,10 @@ import AddTaskField from 'components/add-task-field';
 import BottomSheetWithSettings from './BottomSheetWithSettings';
 
 
+//images:
+import OopsImage from 'assets/images/opps.svg';
+
+
 type ListScreenNavigationProp = NativeStackScreenProps<RootStackParamList, 'LIST'>;
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'LIST'>;
 
@@ -36,17 +40,17 @@ export default function List({
 }: ListProps) {
     const theme = useTheme();
     const {
-        data,
+        currentListId,
         isModalVisibleOnStart = false,
         isNewList = false,
     }: any = route.params;
-    const { listData } = useListContext();
-    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.IdList === data.IdList));
+    const { listData, createList } = useListContext();
+    const [currentList, setCurrentList] = useState(listData.find((item: ListType) => item.idList === currentListId));
     const [isModalVisible, setIsModalVisible] = useState(isModalVisibleOnStart);
-    const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 1);
-    const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 1);
+    const [selectedIcon, setSelectedIcon] = useState(currentList?.iconId || 0);
+    const [selectedColor, setSelectedColor] = useState(currentList?.colorVariant || 0);
     const [listName, setListName] = useState(currentList?.listName || '');
-    const [IdList, setIdList] = useState(currentList?.IdList || 0);
+    const [idList, setIdList] = useState(currentList?.idList || 0);
     const [unCompletedTasks, setUnCompletedTasks] = useState<TaskType[]>([]);
     const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [isCompletedVisible, setIsCompletedVisible] = useState(false);
@@ -64,6 +68,7 @@ export default function List({
             refDetails.current?.scrollTo(-(height - constants.BOTTOM_SHEET_HEIGHT.DETAILS));
         }
     }, []);
+
 
     const handleModal = () => {
         setIsModalVisible(() => !isModalVisible);
@@ -86,15 +91,23 @@ export default function List({
         setIsCompletedVisible(!isCompletedVisible);
     };
 
-    useEffect(() => {
-        setCurrentList(listData.find((item: ListType) => item.IdList === data.IdList));
-    }, [listData, data.IdList]);
+    useLayoutEffect(() => {
+        setCurrentList(listData.find((item: ListType) => item.idList === currentListId));
+    }, [listData, currentListId]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setUnCompletedTasks(currentList?.tasks.filter((item: TaskType) => !item.isCompleted) || []);
         setCompletedTasks(currentList?.tasks.filter((item: TaskType) => item.isCompleted) || []);
         setListName(currentList?.listName || '');
     }, [currentList]);
+
+    useEffect(() => {
+        if (!currentList) {
+            setTimeout(() => {
+                navigation.goBack();
+            }, 500);
+        }
+    }, []);
 
     const placeholderText = intl.formatMessage({
         defaultMessage: 'Enter list name',
@@ -102,8 +115,27 @@ export default function List({
     });
 
     if (!currentList) {
-        // TODO: Handle no data state
-        return <View><Text>No data here</Text></View>;
+        // Handle no data state
+
+        return (
+            <View style={{
+                ...styles.noDataStyle,
+                backgroundColor: theme.BACKGROUND,
+            }} >
+                <Text style={{
+                    ...styles.noDataStyleText,
+                    color: theme.TEXT,
+                }}>
+                    Oops!
+                </Text>
+                <OopsImage />
+                <Text style={{
+                    ...styles.noDataStyleText,
+                    color: theme.TEXT,
+                }}>
+                    Something went wrong
+                </Text>
+            </View>);
     }
 
     return (
@@ -140,7 +172,7 @@ export default function List({
                         {unCompletedTasks.length > 0 ?
                             <TaskList
                                 tasks={unCompletedTasks}
-                                listId={currentList.IdList}
+                                listId={currentList.idList}
                                 color={listColorTheme[currentList.colorVariant]}
                             /> :
                             completedTasks.length > 0 ?
@@ -191,16 +223,16 @@ export default function List({
                                 {isCompletedVisible &&
                                     <TaskList
                                         tasks={completedTasks}
-                                        listId={currentList.IdList}
+                                        listId={currentList.idList}
                                         color={listColorTheme[currentList.colorVariant]}
                                     />}
                             </View>
                         )}
                     </View>
                 </ScrollView>
-                {!isModalVisible && (
+                {!(isModalVisible || currentList.isArchived) && (
                     <AddTaskField
-                        currentListId={currentList.IdList}
+                        currentListId={currentList.idList}
                         color={listColorTheme[currentList.colorVariant]}
                     />
                 )}
@@ -210,7 +242,7 @@ export default function List({
                 handleModal={handleModal}
                 isModalVisible={isModalVisible}
                 listName={listName}
-                IdList={IdList}
+                idList={idList}
                 placeholderText={placeholderText}
                 selectedColor={selectedColor}
                 selectedIcon={selectedIcon}
@@ -221,13 +253,14 @@ export default function List({
 
             <BottomSheetWithSettings
                 refDetails={refDetails}
-                IdList={IdList}
+                idList={idList}
                 handleModal={handleModal}
                 handleShowDetailsBottomSheet={handleShowDetailsBottomSheet}
             />
 
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
@@ -254,5 +287,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: typography.FONT_SIZE_20,
         marginVertical: spacing.SCALE_8,
+    },
+    noDataStyle: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: spacing.SCALE_20,
+    },
+    noDataStyleText: {
+        fontSize: typography.FONT_SIZE_28,
+        textAlign: 'center',
+        fontWeight: typography.FONT_WEIGHT_BOLD,
     }
 });

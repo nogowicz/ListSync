@@ -10,6 +10,7 @@ type NavigationTopBarProps = {
     onTitlePress?: () => void;
     type: NAVIGATION_TOP_BAR_TYPES;
     handleShowDetailsBottomSheet?: () => void;
+    extraActionWhenGoBackPressed?: () => void;
 };
 
 type NavigationTopBarElement = {
@@ -18,13 +19,22 @@ type NavigationTopBarElement = {
     navigationTypes?: JSX.Element;
 };
 
-export default function NavigationTopBar({ name, icon, onTitlePress, color, type, handleShowDetailsBottomSheet }: NavigationTopBarProps) {
+export default function NavigationTopBar({
+    name,
+    icon,
+    onTitlePress,
+    color,
+    type,
+    handleShowDetailsBottomSheet,
+    extraActionWhenGoBackPressed,
+}: NavigationTopBarProps) {
     const navigationTopBars = prepareNavigationTopBar({
         name: name,
         icon: icon,
         color: color,
         onTitlePress: onTitlePress,
-        handleShowDetailsBottomSheet: handleShowDetailsBottomSheet
+        handleShowDetailsBottomSheet: handleShowDetailsBottomSheet,
+        extraActionWhenGoBackPressed: extraActionWhenGoBackPressed,
     });
 
     function getNavigationTopBarById(navigationTopBars: NavigationTopBarElement[], type: navigationTypes.NAVIGATION_TOP_BAR_TYPES) {

@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import React, {
     useEffect,
+    useLayoutEffect,
     useRef,
     useState,
 } from 'react'
@@ -57,13 +58,12 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
     const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState(false);
     const [showNotificationDatePicker, setShowNotificationDatePicker] = useState(false);
-    const [deadlineDatePickerDate, setDeadlineDatePickerDate] = useState<Date>();
 
     const [isNotificationVisible, setIsNotificationVisible] = useState(false);
     const [notification, setNotification] = useState<string>("Notification");
     const [notificationDatePickerDate, setNotificationDatePickerDate] = useState<Date>(new Date());
     const [showNotificationTimePicker, setShowNotificationTimePicker] = useState(false);
-    const [notificationTime, setNotificationTime] = useState<Date>();
+    const [notificationTime, setNotificationTime] = useState<string | null>(null);
     const [notificationTodayHour, setNotificationTodayHour] = useState<string>('18:00');
     const [notificationTomorrowHour, setNotificationTomorrowHour] = useState<string>('18:00');
     const [datePickerDate, setDatePickerDate] = useState<Date>();
@@ -82,8 +82,8 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
 
     const inputRef = useRef<TextInput>(null);
 
-    useEffect(() => {
-        setActiveList(list.find((item: ListType) => item.IdList === currentListId));
+    useLayoutEffect(() => {
+        setActiveList(list.find((item: ListType) => item.idList === currentListId));
     }, [list]);
 
     useEffect(() => {
@@ -118,7 +118,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             displayTriggerNotification(
                 textValue,
                 notificationBodyTranslate,
-                notificationTime.getTime(),
+                new Date(notificationTime).getTime(),
                 taskId,
                 completeTaskAction
             )
@@ -131,35 +131,31 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
         }
         if (user) {
             const newTask: TaskType = {
-                IdTask: -1,
+                idTask: -1,
                 title: textValue,
                 isCompleted: false,
-                addedBy: user.ID,
+                addedBy: user.id,
                 assignedTo: null,
                 deadline: deadlineDate,
                 effort: '',
                 importance: importance,
                 note: '',
                 createdAt: new Date().toISOString(),
+                notificationTime: notificationTime,
                 subtasks: [],
             };
-
-            try {
-                const taskId = await addTask(newTask, activeList?.IdList);
-                if (taskId) {
-                    handleCreateNotification(taskId);
-                }
-                setDeadline(deadlineNames.REMOVE);
-                setDeadlineDate(null);
-                setIsDeadlineVisible(false);
-                setNotification(notificationTimeNames.REMOVE);
-                setNotificationTime(undefined);
-                setIsNotificationVisible(false);
-                setImportance(importanceNames.REMOVE);
-                setIsImportanceVisible(false);
-                setTextValue('');
-            } catch (error) {
-                console.error('Error adding task:', error);
+            setTextValue('');
+            setDeadline(deadlineNames.REMOVE);
+            setDeadlineDate(null);
+            setIsDeadlineVisible(false);
+            setNotification(notificationTimeNames.REMOVE);
+            setNotificationTime(null);
+            setIsNotificationVisible(false);
+            setImportance(importanceNames.REMOVE);
+            setIsImportanceVisible(false);
+            const taskId = await addTask(newTask, user.idListALl, activeList?.idList);
+            if (taskId) {
+                handleCreateNotification(taskId);
             }
         }
     };
@@ -167,11 +163,11 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
 
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setDeadlineDate(getFormattedDate(deadlineNames.PICK_DATE, datePickerDate) as string);
     }, [datePickerDate]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const updatedLists = listData.filter((item: ListType) => item.isArchived === false);
         setList(updatedLists);
     }, [listData]);
@@ -193,14 +189,14 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
         return (
             <View>
                 <DateTimePickers
-                    deadlineDatePickerDate={deadlineDatePickerDate}
+                    deadlineDatePickerDate={deadlineDate}
                     timePickerTime={timePickerTime}
                     notificationDatePickerDate={notificationDatePickerDate}
                     showDeadlineDatePicker={showDeadlineDatePicker}
                     showNotificationDatePicker={showNotificationDatePicker}
                     showNotificationTimePicker={showNotificationTimePicker}
                     setShowDeadlineDatePicker={setShowDeadlineDatePicker}
-                    setDeadlineDatePickerDate={setDeadlineDatePickerDate}
+                    setDeadlineDatePickerDate={setDeadlineDate}
                     setDeadline={setDeadline}
                     setShowNotificationTimePicker={setShowNotificationTimePicker}
                     setTimePickerTime={setTimePickerTime}
@@ -280,6 +276,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
                             style={[styles.textInput, { color: theme.TEXT, }]}
                             value={textValue}
                             onChangeText={(text) => setTextValue(text)}
+                            onSubmitEditing={handleAddTask}
                         />
                         <TouchableOpacity
                             activeOpacity={constants.ACTIVE_OPACITY.HIGH}

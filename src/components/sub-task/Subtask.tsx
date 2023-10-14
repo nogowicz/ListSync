@@ -29,7 +29,7 @@ export default function Subtask({
 
     function handleDeleteSubtask() {
         if (listId) {
-            deleteSubtask(item.idSubtask, item.Task_idTask, listId);
+            deleteSubtask(item.idSubtask, item.idTask, listId);
         }
     }
 

@@ -36,9 +36,9 @@ type FunctionPanelButtonsProps = {
     activeList?: ListType;
     deadline?: string;
     notification?: string;
-    notificationTime?: Date;
+    notificationTime: string | null;
     importance?: string;
-    deadlineDate?: string | null;
+    deadlineDate: string | null;
 }
 
 export default function FunctionPanelButtons({
@@ -145,18 +145,22 @@ export default function FunctionPanelButtons({
                 }}
             >
                 <ListSelection
-                    stroke={activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY}
+                    stroke={activeList?.idList === 1 ? theme.HINT : theme.PRIMARY}
                     strokeWidth={constants.STROKE_WIDTH.ICON}
                 />
                 <Text style={{
-                    color: activeList?.IdList === 1 ? theme.HINT : theme.PRIMARY,
-                }}>
+                    color: activeList?.idList === 1 ? theme.HINT : theme.PRIMARY,
+                    maxWidth: 100,
+                }}
+                    ellipsizeMode='tail'
+                    numberOfLines={1}
+                >
 
 
                     {activeList?.listName === "All" ? allListTranslation :
                         activeList?.listName === "Unnamed list" ? unnamedListTranslation : activeList?.listName}
                 </Text>
-            </TouchableOpacity>
+            </TouchableOpacity >
         );
     } else if (type === FUNCTIONAL_BUTTONS_NAMES.DEADLINE && deadline) {
         return (
@@ -211,7 +215,7 @@ export default function FunctionPanelButtons({
                             id='views.authenticated.home.text-input.notification'
                             defaultMessage={'Notification'}
                         /> :
-                        formatDateToShortDateWithTime(notificationTime, intl)
+                        formatDateToShortDateWithTime(new Date(notificationTime), intl)
                     }
 
                 </Text>

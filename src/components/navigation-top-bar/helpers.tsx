@@ -22,6 +22,7 @@ type PrepareNavigationTopBarProps = {
     color?: string;
     onTitlePress?: () => void;
     handleShowDetailsBottomSheet?: () => void;
+    extraActionWhenGoBackPressed?: () => void;
 };
 
 export function prepareNavigationTopBar({
@@ -29,7 +30,8 @@ export function prepareNavigationTopBar({
     onTitlePress,
     icon,
     color,
-    handleShowDetailsBottomSheet
+    handleShowDetailsBottomSheet,
+    extraActionWhenGoBackPressed
 }: PrepareNavigationTopBarProps) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const theme = useTheme();
@@ -66,6 +68,9 @@ export function prepareNavigationTopBar({
                     <Button
                         onPress={() => {
                             navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
+                            if (extraActionWhenGoBackPressed) {
+                                extraActionWhenGoBackPressed();
+                            }
                         }}
                         type={buttonTypes.BUTTON_TYPES.BACK}
                     />
@@ -76,7 +81,8 @@ export function prepareNavigationTopBar({
                             fontSize: spacing.SCALE_30,
                             color: theme.TEXT,
                             textAlign: 'center',
-                        }}>
+                        }}
+                        >
                             {name}
                         </Text>
                     </View>
@@ -100,6 +106,9 @@ export function prepareNavigationTopBar({
                     <Button
                         onPress={() => {
                             navigation.navigate(SCREENS.AUTHENTICATED.HOME.ID)
+                            if (extraActionWhenGoBackPressed) {
+                                extraActionWhenGoBackPressed();
+                            }
                         }}
                         type={buttonTypes.BUTTON_TYPES.BACK}
                     />
@@ -113,7 +122,11 @@ export function prepareNavigationTopBar({
                         <Text style={{
                             fontSize: fontSize,
                             color: theme.TEXT,
-                        }}>
+                            width: '56%',
+                        }}
+                            numberOfLines={3}
+                            ellipsizeMode="tail"
+                        >
                             {name === "All" ? allListTranslation :
                                 name === "Unnamed list" ? unnamedListTranslation : name}
                         </Text>

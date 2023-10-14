@@ -8,15 +8,15 @@ type DateTimePickersProps = {
     showDeadlineDatePicker: boolean;
     showNotificationDatePicker: boolean;
     showNotificationTimePicker: boolean;
-    deadlineDatePickerDate: Date | undefined;
+    deadlineDatePickerDate: string | null;
     notificationDatePickerDate: Date;
     timePickerTime: Date | undefined;
     setShowDeadlineDatePicker: Dispatch<SetStateAction<boolean>>;
-    setDeadlineDatePickerDate: Dispatch<SetStateAction<Date | undefined>>;
+    setDeadlineDatePickerDate: Dispatch<SetStateAction<string | null>>;
     setDeadline: Dispatch<SetStateAction<string>>;
     setShowNotificationTimePicker: Dispatch<SetStateAction<boolean>>;
     setTimePickerTime: Dispatch<SetStateAction<Date | undefined>>;
-    setNotificationTime: Dispatch<SetStateAction<Date | undefined>>;
+    setNotificationTime: Dispatch<SetStateAction<string | null>>;
     setNotification: Dispatch<SetStateAction<string>>;
     setShowNotificationDatePicker: Dispatch<SetStateAction<boolean>>;
     setNotificationDatePickerDate: Dispatch<SetStateAction<Date>>;
@@ -37,14 +37,15 @@ export default function DateTimePickers({
     setNotificationTime,
     setNotification,
     setShowNotificationDatePicker,
-    setNotificationDatePickerDate
+    setNotificationDatePickerDate,
 }: DateTimePickersProps) {
 
     const onChangeDeadlineDate = (event: any, selectedDate?: Date | undefined) => {
         if (event.type === 'set') {
             setShowDeadlineDatePicker(Platform.OS === 'ios' ? true : false);
             const currentDate = selectedDate || deadlineDatePickerDate;
-            setDeadlineDatePickerDate(currentDate);
+            const currentDateAsString = currentDate?.toString();
+            setDeadlineDatePickerDate(currentDateAsString ?? null);
             setDeadline(deadlineNames.PICK_DATE);
         } else if (event.type === 'dismissed') {
             setShowDeadlineDatePicker(false);
@@ -66,7 +67,7 @@ export default function DateTimePickers({
                 currentDate.getMinutes()
             );
 
-            setNotificationTime(combinedDate);
+            setNotificationTime(combinedDate.toISOString());
             setNotification(notificationTimeNames.PICK_DATE);
         } else if (event.type === 'dismissed') {
             setShowNotificationDatePicker(false);
@@ -92,11 +93,12 @@ export default function DateTimePickers({
             {showDeadlineDatePicker && (
                 <DateTimePicker
                     testID='dateTimePicker'
-                    value={deadlineDatePickerDate || new Date()}
+                    value={new Date(deadlineDatePickerDate as string) || new Date()}
                     mode={'date'}
                     is24Hour={true}
                     display='default'
                     onChange={onChangeDeadlineDate}
+                    minimumDate={new Date()}
                 />
             )}
             {showNotificationDatePicker && (
@@ -107,6 +109,7 @@ export default function DateTimePickers({
                     is24Hour={true}
                     display='default'
                     onChange={onChangeNotificationDate}
+                    minimumDate={new Date()}
                 />
             )}
             {showNotificationTimePicker &&

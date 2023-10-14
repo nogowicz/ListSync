@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   Appearance,
   StatusBar,
@@ -9,11 +9,11 @@ import { theme } from './src/styles/colors';
 import LangContext, { LangModeProvider } from './src/lang/LangProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DataProvider } from 'context/DataProvider';
-import { UserProvider } from 'context/UserProvider';
 import { getItem } from 'utils/asyncStorage';
 import { EventRegister } from 'react-native-event-listeners';
 import { AuthProvider } from 'context/AuthContext';
 import { useNotification } from 'hooks/useNotification';
+
 
 
 export default function App(): JSX.Element {
@@ -21,7 +21,7 @@ export default function App(): JSX.Element {
   const [themeMode, setThemeMode] = useState(false);
   const { checkNotificationPermission } = useNotification();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     async function fetchTheme() {
       try {
         await getItem('theme').then((storedTheme) => {
@@ -39,7 +39,7 @@ export default function App(): JSX.Element {
   }, []);
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let eventListener = EventRegister.addEventListener(
       "changeTheme",
       (theme: boolean) => {
@@ -63,13 +63,11 @@ export default function App(): JSX.Element {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <LangModeProvider>
           <AuthProvider>
-            <UserProvider>
+            <LangContext>
               <DataProvider>
-                <LangContext>
-                  <Routes />
-                </LangContext>
+                <Routes />
               </DataProvider>
-            </UserProvider>
+            </LangContext>
           </AuthProvider>
         </LangModeProvider>
       </GestureHandlerRootView>

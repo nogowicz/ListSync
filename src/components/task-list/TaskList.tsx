@@ -1,9 +1,8 @@
 import { View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { ListType, TaskType } from 'data/types';
+import { TaskType } from 'data/types';
 import Task from 'components/task';
 import { useListContext } from 'context/DataProvider';
-import { updateTaskInDatabase } from 'utils/database';
 import notifee, { EventType } from '@notifee/react-native';
 import { useNotification } from 'hooks/useNotification';
 
@@ -23,7 +22,7 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
     }, [tasks]);
 
     const handleCompleteTask = (taskId: number) => {
-        const taskToUpdate = tasks.find((task) => task.IdTask === taskId);
+        const taskToUpdate = tasks.find((task) => task.idTask === taskId);
 
         if (taskToUpdate) {
             completeTask(taskToUpdate).then(() => {
@@ -55,11 +54,11 @@ export default function TaskList({ tasks, listId, color }: TaskListProps) {
         <View style={{ flex: 1 }}>
             {currentTasks.map((item: TaskType) => (
                 <Task
-                    key={item.IdTask}
+                    key={item.idTask}
                     listId={listId}
                     task={item}
                     color={color}
-                    onTaskComplete={() => handleCompleteTask(item.IdTask)}
+                    onTaskComplete={() => handleCompleteTask(item.idTask)}
                 />
             )
             )}

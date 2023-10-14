@@ -11,7 +11,6 @@ import { ListType } from "data/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "navigation/navigation";
 import { useAuth } from "context/AuthContext";
-import { addListToDatabase } from "utils/database";
 
 
 //components:
@@ -26,16 +25,12 @@ export function prepareTopPanel() {
     const { createList } = useListContext();
 
     const handleCreateNewList = async () => {
-        const newList = await createList()
-
         navigation.navigate(SCREENS.AUTHENTICATED.LIST.ID, {
-            data: newList,
             isModalVisibleOnStart: true,
             isNewList: true,
+            currentListId: await createList(),
         });
-
     };
-
 
 
     return [
@@ -123,7 +118,7 @@ const styles = StyleSheet.create({
         fontSize: typography.FONT_SIZE_24,
     },
     dateText: {
-        fontSize: typography.FONT_SIZE_15,
+        fontSize: typography.FONT_SIZE_14,
     },
     profileImage: {
         width: constants.PHOTO_SIZE.BIG,

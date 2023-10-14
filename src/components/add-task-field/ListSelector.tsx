@@ -45,7 +45,7 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                 {list.map((item: ListType) => (
                     <TouchableOpacity
                         activeOpacity={constants.ACTIVE_OPACITY.HIGH}
-                        key={item.IdList}
+                        key={item.idList}
                         style={{
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -66,7 +66,10 @@ export default function ListSelector({ list, setIsListVisible, setActiveList }: 
                             color: theme.TEXT,
                             fontSize: typography.FONT_SIZE_12,
                             textAlign: 'center',
-                        }}>
+                        }}
+                            ellipsizeMode='tail'
+                            numberOfLines={2}
+                        >
                             {item.listName === "All" ? allListTranslation :
                                 item.listName === "Unnamed list" ? unnamedListTranslation : item.listName}
                         </Text>

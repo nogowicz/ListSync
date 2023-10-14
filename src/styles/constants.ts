@@ -1,10 +1,12 @@
 export const BORDER_RADIUS = {
   BUTTON: 10,
   CHECK_BUTTON: 5,
+  CIRCLE: 100,
 };
 
 export const STROKE_WIDTH = {
   ICON: 1.5,
+  ICON_BOLD: 2,
 };
 
 export const ICON_SIZE = {
@@ -17,6 +19,7 @@ export const ICON_SIZE = {
   TEXT_FIELD_LIST_ICON: 25,
   SETTING_BUTTON: 30,
   SUBTASK_SQUARE_CHECK: 8,
+  ACTIVITY_INDICATOR: 70,
 };
 
 export const ACTIVE_OPACITY = {
@@ -37,5 +40,5 @@ export const PHOTO_SIZE = {
 export const BOTTOM_SHEET_HEIGHT = {
   LANGUAGES: 500,
   THEMES: 500,
-  DETAILS: 320,
+  DETAILS: 260,
 };

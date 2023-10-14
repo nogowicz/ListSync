@@ -6,7 +6,6 @@ import { typography, spacing, constants } from 'styles';
 import { Modal } from 'components/modal/Modal';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { useListContext } from 'context/DataProvider';
-import { ListType } from 'data/types';
 import { listColorTheme, listIconTheme } from 'styles/list-styles';
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 type ChangeListModalProps = {
     isModalVisible: boolean;
     listName: string;
-    IdList: number;
+    idList: number;
     selectedColor: number;
     placeholderText: string;
     setSelectedIcon: Dispatch<SetStateAction<number>>;
@@ -27,7 +26,7 @@ type ChangeListModalProps = {
 export default function ChangeListModal({
     isModalVisible,
     listName,
-    IdList,
+    idList,
     selectedColor,
     placeholderText,
     setSelectedIcon,
@@ -61,7 +60,7 @@ export default function ChangeListModal({
     }, []);
 
     const handleDeleteList = async () => {
-        await deleteList(IdList).then(() => {
+        await deleteList(idList).then(() => {
             navigation.goBack();
         })
     };
@@ -72,6 +71,7 @@ export default function ChangeListModal({
         iconId: number,
         colorVariant: number
     ) => {
+
         setIsNewListState(false);
         updateList(listId, listName, iconId, colorVariant).then(() => {
             handleModal();
@@ -185,7 +185,7 @@ export default function ChangeListModal({
                         />
                     }
                         onPress={() => handleUpdateList(
-                            IdList,
+                            idList,
                             newListName,
                             selectedIcon,
                             selectedColor

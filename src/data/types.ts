@@ -4,11 +4,11 @@ export interface SubtaskType {
   isCompleted: boolean;
   addedBy: number;
   createdAt: string;
-  Task_idTask: number;
+  idTask: number;
 }
 
 export interface TaskType {
-  IdTask: number;
+  idTask: number;
   title: string;
   isCompleted: boolean;
   deadline: string | null;
@@ -18,11 +18,12 @@ export interface TaskType {
   addedBy: number;
   assignedTo: number | null;
   createdAt: string;
+  notificationTime: string | null;
   subtasks: SubtaskType[];
 }
 
 export interface ListType {
-  IdList: number;
+  idList: number;
   listName: string;
   iconId: number;
   canBeDeleted: boolean;

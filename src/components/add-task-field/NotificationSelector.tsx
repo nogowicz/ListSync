@@ -35,7 +35,7 @@ type NotificationSelectorProps = {
     setNotification: Dispatch<SetStateAction<string>>;
     notification: string;
     setIsNotificationVisible: Dispatch<SetStateAction<boolean>>;
-    setNotificationTime: Dispatch<SetStateAction<Date | undefined>>;
+    setNotificationTime: Dispatch<SetStateAction<string | null>>;
     onPickDatePress: any;
     notificationTodayHour: string;
     notificationTomorrowHour: string;
@@ -67,15 +67,15 @@ export default function NotificationSelector({
                 if (now.getHours() > 17 || (now.getHours() === 17 && now.getMinutes() > 50)) {
                     dateAsDate.setHours(22);
                     dateAsDate.setMinutes(0);
-                    setNotificationTime(dateAsDate);
+                    setNotificationTime(dateAsDate.toISOString());
                 } else if (now.getHours() > 21 || (now.getHours() === 21 && now.getMinutes() > 50)) {
                     dateAsDate.setHours(23);
                     dateAsDate.setMinutes(30);
-                    setNotificationTime(dateAsDate);
+                    setNotificationTime(dateAsDate.toISOString());
                 } else {
                     dateAsDate.setHours(18);
                     dateAsDate.setMinutes(0);
-                    setNotificationTime(dateAsDate);
+                    setNotificationTime(dateAsDate.toISOString());
                 }
                 setIsNotificationVisible(false);
             }
@@ -90,7 +90,7 @@ export default function NotificationSelector({
                 const date: string | null = getFormattedDate(notificationTimeNames.TOMORROW);
                 const dateAsDate = new Date(date as string);
                 dateAsDate.setHours(18);
-                setNotificationTime(dateAsDate);
+                setNotificationTime(dateAsDate.toISOString());
                 setIsNotificationVisible(false);
             }
         },
@@ -104,7 +104,7 @@ export default function NotificationSelector({
                 const date: string | null = getFormattedDate(notificationTimeNames.NEXT_WEEK);
                 const dateAsDate = new Date(date as string);
                 dateAsDate.setHours(18);
-                setNotificationTime(dateAsDate);
+                setNotificationTime(dateAsDate.toISOString());
                 setIsNotificationVisible(false);
             }
         },
@@ -124,7 +124,7 @@ export default function NotificationSelector({
             isVisible: (notification !== notificationTimeNames.REMOVE),
             onPress: () => {
                 setNotification(notificationTimeNames.REMOVE);
-                setNotificationTime(undefined);
+                setNotificationTime(null);
                 setIsNotificationVisible(false);
             }
         },
