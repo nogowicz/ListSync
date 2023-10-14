@@ -25,6 +25,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from 'navigation/utils/screens';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 import { RootStackParamList } from 'navigation/navigation';
+import { useAuth } from 'context/AuthContext';
 
 //icons:
 import Trash from 'assets/button-icons/trash.svg';
@@ -52,6 +53,7 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
     const [isSubtasksVisible, setIsSubtasksVisible] = useState(false);
     const rotateAnimation = useSharedValue(isSubtasksVisible ? -90 : -180);
     const { completeSubtask, deleteTask } = useListContext();
+    const { user } = useAuth();
     const now = new Date();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const rotateStyle = useAnimatedStyle(() => {
@@ -102,9 +104,11 @@ export default function Task({ task, onTaskComplete, listId, color }: TaskProps)
 
     const handleDeleteTask = async () => {
         try {
-            await deleteTask(task.idTask, listId).then(() => {
-                cancelNotification(String(task.idTask));
-            })
+            if (user) {
+                await deleteTask(task.idTask, listId, user?.idListALl).then(() => {
+                    cancelNotification(String(task.idTask));
+                });
+            }
 
         } catch (error) {
             console.error('Error removing task:', error);

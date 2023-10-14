@@ -6,7 +6,6 @@ import Snackbar from 'react-native-snackbar';
 import { useIntl } from 'react-intl';
 import { useTheme } from 'navigation/utils/ThemeProvider';
 import { infoTranslation } from '.';
-import subTask from 'components/sub-task';
 
 type DataContextType = {
   isLoadingData: boolean;
@@ -27,8 +26,8 @@ type DataContextType = {
   ) => Promise<void>;
   deleteCompletedTasksInList: (idList: number) => Promise<void>;
   deleteCompletedTasks: (idList: number) => Promise<void>;
-  addTask: (newTask: TaskType, idList?: number) => Promise<number | undefined>;
-  deleteTask: (idTask: number, idList: number) => Promise<void>;
+  addTask: (newTask: TaskType, idAllList: number, idList?: number) => Promise<number | undefined>;
+  deleteTask: (idTask: number, idList: number, idAllList: number) => Promise<void>;
   updateTask: (updatedTask: TaskType) => Promise<void>;
   completeTask: (updatedTask: TaskType) => Promise<void>;
   addSubtask: (
@@ -340,7 +339,6 @@ export function DataProvider({ children }: DataProviderProps) {
       }
     },
     deleteCompletedTasksInList: async (idList: number): Promise<void> => {
-      console.log(idList)
       try {
         const updatedListData = listData.map((list) => {
           if (list.idList === idList) {
@@ -354,15 +352,12 @@ export function DataProvider({ children }: DataProviderProps) {
         });
 
 
-        const response = await fetch(`${API_URL}/remove_completed_tasks`, {
+        const response = await fetch(`${API_URL}/remove_completed_tasks?idList=${idList}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
             "accept": "text/plain"
           },
-          body: JSON.stringify({
-            "idList": idList
-          })
         });
 
         const responseData = await response.text();
@@ -430,12 +425,12 @@ export function DataProvider({ children }: DataProviderProps) {
         });
       }
     },
-    addTask: async (newTask: TaskType, idList?: number): Promise<number | undefined> => {
+    addTask: async (newTask: TaskType, idAllList: number, idList?: number): Promise<number | undefined> => {
       try {
         // Update local state
         if (idList !== undefined) {
           const updatedListData = listData.map((list) => {
-            if (list.idList === idList || list.idList === 1) {
+            if (list.idList === idList || list.idList === idAllList) {
               return {
                 ...list,
                 tasks: [...list.tasks, newTask],
@@ -481,7 +476,7 @@ export function DataProvider({ children }: DataProviderProps) {
           // Delete the task from the list data if it was not added successfully
           if (idList !== undefined) {
             const revertedListData = listData.map((list) => {
-              if (list.idList === idList || list.idList === 1) {
+              if (list.idList === idList || list.idList === idAllList) {
                 return {
                   ...list,
                   tasks: list.tasks.filter((task) => task.idTask !== newTask.idTask),
@@ -518,7 +513,7 @@ export function DataProvider({ children }: DataProviderProps) {
         // Delete the task from the list data if it was not added successfully
         if (idList !== undefined) {
           const revertedListData = listData.map((list) => {
-            if (list.idList === idList || list.idList === 1) {
+            if (list.idList === idList || list.idList === idAllList) {
               return {
                 ...list,
                 tasks: list.tasks.filter((task) => task.idTask !== newTask.idTask),
@@ -531,11 +526,11 @@ export function DataProvider({ children }: DataProviderProps) {
         }
       }
     },
-    deleteTask: async (idTask: number, idList: number): Promise<void> => {
+    deleteTask: async (idTask: number, idList: number, idAllList): Promise<void> => {
       try {
         // Update local state
         const updatedListData = listData.map((list) => {
-          if (list.idList === idList) {
+          if (list.idList === idList || list.idList === idAllList) {
             // Filter out the task with the specified idTask
             const updatedTasks = list.tasks.filter((listTask) => listTask.idTask !== idTask);
             return {

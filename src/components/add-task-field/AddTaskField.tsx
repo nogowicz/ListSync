@@ -153,7 +153,7 @@ export default function AddTaskField({ currentListId, color }: AddTaskFieldProps
             setIsNotificationVisible(false);
             setImportance(importanceNames.REMOVE);
             setIsImportanceVisible(false);
-            const taskId = await addTask(newTask, activeList?.idList);
+            const taskId = await addTask(newTask, user.idListALl, activeList?.idList);
             if (taskId) {
                 handleCreateNotification(taskId);
             }
