@@ -1,7 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { removeItem, setItem } from "utils/asyncStorage";
 import { API_URL } from '@env';
-import jwtDecode from 'jwt-decode';
 
 
 type AuthContextType = {
@@ -73,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 });
 
                 // Get the response data from the server
-                const responseData = await response.text();
+                const responseData = await response.json();
 
                 // Check if the response is not OK
                 if (!response.ok) {
@@ -82,11 +81,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 }
 
                 // Decode the response data (assuming it's a JWT token)
-                const decodedResponseData: UserType = jwtDecode(responseData);
 
                 // Set the user data in local storage and application state
-                setItem('user', JSON.stringify(decodedResponseData));
-                setUser(decodedResponseData);
+                setItem('user', JSON.stringify(responseData));
+                setUser(responseData);
 
 
             },
@@ -134,7 +132,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 });
 
                 // Get the response data from the login request
-                const responseLoginData = await responseLogin.text();
+                const responseLoginData = await responseLogin.json();
 
                 // Check if the login request is not OK
                 if (!responseLogin.ok) {
@@ -143,11 +141,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 }
 
                 // Decode the response data (assuming it's a JWT token)
-                const decodedResponseData: UserType = jwtDecode(responseLoginData);
-
                 // Set the user data in local storage and application state
-                setItem('user', JSON.stringify(decodedResponseData));
-                setUser(decodedResponseData);
+                setItem('user', JSON.stringify(responseLoginData));
+                setUser(responseLoginData);
 
 
             },
